@@ -205,7 +205,7 @@
                             &nbsp;
                             Oracle Database
                         </a>
-                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/">Oracle Database简单概述</a></li>  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-PLSQL%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/">Oracle Database PL/SQL注入漏洞原理</a></li>  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/">Oracle Database 11g Wrap加密解密分析</a></li>  </ul> 
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/">Oracle Database简单概述</a></li>  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-PLSQL%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/">Oracle Database PL/SQL注入漏洞原理</a></li>  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/">Oracle Database 11g Wrap加密解密分析</a></li>  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-%E4%B8%8A%E7%AF%87/">The Oracle Hacker's Handbook: Hacking and Defending Oracle 上篇</a></li>  <li class="file"><a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-%E4%B8%8B%E7%AF%87/">The Oracle Hacker's Handbook: Hacking and Defending Oracle 下篇</a></li>  </ul> 
                     </li> 
                     
                     <li class="directory">
@@ -326,6 +326,214 @@
 </aside>
             
             <section id="main">
+        <article id="post-数据库安全/Oracle Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-下篇" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+                    <div class="article-meta">
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/">数据库安全</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle-Database/">Oracle Database</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Oracle-Database/" rel="tag">Oracle Database</a>
+    </div>
+
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-%E4%B8%8B%E7%AF%87/">
+            <time datetime="2021-07-14T08:07:07.000Z" itemprop="datePublished">2021-07-14</time>
+        </a>
+    </div>
+
+
+                        
+                            <i class="fa fa-bar-chart"></i>
+                            <span id="busuanzi_container_site_pv"><span id="busuanzi_value_page_pv"></span></span>    
+                        
+                        
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/raw/writing/source/_posts/数据库安全/Oracle Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-下篇.md"> Source </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/edit/writing/source/_posts/数据库安全/Oracle Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-下篇.md"> Edit </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/commits/writing/source/_posts/数据库安全/Oracle Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-下篇.md"> History </a>
+                            </div>
+                        
+                    </div>
+                
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-%E4%B8%8B%E7%AF%87/">The Oracle Hacker&#39;s Handbook: Hacking and Defending Oracle 下篇</a>
+        </h1>
+    
+
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+        
+            
+                
+                
+                    
+                    
+                
+                    
+                    
+                
+                    
+                    
+                
+                    
+                    
+                
+                    
+                    
+                
+                
+                    
+                    <p></p><p><strong>The  Oracle Hacker’s Handbook: Hacking and Defending Oracle</strong> </p>
+<p><strong>by David  Litchfield John Wiley &amp; Sons</strong></p>
+<h2 id="触发器（Triggers-）"><a href="#触发器（Triggers-）" class="headerlink" title="触发器（Triggers ）"></a>触发器（Triggers ）</h2><p>在 Oracle 中，触发器是执行某些任务并在给定事件发生时自动触发的 PL/SQL 代码片段。可以为各种事件创建触发器，包括 DML 操作，如 INSERT、DELETE 和 UPDATE；并且它们可以设置为在事件之前或之后触发。触发器也可以定义为事件，例如用户登录、用户被删除或表被截断——换句话说，为所有类型的事件。当涉及到触发器时，有几个关键点需要记住。</p>
+<p>首先，触发器以定义它的用户的权限执行。其次，就本章而言，可能更重要的是，就像任何 PL/SQL 对象一样，触发器可能容易受到攻击。在查看实际示例之前，查看一个人为的 SQL 注入示例会很有启发性。对于此示例，我们创建了两个表：一个称为 MYTABLE 以保存短字符串，另一个称为 MYTABLE_LONG 以保存长度超过 15 个字符的字符串的副本。然后我们在 MYTABLE 上创建一个触发器以在插入之前触发，这样如果有人试图将长度超过 15 个字符的字符串插入到 MYTABLE 中，副本也会存储在 MYTABLE_LONG 中。这个例子除了证明这一点之外毫无用处：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">SQL&gt; CONNECT SCOTT/TIGER</span><br><span class="line">Connected.</span><br><span class="line">SQL&gt; SET SERVEROUTPUT ON</span><br><span class="line">SQL&gt; CREATE TABLE MYTABLE (V VARCHAR2(200));</span><br><span class="line"></span><br><span class="line">Table created.</span><br><span class="line"></span><br><span class="line">SQL&gt; CREATE TABLE MYTABLE_LONG (V VARCHAR2(200));</span><br><span class="line"></span><br><span class="line">Table created.</span><br><span class="line"></span><br><span class="line">SQL&gt; CREATE OR REPLACE TRIGGER MYTRIGGER BEFORE INSERT ON MYTABLE</span><br><span class="line">  2  REFERENCING NEW AS NEWROW</span><br><span class="line">  3  FOR EACH ROW</span><br><span class="line">  4  DECLARE</span><br><span class="line">  5  L NUMBER;</span><br><span class="line">  6  S VARCHAR2(2000);</span><br><span class="line">  7  BEGIN</span><br><span class="line">  8  L:=LENGTH(:NEWROW.V);</span><br><span class="line">  9  IF L &gt; 15 THEN</span><br><span class="line"> 10     DBMS_OUTPUT.PUT_LINE(&#x27;INSERTING INTO MYTABLE_LONG AS WELL&#x27;);</span><br><span class="line"> 11     S:=&#x27;INSERT INTO MYTABLE_LONG (V) VALUES (&#x27;&#x27;&#x27; || :NEWROW.V ||</span><br><span class="line">&#x27;&#x27;&#x27;)&#x27;;</span><br><span class="line"> 12     EXECUTE IMMEDIATE S;</span><br><span class="line"> 13  END IF;</span><br><span class="line"> 14  END MYTRIGGER;</span><br><span class="line"> 15 /</span><br><span class="line"></span><br><span class="line">Trigger created.</span><br><span class="line"></span><br><span class="line">SQL&gt; SHOW ERRORS</span><br><span class="line">No errors.</span><br><span class="line">SQL&gt; INSERT INTO MYTABLE (V) VALUES (&#x27;Hello, world!&#x27;);</span><br><span class="line"></span><br><span class="line">1 row created.</span><br><span class="line"></span><br><span class="line">SQL&gt; INSERT INTO MYTABLE (V) VALUES (&#x27;Hello, world! More text...&#x27;);</span><br><span class="line">INSERTING INTO MYTABLE_LONG AS WELL</span><br><span class="line"></span><br><span class="line">1 row created.</span><br><span class="line"></span><br><span class="line">SQL&gt; INSERT INTO MYTABLE (V) VALUES</span><br><span class="line">(&#x27;__________INJECT&#x27;&#x27;POINT__________&#x27;);</span><br><span class="line">INSERTING INTO MYTABLE_LONG AS WELL</span><br><span class="line">INSERT INTO MYTABLE (V) VALUES (&#x27;__________INJECT&#x27;&#x27;POINT__________&#x27;)</span><br><span class="line">*</span><br><span class="line">ERROR at line 1:</span><br><span class="line">ORA-00917: missing comma</span><br><span class="line">ORA-06512: at &quot;SCOTT.MYTRIGGER&quot;, line 9</span><br><span class="line">ORA-04088: error during execution of trigger &#x27;SCOTT.MYTRIGGER&#x27;</span><br></pre></td></tr></table></figure>
+<p>
+                
+            
+        
+        
+            </p></div>   
+            <div class="article-more-link">
+                <a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-%E4%B8%8B%E7%AF%87/#more">Read More</a>
+            </div>
+        
+        <footer class="article-footer">
+        </footer>
+    </div>
+</article>
+
+
+
+
+
+
+    
+        <article id="post-数据库安全/Oracle Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-上篇" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+                    <div class="article-meta">
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/">数据库安全</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle-Database/">Oracle Database</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Oracle-Database/" rel="tag">Oracle Database</a>
+    </div>
+
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-%E4%B8%8A%E7%AF%87/">
+            <time datetime="2021-07-12T08:06:40.000Z" itemprop="datePublished">2021-07-12</time>
+        </a>
+    </div>
+
+
+                        
+                            <i class="fa fa-bar-chart"></i>
+                            <span id="busuanzi_container_site_pv"><span id="busuanzi_value_page_pv"></span></span>    
+                        
+                        
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/raw/writing/source/_posts/数据库安全/Oracle Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-上篇.md"> Source </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/edit/writing/source/_posts/数据库安全/Oracle Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-上篇.md"> Edit </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/commits/writing/source/_posts/数据库安全/Oracle Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-上篇.md"> History </a>
+                            </div>
+                        
+                    </div>
+                
+                
+    
+        <h1 itemprop="name">
+            <a class="article-title" href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-%E4%B8%8A%E7%AF%87/">The Oracle Hacker&#39;s Handbook: Hacking and Defending Oracle 上篇</a>
+        </h1>
+    
+
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+        
+            
+                
+                
+                    
+                    
+                
+                    
+                    
+                
+                    
+                    
+                
+                    
+                    
+                
+                    
+                    
+                
+                
+                    
+                    <p></p><p><strong>The  Oracle Hacker’s Handbook: Hacking and Defending Oracle</strong></p>
+<p><strong>by David  Litchfield John Wiley &amp; Sons</strong></p>
+<p>探索黑帽黑客用来入侵和破坏 Oracle 的每一种技术和工具，这份深入指南向您展示了如何找到数据库中的弱点，以便更好地保护它们。</p>
+<p>[TOC]</p>
+<h2 id="Oracle-RDBMS概述"><a href="#Oracle-RDBMS概述" class="headerlink" title="Oracle RDBMS概述"></a>Oracle RDBMS概述</h2><h3 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h3><p>​        在Windows上还是在Linux平台上,构成Oracle服务器和服务的过程会有所不同。</p>
+<p>
+                
+            
+        
+        
+            </p></div>   
+            <div class="article-more-link">
+                <a href="/wiki/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-%E4%B8%8A%E7%AF%87/#more">Read More</a>
+            </div>
+        
+        <footer class="article-footer">
+        </footer>
+    </div>
+</article>
+
+
+
+
+
+
+    
         <article id="post-漏洞相关/Redis/CVE-2018-11218-Redis-Lua缓冲区溢出漏洞" class="article article-type-post" itemscope itemprop="blogPost">
     <div class="article-inner">
         
@@ -1145,214 +1353,6 @@
             </p></ul></div>   
             <div class="article-more-link">
                 <a href="/wiki/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/#more">Read More</a>
-            </div>
-        
-        <footer class="article-footer">
-        </footer>
-    </div>
-</article>
-
-
-
-
-
-
-    
-        <article id="post-漏洞相关/Redis/Redis未授权访问漏洞" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-                    <div class="article-meta">
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/">漏洞相关</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/">Redis</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link-link" href="/tags/Redis/" rel="tag">Redis</a>
-    </div>
-
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/wiki/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/Redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/">
-            <time datetime="2021-07-06T07:57:13.000Z" itemprop="datePublished">2021-07-06</time>
-        </a>
-    </div>
-
-
-                        
-                            <i class="fa fa-bar-chart"></i>
-                            <span id="busuanzi_container_site_pv"><span id="busuanzi_value_page_pv"></span></span>    
-                        
-                        
-                            <div class="article-meta-button">
-                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/raw/writing/source/_posts/漏洞相关/Redis/Redis未授权访问漏洞.md"> Source </a>
-                            </div>
-                            <div class="article-meta-button">
-                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/edit/writing/source/_posts/漏洞相关/Redis/Redis未授权访问漏洞.md"> Edit </a>
-                            </div>
-                            <div class="article-meta-button">
-                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/commits/writing/source/_posts/漏洞相关/Redis/Redis未授权访问漏洞.md"> History </a>
-                            </div>
-                        
-                    </div>
-                
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/wiki/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/Redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/">Redis未授权访问漏洞</a>
-        </h1>
-    
-
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-        
-            
-                
-                
-                    
-                    
-                
-                    
-                    
-                
-                    
-                    
-                
-                    
-                    
-                
-                    
-                    
-                
-                
-                    
-                    <p></p><h2 id="漏洞信息"><a href="#漏洞信息" class="headerlink" title="漏洞信息"></a>漏洞信息</h2><h3 id="漏洞简介"><a href="#漏洞简介" class="headerlink" title="漏洞简介"></a>漏洞简介</h3><ul>
-<li>漏洞名称：Redis未授权访问漏洞</li>
-<li>漏洞编号：CNVD-2015-07557</li>
-<li>漏洞类型：未授权访问</li>
-<li>CVSS评分：【CVSS v2.0：】【CVSS v3.0：】</li>
-<p>
-                
-            
-        
-        
-            </p></ul></div>   
-            <div class="article-more-link">
-                <a href="/wiki/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/Redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/#more">Read More</a>
-            </div>
-        
-        <footer class="article-footer">
-        </footer>
-    </div>
-</article>
-
-
-
-
-
-
-    
-        <article id="post-漏洞相关/OpenSSL/CVE-2014-0160-OpenSSL心脏滴血漏洞" class="article article-type-post" itemscope itemprop="blogPost">
-    <div class="article-inner">
-        
-        
-            <header class="article-header">
-                
-                    <div class="article-meta">
-                        
-    <div class="article-category">
-    	<i class="fa fa-folder"></i>
-        <a class="article-category-link" href="/categories/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/">漏洞相关</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/OpenSSL/">OpenSSL</a>
-    </div>
-
-                        
-    <div class="article-tag">
-        <i class="fa fa-tag"></i>
-        <a class="tag-link-link" href="/tags/OpenSSL/" rel="tag">OpenSSL</a>
-    </div>
-
-                        
-    <div class="article-date">
-        <i class="fa fa-calendar"></i>
-        <a href="/wiki/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/OpenSSL/CVE-2014-0160-OpenSSL%E5%BF%83%E8%84%8F%E6%BB%B4%E8%A1%80%E6%BC%8F%E6%B4%9E/">
-            <time datetime="2021-07-06T06:59:47.000Z" itemprop="datePublished">2021-07-06</time>
-        </a>
-    </div>
-
-
-                        
-                            <i class="fa fa-bar-chart"></i>
-                            <span id="busuanzi_container_site_pv"><span id="busuanzi_value_page_pv"></span></span>    
-                        
-                        
-                            <div class="article-meta-button">
-                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/raw/writing/source/_posts/漏洞相关/OpenSSL/CVE-2014-0160-OpenSSL心脏滴血漏洞.md"> Source </a>
-                            </div>
-                            <div class="article-meta-button">
-                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/edit/writing/source/_posts/漏洞相关/OpenSSL/CVE-2014-0160-OpenSSL心脏滴血漏洞.md"> Edit </a>
-                            </div>
-                            <div class="article-meta-button">
-                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/commits/writing/source/_posts/漏洞相关/OpenSSL/CVE-2014-0160-OpenSSL心脏滴血漏洞.md"> History </a>
-                            </div>
-                        
-                    </div>
-                
-                
-    
-        <h1 itemprop="name">
-            <a class="article-title" href="/wiki/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/OpenSSL/CVE-2014-0160-OpenSSL%E5%BF%83%E8%84%8F%E6%BB%B4%E8%A1%80%E6%BC%8F%E6%B4%9E/">CVE-2014-0160_OpenSSL心脏滴血漏洞</a>
-        </h1>
-    
-
-            </header>
-        
-        
-        <div class="article-entry" itemprop="articleBody">
-        
-        
-            
-                
-                
-                    
-                    
-                
-                    
-                    
-                
-                    
-                    
-                
-                    
-                    
-                
-                    
-                    
-                
-                
-                    
-                    <p></p><p>​        OpenSSL是为网络通信提供安全及数据完整性的一种安全协议，囊括了主要的密码算法、常用的密钥和证书封装管理功能以及SSL协议。OpenSSL 1.0.1中的TLS和DTLS在实现上没有严格处理Heartbeat扩展包，心跳处理逻辑没有检测心跳包中的长度字段是否和后续的数据字段相符合，用此漏洞攻击者可以通过特制的数据包触发缓冲区溢出读操作，获得通信中的敏感信息。允许攻击者从内存中读取多达64KB的数据。</p>
-<h2 id="漏洞触发"><a href="#漏洞触发" class="headerlink" title="漏洞触发"></a>漏洞触发</h2><p>​        OpenSSL心脏滴血（CVE-2014-0160），存在于含有心跳扩展机制的TLS版本：TLSv1.0（0x0301），TLSv1.1（0x0302），TLSv1.2（0x0303）三种版本中。</p>
-<p>​        此漏洞主要通过攻击者模拟向服务器端发送自己编写的Heartbeat心跳数据包，主要是Heartbeat Message的长度与payload length进行匹配，若payload lenght长度大于HeartbeatMes sage的length，则会在服务器返回的response响应包中产生数据溢出，造成有用数据泄露。</p>
-<p>TLS数据包格式</p>
-<table>
-<p>
-                
-            
-        
-        
-            </p></table></div>   
-            <div class="article-more-link">
-                <a href="/wiki/%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/OpenSSL/CVE-2014-0160-OpenSSL%E5%BF%83%E8%84%8F%E6%BB%B4%E8%A1%80%E6%BC%8F%E6%B4%9E/#more">Read More</a>
             </div>
         
         <footer class="article-footer">
