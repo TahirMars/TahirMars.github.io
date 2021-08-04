@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    
+    <title>Oracle Database 11g Wrap加密解密分析 | Tahir&#39;s Wiki</title>
+    
+    
+        <meta name="keywords" content="Oracle Database">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="[TOC] ​        Oracle为PL&#x2F;SQL开发者提供的一种对他们所写的代码（oracle下的对象Package、Procedure、Function、Java Source等）进行加密的工具。当PL&#x2F;SQL代码被加密以后，它就被描述为被“包装过”。使wrap工具对代码进行包装，wrap工具会取出含有要包装的代码的文件名并输出下面的文件： 1wrap iname&#x3D;plain.sql o">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Oracle Database 11g Wrap加密解密分析">
+<meta property="og:url" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="Tahir&#39;s Wiki">
+<meta property="og:description" content="[TOC] ​        Oracle为PL&#x2F;SQL开发者提供的一种对他们所写的代码（oracle下的对象Package、Procedure、Function、Java Source等）进行加密的工具。当PL&#x2F;SQL代码被加密以后，它就被描述为被“包装过”。使wrap工具对代码进行包装，wrap工具会取出含有要包装的代码的文件名并输出下面的文件： 1wrap iname&#x3D;plain.sql o">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/1.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/2.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/3.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/4.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/5.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/6.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/7.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/8.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/9.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/10.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/11.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/12.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/15.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/13.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/14.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/16.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/17.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/18.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/19.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/21.png">
+<meta property="article:published_time" content="2021-07-03T03:17:57.000Z">
+<meta property="article:modified_time" content="2021-07-03T03:22:48.962Z">
+<meta property="article:author" content="Tahir">
+<meta property="article:tag" content="Oracle Database">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/1.png">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Tahir&#39;s Wiki" type="application/atom+xml">
+    
+
+    
+        <link rel="icon" href="/favicon.ico">
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+<script src="/libs/jquery/plugins/cookie/1.4.1/jquery.cookie.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Tahir&#39;s Wiki</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/">首页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something...">
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap" id="categories">
+        <h3 class="widget-title">
+            <span>categories</span>
+            &nbsp;
+            <a id="allExpand" href="#">
+                <i class="fa fa-angle-double-down fa-2x"></i>
+            </a>
+        </h3>
+        
+        
+        
+         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            1. 漏洞相关
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            MSSQL
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/MSSQL/CVE-2020-0618-Microsoft-SQL-Server-Reporting-Services%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">CVE-2020-0618_SQL Server Reporting Services远程代码执行漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/MSSQL/BID-23649-Microsoft-SQL-Server-%E6%95%B0%E6%8D%AE%E5%BA%93%E9%93%BE%E6%8E%A5%E7%88%AC%E7%BD%91%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">BID-23649_SQL Server链接爬网命令执行漏洞</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            OpenSSL
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/OpenSSL/CVE-2014-0224-OpenSSL%E4%B8%AD%E9%97%B4%E4%BA%BA%E6%BC%8F%E6%B4%9E/">CVE-2014-0224_OpenSSL中间人漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/OpenSSL/CVE-2014-0160-OpenSSL%E5%BF%83%E8%84%8F%E6%BB%B4%E8%A1%80%E6%BC%8F%E6%B4%9E/">CVE-2014-0160_OpenSSL心脏滴血漏洞</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Redis
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/Redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/">Redis未授权访问漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">Redis主从复制代码执行漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2013-7458-Redis-redis-cli%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/">CVE-2013-7458_Redis redis-cli信息泄露漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2015-4335-Redis-EVAL-Lua%E6%B2%99%E7%AE%B1%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E/">CVE-2015-4335_Redis EVAL Lua沙箱绕过漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2015-8080-Redis-getnum%E6%95%B4%E6%95%B0%E6%BA%A2%E5%87%BA%E6%BC%8F%E6%B4%9E/">CVE-2015-8080_Redis getnum整数溢出漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2016-8339-Redis%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E6%BC%8F%E6%B4%9E/">CVE-2016-8339_Redis缓冲区溢出漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2016-10517-Redis%E8%B7%A8%E5%8D%8F%E8%AE%AE%E6%BC%8F%E6%B4%9E/">CVE-2016-10517_Redis跨协议漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2017-15047-Redis%E6%95%B0%E7%BB%84%E7%B4%A2%E5%BC%95%E8%B6%8A%E7%95%8C%E6%BC%8F%E6%B4%9E/">CVE-2017-15047_Redis数组索引越界漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2018-11218-Redis-Lua%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E6%BC%8F%E6%B4%9E/">CVE-2018-11218_Redis Lua缓冲区溢出漏洞</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            2. 数据库安全
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            Oracle Database
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/">Oracle Database简单概述</a></li>  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-PLSQL%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/">Oracle Database PL/SQL注入漏洞原理</a></li>  <li class="file active"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/">Oracle Database 11g Wrap加密解密分析</a></li>  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-%E4%B8%8A%E7%AF%87/">The Oracle Hacker's Handbook: Hacking and Defending Oracle 上篇</a></li>  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-%E4%B8%8B%E7%AF%87/">The Oracle Hacker's Handbook: Hacking and Defending Oracle 下篇</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            SQL Server
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/">SQL Server数据库攻防详解上篇</a></li>  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8B%E7%AF%87/">SQL Server数据库攻防详解下篇</a></li>  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/">SQL Server数据库安全加固</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            3. 应急响应
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Linux应急响应
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/3.%20%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/Linux%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/Linux%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/">Linux应急响应</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Windows应急响应
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/3.%20%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/Windows%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/Windows%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/">Windows应急响应</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            4. 内网安全攻防
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            0-内网攻防基础
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/PowerShell%E5%9F%BA%E7%A1%80/">PowerShell基础</a></li>  <li class="file"><a href="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/">部署域环境</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            1-内网信息搜集
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/1-%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86/%E4%B8%BB%E6%9C%BA%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86/">主机信息搜集</a></li>  <li class="file"><a href="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/1-%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86/%E5%9F%9F%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86/">域信息搜集</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            5. 高级威胁猎捕
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Cobalt Strike
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/0-Cobalt%20Strike%E9%9B%B6%E5%9F%BA%E7%A1%80/">0-Cobalt Strike零基础</a></li>  <li class="file"><a href="/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/">1-Cobalt Strike基础上篇</a></li>  <li class="file"><a href="/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%AD%E7%AF%87/">1-Cobalt Strike基础中篇</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Defense Evasion
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            进程注入
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Defense%20Evasion/%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Shellcode-APC%E6%B3%A8%E5%85%A5%E5%92%8C%E5%8A%A0%E8%BD%BD/">Shellcode APC注入和加载</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            6. 威胁情报
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            APT情报
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/6.%20%E5%A8%81%E8%83%81%E6%83%85%E6%8A%A5/APT%E6%83%85%E6%8A%A5/%E7%9F%A5%E5%90%8DAPT%E7%BB%84%E7%BB%87%E6%A6%82%E8%BF%B0/">知名APT组织概述</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            7. 学习资源
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/7.%20%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90/">学习资源</a></li>  </ul> 
+                    </li> 
+                     <li class="file"><a href="/wiki/hello-world/">Hello World</a></li>  </ul> 
+    </div>
+    <script>
+        $(document).ready(function() {
+            var iconFolderOpenClass  = 'fa-folder-open';
+            var iconFolderCloseClass = 'fa-folder';
+            var iconAllExpandClass = 'fa-angle-double-down';
+            var iconAllPackClass = 'fa-angle-double-up';
+            // Handle directory-tree expansion:
+            // 左键单独展开目录
+            $(document).on('click', '#categories a[data-role="directory"]', function (event) {
+                event.preventDefault();
+
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var subtree = $(this).siblings('ul');
+                icon.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if (expanded) {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideUp({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderCloseClass);
+                } else {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideDown({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderOpenClass);
+                }
+            });
+            // 右键展开下属所有目录
+            $('#categories a[data-role="directory"]').bind("contextmenu", function(event){
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var listNode = $(this).siblings('ul');
+                var subtrees = $.merge(listNode.find('li ul'), listNode);
+                var icons = $.merge(listNode.find('.fa'), icon);
+                icons.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if(expanded) {
+                    subtrees.slideUp({ duration: 100 });
+                    icons.addClass(iconFolderCloseClass);
+                } else {
+                    subtrees.slideDown({ duration: 100 });
+                    icons.addClass(iconFolderOpenClass);
+                }
+            })
+            // 展开关闭所有目录按钮
+            $(document).on('click', '#allExpand', function (event) {
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconAllExpandClass);
+                icon.removeClass(iconAllExpandClass).removeClass(iconAllPackClass);
+                if(expanded) {
+                    $('#sidebar .fa.fa-folder').removeClass('fa-folder').addClass('fa-folder-open')
+                    $('#categories li ul').slideDown({ duration: 100 });
+                    icon.addClass(iconAllPackClass);
+                } else {
+                    $('#sidebar .fa.fa-folder-open').removeClass('fa-folder-open').addClass('fa-folder')
+                    $('#categories li ul').slideUp({ duration: 100 });
+                    icon.addClass(iconAllExpandClass);
+                }
+            });  
+        });
+    </script>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+            <section id="main"><article id="post-2. 数据库安全/Oracle Database/Oracle-Database-11g-Wrap加密解密分析" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+                    <div class="article-meta">
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/2-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/">2. 数据库安全</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/2-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle-Database/">Oracle Database</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Oracle-Database/" rel="tag">Oracle Database</a>
+    </div>
+
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/">
+            <time datetime="2021-07-03T03:17:57.000Z" itemprop="datePublished">2021-07-03</time>
+        </a>
+    </div>
+
+
+                        
+                            <i class="fa fa-bar-chart"></i>
+                            <span id="busuanzi_container_site_pv"><span id="busuanzi_value_page_pv"></span></span>    
+                        
+                        
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/raw/writing/source/_posts/2. 数据库安全/Oracle Database/Oracle-Database-11g-Wrap加密解密分析.md"> Source </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/edit/writing/source/_posts/2. 数据库安全/Oracle Database/Oracle-Database-11g-Wrap加密解密分析.md"> Edit </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/commits/writing/source/_posts/2. 数据库安全/Oracle Database/Oracle-Database-11g-Wrap加密解密分析.md"> History </a>
+                            </div>
+                        
+                    </div>
+                
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Oracle Database 11g Wrap加密解密分析
+        </h1>
+    
+
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">Catalogue</strong>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Oracle-Wrap%E7%9A%84%E6%96%87%E4%BB%B6%E6%A0%BC%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">1. Oracle Wrap的文件格式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-Oracle-Wrap%E7%9A%84%E5%8A%A0%E5%AF%86%E6%9C%BA%E5%88%B6"><span class="toc-number">2.</span> <span class="toc-text">2. Oracle Wrap的加密机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-Unwrap%E5%8F%8D%E5%90%91%E8%A7%A3%E5%AF%86"><span class="toc-number">3.</span> <span class="toc-text">3. Unwrap反向解密</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-base64%E8%A7%A3%E7%A0%81%E5%BE%97%E5%88%B0Oracle%E5%8F%8C%E5%AD%97%E7%AC%A6%E8%BD%AC%E6%8D%A2%E5%90%8E%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 base64解码得到Oracle双字符转换后字符串</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E8%AE%A1%E7%AE%97Oracle%E5%8F%8C%E5%AD%97%E7%AC%A6%E8%BD%AC%E6%8D%A2%E8%A1%A8"><span class="toc-number">3.2.</span> <span class="toc-text">3.2 计算Oracle双字符转换表</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-1-%E5%88%9B%E5%BB%BALZ%E5%8E%8B%E7%BC%A9%E5%8C%85"><span class="toc-number">3.2.1.</span> <span class="toc-text">3.2.1 创建LZ压缩包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-2-%E6%AF%94%E8%BE%83LZ%E5%8E%8B%E7%BC%A9%E4%B8%B2%E5%92%8Cbase64%E8%A7%A3%E7%A0%81%E4%B8%B2"><span class="toc-number">3.2.2.</span> <span class="toc-text">3.2.2 比较LZ压缩串和base64解码串</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-3-%E8%AE%A1%E7%AE%97%E6%9B%BF%E6%8D%A2%E8%A1%A8"><span class="toc-number">3.2.3.</span> <span class="toc-text">3.2.3 计算替换表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-4-%E7%BC%96%E5%86%99Unwrap-PL-SQL%E7%A8%8B%E5%BA%8F"><span class="toc-number">3.2.4.</span> <span class="toc-text">3.2.4 编写Unwrap PL&#x2F;SQL程序</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-Wrap%E5%92%8CUnwrap%E8%BF%87%E7%A8%8B"><span class="toc-number">4.</span> <span class="toc-text">4. Wrap和Unwrap过程</span></a></li></ol>
+                </div>
+            
+        
+        
+            <p>[TOC]</p>
+<p>​        Oracle为PL/SQL开发者提供的一种对他们所写的代码（oracle下的对象Package、Procedure、Function、Java Source等）进行加密的工具。当PL/SQL代码被加密以后，它就被描述为被“包装过”。使wrap工具对代码进行包装，wrap工具会取出含有要包装的代码的文件名并输出下面的文件：</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wrap <span class="attribute">iname</span>=plain.sql <span class="attribute">oname</span>=encrypted.plb</span><br></pre></td></tr></table></figure>
+
+<p>​        因为代码被加密了，所以其细节被隐藏了，而且Oracle不提供解包装设备。但是我们可以编写我们自己的unwrap程序。</p>
+<h2 id="1-Oracle-Wrap的文件格式"><a href="#1-Oracle-Wrap的文件格式" class="headerlink" title="1. Oracle Wrap的文件格式"></a>1. Oracle Wrap的文件格式</h2><p>​        Oracle为了防止自己的对象程序源码泄露，也对其做了wrap处理。因为许多PACKAGE、PROCEDURE等程序本身可能存在SQL注入漏洞，但是如果得不到源码，对其进行审计是很困难的。这样wrap在一定程度上也起到了保护作用。</p>
+<p>​        这里随便找一个Oracle的PACKAGE为实例，这里我们找到kupd$data包程序，其代码如图所示：</p>
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/1.png"></p>
+<p>​        可以将所有被warp加密的*.plb文件内容，分为header和body（BASE64）。header包含有关被加密包的数据库版本，对象类型以及加密和未加密文本的长度信息。</p>
+<p>​        body包含使用BASE64编码的实际被加密的代码。</p>
+<p>​        header格式如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">1. CREATE OR REPLACE PACKAGE kupd$data wrapped </span><br><span class="line">2. a000000</span><br><span class="line">3. 1</span><br><span class="line">4. abcd</span><br><span class="line">5. abcd</span><br><span class="line">6. abcd</span><br><span class="line">7. abcd</span><br><span class="line">8. abcd</span><br><span class="line">9. abcd</span><br><span class="line">10. abcd</span><br><span class="line">11. abcd</span><br><span class="line">12. abcd</span><br><span class="line">13. abcd</span><br><span class="line">14. abcd</span><br><span class="line">15. abcd</span><br><span class="line">16. abcd</span><br><span class="line">17. abcd</span><br><span class="line">18. abcd</span><br><span class="line">19. 9</span><br><span class="line">20. abb 42e</span><br></pre></td></tr></table></figure>
+
+<p>​        展开.plb文件时，可以忽略前20行。包装的代码的header提供有关PL/SQL代码类型的一些信息，下面是header的一些字段（不过，实际上，不需要它们来解密PL/SQL）</p>
+<p>​        第3行：<br>​        看起来像是数据库服务器相关的十六进制值，但是在大多数情况下，它们等于1。因此，使用此标头记录没有实际值。</p>
+<p>​        第19行：<br>​        一个十六进制值，指定PL / SQL对象的类型（所有PL / SQL对象的类型）：</p>
+<table>
+<thead>
+<tr>
+<th align="left">十六进制</th>
+<th align="left">对象类型</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">7</td>
+<td align="left">过程</td>
+</tr>
+<tr>
+<td align="left">8</td>
+<td align="left">函数</td>
+</tr>
+<tr>
+<td align="left">9</td>
+<td align="left">包</td>
+</tr>
+<tr>
+<td align="left">b</td>
+<td align="left">包体</td>
+</tr>
+<tr>
+<td align="left">d</td>
+<td align="left">类型</td>
+</tr>
+<tr>
+<td align="left">e</td>
+<td align="left">类型体</td>
+</tr>
+</tbody></table>
+<p>​        第20行：</p>
+<p>​        header的最后一行包含两个十六进制值，中间用空格分隔。这些值包含长度信息。第一个值包含未加密文本的长度<strong>（不包含CREATE OR REPLACE部分）</strong>。第二个值包含不带标题且不带结尾LF（0x0A）和“ /”符号的包体的长度。</p>
+<p>​        body</p>
+<p>​        如前所述，加密的PL / SQL文本是BASE64编码的，需要解码后才能真正开始解包（解密）。BASE64解码主体的前20个字节包含包装（加密）主体的SHA1哈希值。主体的其余部分是一个编码的（使用编码表）压缩的字节流，其中包含源文本。</p>
+<h2 id="2-Oracle-Wrap的加密机制"><a href="#2-Oracle-Wrap的加密机制" class="headerlink" title="2. Oracle Wrap的加密机制"></a>2. Oracle Wrap的加密机制</h2><p>​        Oracle加密的原理就是先对源码进行lz压缩，得到lz压缩串，然后对压缩串进行SHA-1运算得到40位的加密串，然后将加密串与压缩串拼接得到拼接字符串，然后对拼接字符串进行Oracle双字符转换（转换表）。最后将转换后的字符串进行base64编码，最终得到wrap的加密串。</p>
+<h2 id="3-Unwrap反向解密"><a href="#3-Unwrap反向解密" class="headerlink" title="3. Unwrap反向解密"></a>3. Unwrap反向解密</h2><p>​        通过上面的加密机制，反向操作达到解密目的。</p>
+<h3 id="3-1-base64解码得到Oracle双字符转换后字符串"><a href="#3-1-base64解码得到Oracle双字符转换后字符串" class="headerlink" title="3.1 base64解码得到Oracle双字符转换后字符串"></a>3.1 base64解码得到Oracle双字符转换后字符串</h3><p>​        首先，我们以一小段PL/SQL代码来测试分先加密字符串的结构，这里我先讲程序加密处理。如图所示，这里将create procedure a代码wrap之后变成了如下代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select dbms_ddl_wrap(&#x27;create procedure a&#x27;) from dual;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/2.png"></p>
+<p>​        为了进一步分析其加密字符串中的结构，我们利用如下print_warpped_str.sql代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">with src as</span><br><span class="line">( select &#x27;procedure a&#x27; txt from dual ), wrap as</span><br><span class="line">( select src.txt, dbms_ddl.wrap( &#x27;create &#x27; || src.txt ) wrap from src )</span><br><span class="line">select rtrim( substr( wrap.wrap, instr(wrap.wrap, chr(10), 1, 20 ) + 1),chr(10)) from wrap;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/3.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">8BgMHdmA3Qg9IbJmntlZoZQoHwcwg5nnm7+fMr2ywFxakaamb40d1Q==</span><br></pre></td></tr></table></figure>
+
+<p>​        ps:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">oracle中trim，ltrim，rtrim函数用法</span><br><span class="line"></span><br><span class="line">oracle中trim，ltrim，rtrim函数用法</span><br><span class="line">该函数共有两种作用：</span><br><span class="line">第一种，即去除空格。</span><br><span class="line">例子：</span><br><span class="line">--TRIM去除指定字符的前后空格</span><br><span class="line">SQL&gt; SELECT TRIM(&#x27; dd df &#x27;) FROM dual;</span><br><span class="line">TRIM(&#x27;DDDF&#x27;)</span><br><span class="line">\------------</span><br><span class="line">dd df</span><br><span class="line"></span><br><span class="line">--LTRIM去除指定字符的前面空格</span><br><span class="line">SQL&gt; SELECT LTRIM(&#x27; dd df &#x27;) FROM dual;</span><br><span class="line">LTRIM(&#x27;DDDF&#x27;)</span><br><span class="line">\-------------</span><br><span class="line">dd df</span><br><span class="line"></span><br><span class="line">--RTRIM去除指定字符后面后空格</span><br><span class="line">SQL&gt; SELECT RTRIM(&#x27; dd df &#x27;) FROM dual;</span><br><span class="line">RTRIM(&#x27;DDDF&#x27;)</span><br><span class="line">\-------------</span><br><span class="line"> dd df</span><br><span class="line"></span><br><span class="line">第二种，去除指定的字符。trim只能去除单个字符，而ltrim和rtrim可以去除多个字符。</span><br><span class="line">trim去除字符的写法：</span><br><span class="line">--表示字符串string2去除前面|后面|前后面（leading|trailing|both）的字符string1，默认去除方式为both</span><br><span class="line">SELECT TRIM(leading|trailing|both string1 FROM string2) FROM dual;</span><br><span class="line">例子：</span><br><span class="line">SQL&gt; SELECT trim(leading &#x27;d&#x27; from &#x27;dfssa&#x27;) FROM dual;</span><br><span class="line">TRIM(LEADING&#x27;D&#x27;FROM&#x27;DFSSA&#x27;)</span><br><span class="line">\---------------------------</span><br><span class="line">fssa</span><br><span class="line"></span><br><span class="line">SQL&gt; SELECT trim(both &#x27;1&#x27; from &#x27;123sfd111&#x27;) FROM dual;</span><br><span class="line">TRIM(BOTH&#x27;1&#x27;FROM&#x27;123SFD111&#x27;)</span><br><span class="line">\----------------------------</span><br><span class="line">23sfd</span><br><span class="line"></span><br><span class="line">SQL&gt; SELECT trim(trailing &#x27;2&#x27; from &#x27;213dsq12&#x27;) FROM dual;</span><br><span class="line">TRIM(TRAILING&#x27;2&#x27;FROM&#x27;213DSQ12&#x27;)</span><br><span class="line">\------------------------------</span><br><span class="line">213dsq1</span><br></pre></td></tr></table></figure>
+
+<p>​        进一步对这段代码做base64解码，获得经过Oracle双字符转换后的字符串，如图所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">with src as</span><br><span class="line">( select &#x27;procedure a&#x27; txt from dual ), wrap as</span><br><span class="line">( select src.txt, dbms_ddl.wrap( &#x27;create &#x27; || src.txt ) wrap from src )</span><br><span class="line">select utl_encode.base64_decode( utl_raw.cast_to_raw( rtrim( substr( wrap.wrap, instr(wrap.wrap, chr(10), 1, 20 ) + 1),chr(10)))) from wrap;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/4.png"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">F0180C1DD980DD083D21B2669ED959A194281F07308399E79BBF9F32BDB2C05C5A91A6A66F8D1DD5</span><br></pre></td></tr></table></figure>
+
+<p>因为字符串是由两部分组成，先经过LZ压缩，然后经过SHA-1处理，然后再将SHA-1字符串和压缩字符串拼接得到，因为SHA-1总共40位，所以40位以后的全为经过Oracle双字符转换的压缩串，也就是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">308399E79BBF9F32BDB2C05C5A91A6A66F8D1DD5</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-2-计算Oracle双字符转换表"><a href="#3-2-计算Oracle双字符转换表" class="headerlink" title="3.2 计算Oracle双字符转换表"></a>3.2 计算Oracle双字符转换表</h3><p>​        当wrap完成sha-1字符串和压缩字符串的拼接之后，会对照一个字符代替表进行Oracle双字符转换。这个表可能是Oracle的商业机密，所以官方没有给出该表的信息。</p>
+<p>​        但是，我们已经得到了经过字符转换之后的LZ压缩串，同时我们可以通过LZ算法得到的LZ压缩串，通过对比这两个字符串，我们便可以推算出这个转换表。</p>
+<h4 id="3-2-1-创建LZ压缩包"><a href="#3-2-1-创建LZ压缩包" class="headerlink" title="3.2.1 创建LZ压缩包"></a>3.2.1 创建LZ压缩包</h4><p>​        关于LZ压缩，这里用老外提供的一个JAVA包，为了爆破转换表，我们先把JAVA包创建好，用以进行LZ压缩与解压，LZ_java.sql，如下所示（用SYS用户）：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">create or replace java source named UNWRAPPER</span><br><span class="line">as</span><br><span class="line">import java.io.*;</span><br><span class="line">import java.util.zip.*;</span><br><span class="line"></span><br><span class="line">public class UNWRAPPER</span><br><span class="line">&#123;</span><br><span class="line">  public static String Inflate( byte[] src )</span><br><span class="line">  &#123;</span><br><span class="line">    try</span><br><span class="line">    &#123;</span><br><span class="line">      ByteArrayInputStream bis = new ByteArrayInputStream( src );</span><br><span class="line">      InflaterInputStream iis = new InflaterInputStream( bis );</span><br><span class="line">      StringBuffer sb = new StringBuffer();</span><br><span class="line">      for( int c = iis.read(); c != -1; c = iis.read() )</span><br><span class="line">      &#123;</span><br><span class="line">        sb.append( (char) c );</span><br><span class="line">      &#125;</span><br><span class="line">      return sb.toString();</span><br><span class="line">    &#125; catch ( Exception e )</span><br><span class="line">    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    return null;</span><br><span class="line">  &#125;</span><br><span class="line">  public static byte[] Deflate( String src, int quality )</span><br><span class="line">  &#123;</span><br><span class="line">    try</span><br><span class="line">    &#123;</span><br><span class="line">      byte[] tmp = new byte[ src.length() + 100 ];</span><br><span class="line">      Deflater defl = new Deflater( quality );</span><br><span class="line">      defl.setInput( src.getBytes( &quot;UTF-8&quot; ) );</span><br><span class="line">      defl.finish();</span><br><span class="line">      int cnt = defl.deflate( tmp );</span><br><span class="line">      byte[] res = new byte[ cnt ];</span><br><span class="line">      for( int i = 0; i &lt; cnt; i++ )</span><br><span class="line">        res = tmp;</span><br><span class="line">      return res;</span><br><span class="line">    &#125; catch ( Exception e )</span><br><span class="line">    &#123;</span><br><span class="line">    &#125;</span><br><span class="line">    return null;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">/</span><br><span class="line"></span><br><span class="line">alter java source UNWRAPPER compile</span><br><span class="line">/</span><br></pre></td></tr></table></figure>
+
+<p>​        这里deflate函数实现LZ压缩，而inflate则实现解压。</p>
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/5.png"></p>
+<p>​        然后用包把JAVA声明进来，create_amosunwrapper.sql：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">create or replace package amosunwrapper</span><br><span class="line">is</span><br><span class="line">  function deflate( src in varchar2 )</span><br><span class="line">  return raw;</span><br><span class="line">  function deflate( src in varchar2, quality in number )</span><br><span class="line">  return raw;</span><br><span class="line">  function inflate( src in raw )</span><br><span class="line">  return varchar2;</span><br><span class="line">end;</span><br><span class="line">/</span><br><span class="line"></span><br><span class="line">create or replace package body amosunwrapper</span><br><span class="line">is</span><br><span class="line">  function deflate( src in varchar2 )</span><br><span class="line">  return raw</span><br><span class="line">  is</span><br><span class="line">  begin</span><br><span class="line">    return deflate( src, 6 );</span><br><span class="line">  end;</span><br><span class="line"></span><br><span class="line">  function deflate( src in varchar2, quality in number )</span><br><span class="line">  return raw</span><br><span class="line">  as language java</span><br><span class="line">  name &#x27;UNWRAPPER.Deflate( java.lang.String, int ) return byte[]&#x27;;</span><br><span class="line"></span><br><span class="line">  function inflate( src in raw )</span><br><span class="line">  return varchar2</span><br><span class="line">  as language java</span><br><span class="line">  name &#x27;UNWRAPPER.Inflate( byte[] ) return java.lang.String&#x27;;</span><br><span class="line"></span><br><span class="line">end;</span><br><span class="line">/</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/6.png"></p>
+<h4 id="3-2-2-比较LZ压缩串和base64解码串"><a href="#3-2-2-比较LZ压缩串和base64解码串" class="headerlink" title="3.2.2 比较LZ压缩串和base64解码串"></a>3.2.2 比较LZ压缩串和base64解码串</h4><p>​        创建好LZ压缩包，来看一下，LZ串和base64解码串的对比，</p>
+<p>​        首先，使用JAVA包，需要设置压缩级别参数，这个等级参数不一样，压缩得到的字符串完全不一样。我们可以从０等级开始一个一个进行测试，经过测试发现，Oracle用的是9等级。</p>
+<p>​        所以，我们用以下代码对比两个字符串：comp_lz_and_base64.sql：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">with src AS </span><br><span class="line">( select &#x27;procedure a&#x27; txt  from dual   ),</span><br><span class="line">	wrap as   </span><br><span class="line">	( select src.txt , dbms_ddl.wrap( &#x27;create &#x27; || src.txt ) wrap  from src  ),</span><br><span class="line">     subst as  </span><br><span class="line">	 (select substr( utl_encode.base64_decode( utl_raw.cast_to_raw(rtrim( substr( wrap.wrap, instr( wrap.wrap, chr( 10 ), 1, 20 ) + 1 ), chr(10) )  ) ), 41 ) x,</span><br><span class="line">		amosunwrapper.deflate( wrap.txt || chr(0), 9 ) d from wrap  )</span><br><span class="line">    select substr( x, r * 2 - 1, 2 )  c_base64,</span><br><span class="line">   substr( d, r * 2 - 1, 2 )  c_translatecode from subst  , </span><br><span class="line">   ( select rownum r from dual connect by rownum &lt;= ( select length( x ) / 2 from subst ) );</span><br></pre></td></tr></table></figure>
+
+<p>​        结果如下：</p>
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/7.png"></p>
+<p>​        通过对结果的排序，没有出现同一个base64编码对应不同的十六进制的情况，因此我们知道了可以用这个SQL为基础，通过用不同的串来产生替换表的内容。</p>
+<h4 id="3-2-3-计算替换表"><a href="#3-2-3-计算替换表" class="headerlink" title="3.2.3 计算替换表"></a>3.2.3 计算替换表</h4><p>​        首先建一个IDLTRANSLATE表来存储替换表的内容，create_idltranslate.sql：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE SYS.IDLTRANSLATE</span><br><span class="line">  (</span><br><span class="line">    C_BASE64DECODE  VARCHAR2(2) NOT NULL,</span><br><span class="line">    C_LZDEFLATECODE VARCHAR2(2)     NULL</span><br><span class="line">    )</span><br><span class="line">/</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/8.png"></p>
+<p>​        然后写一段PL/SQL块来生成替换表的内容，储存到IDLTRANSLATE表，generate_idltranslate.sql：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">declare</span><br><span class="line">	nCnt integer;</span><br><span class="line">	nLoop integer;</span><br><span class="line">	nSLoop integer;</span><br><span class="line">	nCharmax integer;</span><br><span class="line">	nCharmin integer;</span><br><span class="line">	vChar Varchar2(3);</span><br><span class="line">	cursor getchar is</span><br><span class="line">		with src AS ( select &#x27;procedure &#x27;||vChar txt from dual ),</span><br><span class="line">			wrap as ( select src.txt , dbms_ddl.wrap( &#x27;create &#x27; || src.txt ) wrap from src ),</span><br><span class="line">			subst as (select substr( utl_encode.base64_decode( utl_raw.cast_to_raw(rtrim( substr( wrap.wrap, instr( wrap.wrap, chr( 10 ), 1, 20 ) + 1 ), chr(10) ) ) ), 41 ) x,amosunwrapper.deflate( wrap.txt || chr(0), 9 ) d from wrap )</span><br><span class="line">		select substr( x, r*2 - 1, 2 ) xr ,substr( d, r*2 - 1, 2 ) dr from subst , ( select rownum r from dual connect by rownum &lt;= ( select length( x ) / 2 from subst ) );</span><br><span class="line">begin</span><br><span class="line">	nCharmax:=97;</span><br><span class="line">	nCharmin:=122;</span><br><span class="line">	For nLoop In 97..122 Loop</span><br><span class="line">		For nSloop In 0..99 Loop</span><br><span class="line">			vChar := chr(nLoop)||to_char(nSloop);</span><br><span class="line">			For abc In getchar Loop</span><br><span class="line">				Select Count(*) Into nCnt From sys.idltranslate WHERE c_base64decode = abc.xr;</span><br><span class="line">				If nCnt &lt; 1 Then</span><br><span class="line">					Insert INTO sys.idltranslate VALUES (abc.xr,abc.dr);</span><br><span class="line">					Commit;</span><br><span class="line">				Else</span><br><span class="line">					Select Count(*) Into nCnt From sys.idltranslate WHERE c_base64decode = abc.xr AND c_lzdeflatecode=abc.dr;</span><br><span class="line">					If nCnt &lt; 1 Then</span><br><span class="line">						DBMS_OUTPUT.PUT_LINE(&#x27;wrong orginal char:&#x27;||vchar||&#x27; hex base64:&#x27;||abc.xr);</span><br><span class="line">					End If;</span><br><span class="line">				End If;</span><br><span class="line">			End Loop;</span><br><span class="line">		End Loop;</span><br><span class="line">	End Loop;</span><br><span class="line">end;</span><br><span class="line">/</span><br></pre></td></tr></table></figure>
+
+<p>​        等待运行一段时间</p>
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/9.png"></p>
+<p>​        筛选出sys.idltranslate表前10条数据：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select * from sys.idltranslate where rownum&lt;=10;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/10.png"></p>
+<p>​        运行上面这段SQL大概会产生200多条记录：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select count(*) c_base64decode from sys.idltranslate;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/11.png"></p>
+<p>​        还未达到00-FF总共256条记录，建议替换</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select &#x27;procedure &#x27;||vChar txt from dual</span><br></pre></td></tr></table></figure>
+
+<p>​        中的procedure关健字为package或者function类似的，继续运行直到替换表中有不重复的256条记录为止。有了替换表的内容，就可以unwrap出明文。</p>
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/12.png"></p>
+<p>替换表的值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">3D6585B318DBE287F152AB634BB5A05F7D687B9B24C228678ADEA4261E03EB176F343E7A3FD2A96A0FE935561FB14D1078D975F6BC4104816106F9ADD6D5297E869E79E505BA84CC6E278EB05DA8F39FD0A271B858DD2C38994C480755E4538C46B62DA5AF322240DC50C3A1258B9C16605CCFFD0C981CD4376D3C3A30E86C3147F533DA43C8E35E1994ECE6A39514E09D64FA5915C52FCABB0BDFF297BF0A76B449445A1DF0009621807F1A82394FC1A7D70DD1D8FF139370EE5BEFBE09B97772E7B254B72AC7739066200E51EDF87C8F2EF412C62B83CDACCB3BC44EC069366202AE88FCAA4208A64557D39ABDE1238D924A1189746B91FBFEC901EA1BF7CE</span><br></pre></td></tr></table></figure>
+
+
+
+<h4 id="3-2-4-编写Unwrap-PL-SQL程序"><a href="#3-2-4-编写Unwrap-PL-SQL程序" class="headerlink" title="3.2.4 编写Unwrap PL/SQL程序"></a>3.2.4 编写Unwrap PL/SQL程序</h4><p>​        写unwrap.sql程序，思路反向操作，得到密文的替换串，截取20字节后的替换串，然后查表得到LZ压缩串，再通过LZ_java包解压得到明文：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line">set serveroutput on;</span><br><span class="line">create directory FILEPATH as &#x27;D:\sql_files&#x27;;  --创建一个路径FILEPATH</span><br><span class="line">grant read,write on directory FILEPATH to sys; --给用户sys授予路径读写的权限</span><br><span class="line">create or replace procedure unwrap(o in varchar,n in varchar, t in varchar)</span><br><span class="line">as</span><br><span class="line">	vWrappedtext Varchar2(32767);               </span><br><span class="line">	vtrimtext Varchar2(32767);          </span><br><span class="line">	vChar Varchar2(2);</span><br><span class="line">	vRepchar Varchar2(2);</span><br><span class="line">	vLZinflatestr Varchar2(32767);</span><br><span class="line">	nLen Integer;</span><br><span class="line">	nLoop Integer;</span><br><span class="line">	nCnt Integer;</span><br><span class="line">	l_file utl_file.file_type;</span><br><span class="line"></span><br><span class="line">type vartab is table of varchar2(2) index by varchar2(2);</span><br><span class="line">mytbl vartab;</span><br><span class="line">cursor getchar is select C_BASE64DECODE xr,C_LZDEFLATECODE dr from sys.idltranslate;</span><br><span class="line">Begin</span><br><span class="line">	for i in getchar loop --sys.idltranslate表内容存到字符数组</span><br><span class="line">	   mytbl(i.xr):=i.dr;</span><br><span class="line">	end loop;</span><br><span class="line">	vtrimtext:=&#x27;&#x27;;</span><br><span class="line">	select count(*) into nCnt from DBA_SOURCE</span><br><span class="line">		Where owner=o</span><br><span class="line">		And Name = n</span><br><span class="line">		And Type = t ;</span><br><span class="line">	if nCnt &gt;0 and nCnt &lt;5 then</span><br><span class="line">		for i in 1..nCnt loop</span><br><span class="line">			if i=1 then</span><br><span class="line">				select rtrim( substr( TEXT, instr( TEXT, chr( 10 ), 1, 20 ) + 1 ), chr(10) )   --保存去掉换行的BASE64码正文</span><br><span class="line">					into vLZinflatestr</span><br><span class="line">					from DBA_SOURCE</span><br><span class="line">					Where owner = o</span><br><span class="line">					And Name = n</span><br><span class="line">					And Type = t and line=i;</span><br><span class="line">			else</span><br><span class="line">				select text into vLZinflatestr</span><br><span class="line">					from DBA_SOURCE</span><br><span class="line">					Where owner = o</span><br><span class="line">					And Name = n</span><br><span class="line">					And Type=t and line=i;</span><br><span class="line">			end if;</span><br><span class="line">			vtrimtext:=vtrimtext||vLZinflatestr;</span><br><span class="line">		end loop;</span><br><span class="line">	end if;</span><br><span class="line">	vtrimtext:=replace(vtrimtext,chr(10),&#x27;&#x27;);</span><br><span class="line">	nLen := Length(vtrimtext)/64 ;</span><br><span class="line">	vWrappedtext :=&#x27;&#x27;;</span><br><span class="line">	for i in 0..nLen  loop  </span><br><span class="line">		if i&lt; nLen then</span><br><span class="line">			vWrappedtext:=vWrappedtext||utl_encode.base64_decode( utl_raw.cast_to_raw(substrb(vtrimtext,64*i+1 , 64 ))) ;</span><br><span class="line">		else</span><br><span class="line">			vWrappedtext:=vWrappedtext||utl_encode.base64_decode( utl_raw.cast_to_raw(substrb(vtrimtext,64*i+1  ))) ;</span><br><span class="line">		end if;</span><br><span class="line">			--DBMS_OUTPUT.PUT_LINE(vWrappedtext);</span><br><span class="line">	End Loop;</span><br><span class="line">	--vWrappedtext:=substr(vWrappedtext,41);</span><br><span class="line">	nLen := Length(vWrappedtext)/2 - 1;</span><br><span class="line">	vLZinflatestr :=&#x27;&#x27;;</span><br><span class="line"></span><br><span class="line">	For nLoop In 20..nLen Loop --从第21字节开始</span><br><span class="line">			vChar := Substrb(vWrappedtext,nLoop*2+1,2);</span><br><span class="line">			/*</span><br><span class="line">			Select Count(*) Into nCnt From SYS.IDLTRANSLATE Where C_BASE64DECODE=vChar;</span><br><span class="line">			If nCnt &lt;&gt; 1 Then</span><br><span class="line">					DBMS_OUTPUT.PUT_LINE(&#x27;SUBSTATION TABLE WARNING: Count not find following char--&#x27;||vChar);</span><br><span class="line">					Return;</span><br><span class="line">			Else</span><br><span class="line">					Select C_LZDEFLATECODE Into vRepchar From SYS.IDLTRANSLATE Where C_BASE64DECODE=vChar;</span><br><span class="line">			End If;</span><br><span class="line">			*/</span><br><span class="line">			vLZinflatestr := vLZinflatestr || mytbl(vChar); --从字符数组匹配</span><br><span class="line">			--DBMS_OUTPUT.PUT_LINE(vLZinflatestr);</span><br><span class="line">	End Loop;</span><br><span class="line">	--DBMS_OUTPUT.PUT_LINE(vLZinflatestr);</span><br><span class="line">	l_file := utl_file.fopen(&#x27;FILEPATH&#x27;, &#x27;unwrap_text.sql&#x27;, &#x27;W&#x27;); --给文件变量赋予一个初值unwrap_text.sql，最后一个参数W表示写入</span><br><span class="line">	utl_file.put_line(l_file, amosunwrapper.inflate(vLZinflatestr));</span><br><span class="line">	utl_file.fclose(l_file);--关闭文件</span><br><span class="line">	DBMS_OUTPUT.PUT_LINE(amosunwrapper.inflate(vLZinflatestr));</span><br><span class="line">End;</span><br><span class="line">/</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-Wrap和Unwrap过程"><a href="#4-Wrap和Unwrap过程" class="headerlink" title="4. Wrap和Unwrap过程"></a>4. Wrap和Unwrap过程</h2><p>1.先编一个需要wrap的sql文件，test.sql：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">create or replace function test_f(hy in varchar)</span><br><span class="line">return varchar</span><br><span class="line">as</span><br><span class="line">x varchar(2);</span><br><span class="line">begin</span><br><span class="line">select</span><br><span class="line">case</span><br><span class="line">when hy &gt;=&#x27;01&#x27; and hy&lt;= &#x27;05&#x27; then 1</span><br><span class="line">when hy &gt;=&#x27;06&#x27; and hy&lt;= &#x27;11&#x27; then 2</span><br><span class="line">when hy &gt;=&#x27;13&#x27; and hy&lt;= &#x27;43&#x27; then 3</span><br><span class="line">when hy &gt;=&#x27;44&#x27; and hy&lt;= &#x27;46&#x27; then 4</span><br><span class="line">when hy &gt;=&#x27;47&#x27; and hy&lt;= &#x27;50&#x27; then 5</span><br><span class="line">when hy &gt;=&#x27;51&#x27; and hy&lt;= &#x27;59&#x27; then 6</span><br><span class="line">when hy &gt;=&#x27;60&#x27; and hy&lt;= &#x27;62&#x27; then 7</span><br><span class="line">when hy  =&#x27;63&#x27; or  hy = &#x27;65&#x27; then 8</span><br><span class="line">when hy &gt;=&#x27;66&#x27; and hy&lt;= &#x27;67&#x27; then 9</span><br><span class="line">when hy &gt;=&#x27;68&#x27; and hy&lt;= &#x27;71&#x27; then 10</span><br><span class="line">when hy &gt;=&#x27;72&#x27; and hy&lt;= &#x27;72&#x27; then 11</span><br><span class="line">when hy &gt;=&#x27;73&#x27; and hy&lt;= &#x27;74&#x27; then 12</span><br><span class="line">when hy &gt;=&#x27;75&#x27; and hy&lt;= &#x27;78&#x27; then 13</span><br><span class="line">when hy &gt;=&#x27;79&#x27; and hy&lt;= &#x27;81&#x27; then 14</span><br><span class="line">when hy &gt;=&#x27;82&#x27; and hy&lt;= &#x27;83&#x27; then 15</span><br><span class="line">when hy &gt;=&#x27;84&#x27; and hy&lt;= &#x27;84&#x27; then 16</span><br><span class="line">when hy &gt;=&#x27;85&#x27; and hy&lt;= &#x27;87&#x27; then 17</span><br><span class="line">when hy &gt;=&#x27;88&#x27; and hy&lt;= &#x27;92&#x27; then 18</span><br><span class="line">when hy &gt;=&#x27;93&#x27; and hy&lt;= &#x27;98&#x27; then 19</span><br><span class="line">else null</span><br><span class="line">end</span><br><span class="line">into x from dual;</span><br><span class="line">return x;</span><br><span class="line">end;</span><br><span class="line">/</span><br></pre></td></tr></table></figure>
+
+<p>2.用wrap工具加密test.sql文件，在cmd里运行wrap工具</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\Tahir&gt; wrap iname=C:\Users\Tahir\Desktop\instantclient_12_1\test.sql oname=C:\Users\Tahir\Desktop\instantclient_12_1\test.plb</span><br><span class="line"></span><br><span class="line">wrap iname=C:\Users\Tahir\Desktop\instantclient_12_1\test2.sql oname=C:\Users\Tahir\Desktop\instantclient_12_1\test2.plb</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/15.png"></p>
+<p>3.用plb文件创建函数</p>
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/13.png"></p>
+<p>4.测试函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">select sys.test_f(&#x27;45&#x27;) from dual;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/14.png"></p>
+<p> 5.加密后的内容</p>
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/16.png"></p>
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/17.png"></p>
+<p>6.利用unwrap.sql进行解密</p>
+<p>首先执行@unwrap.sql，生成unwrap储存过程</p>
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/18.png"></p>
+<p>调用unwrap存储过程，对test_f进行解密</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exec sys.unwrap(&#x27;SYS&#x27;,&#x27;TEST_F&#x27;,&#x27;FUNCTION&#x27;);</span><br></pre></td></tr></table></figure>
+
+<p>测试的时候，发现解压LZ会报错</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java.util.zip.ZipException: oversubscribed dynamic bit lengths tree</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/19.png"></p>
+<p>java jdk版本过低，更换版本后解决，执行成功。</p>
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/21.png"></p>
+
+            </div>
+        
+        <footer class="article-footer">
+        </footer>
+    </div>
+</article>
+
+
+    
+<nav id="article-nav">
+    
+        <a href="/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    1-Cobalt Strike基础上篇
+                
+            </div>
+        </a>
+    
+    
+        <a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-PLSQL%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">Oracle Database PL/SQL注入漏洞原理</div>
+        </a>
+    
+</nav>
+
+
+
+
+
+    
+    
+
+
+
+
+<!-- baidu url auto push script -->
+<script type="text/javascript">
+    !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=window.location.href,o=document.referrer;if(!e.test(r)){var n="//api.share.baidu.com/s.gif";o?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var t=new Image;t.src=n}}(window);
+</script>     
+</section>
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            Tahir &copy; 2021 
+            <a rel="external nofollow noopener noreferrer" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png"></a>
+            <br> Powered by <a href="http://hexo.io/" target="_blank" rel="external nofollow noopener noreferrer">Hexo</a>. Theme - <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/zthxxx/hexo-theme-Wikitten">wikitten</a>
+            
+                <br>
+                <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i> <span id="busuanzi_value_site_pv"></span></span>
+                &nbsp;|&nbsp;
+                <span id="busuanzi_container_site_pv"><i class="fa fa-user"></i> <span id="busuanzi_value_site_uv"></span></span>
+            
+        </div>
+    </div>
+</footer>
+        
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+        <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true,
+            TeX: {
+                equationNumbers: {
+                  autoNumber: 'AMS'
+                }
+            }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+</body>
+</html>

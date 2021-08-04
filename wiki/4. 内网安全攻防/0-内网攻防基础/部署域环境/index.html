@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    
+    <title>部署域环境 | Tahir&#39;s Wiki</title>
+    
+    
+        <meta name="keywords" content="0-内网攻防基础">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="Metadata   Author Tahir    Creation Date 2021&#x2F;08&#x2F;04   Modification Date 2021&#x2F;08&#x2F;04   Tactics None   Techniques None   TacticsNone TechniquesNone Procedure搭建域环境Windows Server 2012  10.251.0.37 域控制器 adm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="部署域环境">
+<meta property="og:url" content="http://example.com/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/index.html">
+<meta property="og:site_name" content="Tahir&#39;s Wiki">
+<meta property="og:description" content="Metadata   Author Tahir    Creation Date 2021&#x2F;08&#x2F;04   Modification Date 2021&#x2F;08&#x2F;04   Tactics None   Techniques None   TacticsNone TechniquesNone Procedure搭建域环境Windows Server 2012  10.251.0.37 域控制器 adm">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/5.png">
+<meta property="og:image" content="http://example.com/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/1.png">
+<meta property="og:image" content="http://example.com/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/2.png">
+<meta property="og:image" content="http://example.com/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/3.png">
+<meta property="og:image" content="http://example.com/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/6.png">
+<meta property="og:image" content="http://example.com/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/7.png">
+<meta property="og:image" content="http://example.com/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/8.png">
+<meta property="og:image" content="http://example.com/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/4.png">
+<meta property="og:image" content="http://example.com/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/9.png">
+<meta property="og:image" content="http://example.com/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/12.png">
+<meta property="og:image" content="http://example.com/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/11.png">
+<meta property="og:image" content="http://example.com/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/13.png">
+<meta property="og:image" content="http://example.com/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/14.png">
+<meta property="og:image" content="http://example.com/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/15.png">
+<meta property="og:image" content="http://example.com/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/17.png">
+<meta property="og:image" content="http://example.com/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/16.png">
+<meta property="og:image" content="http://example.com/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/18.png">
+<meta property="article:published_time" content="2021-08-04T03:09:52.000Z">
+<meta property="article:modified_time" content="2021-08-04T03:33:20.251Z">
+<meta property="article:author" content="Tahir">
+<meta property="article:tag" content="0-内网攻防基础">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/5.png">
+    
+
+    
+        <link rel="alternate" href="/atom.xml" title="Tahir&#39;s Wiki" type="application/atom+xml">
+    
+
+    
+        <link rel="icon" href="/favicon.ico">
+    
+
+    
+<link rel="stylesheet" href="/libs/font-awesome/css/font-awesome.min.css">
+
+    
+<link rel="stylesheet" href="/libs/open-sans/styles.css">
+
+    
+<link rel="stylesheet" href="/libs/source-code-pro/styles.css">
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    
+<script src="/libs/jquery/plugins/cookie/1.4.1/jquery.cookie.js"></script>
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/lightgallery/css/lightgallery.min.css">
+
+    
+    
+        
+<link rel="stylesheet" href="/libs/justified-gallery/justifiedGallery.min.css">
+
+    
+    
+    
+    
+
+
+    
+        <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+    <div id="container">
+        <header id="header">
+    <div id="header-main" class="header-inner">
+        <div class="outer">
+            <a href="/" id="logo">
+                <i class="logo"></i>
+                <span class="site-title">Tahir&#39;s Wiki</span>
+            </a>
+            <nav id="main-nav">
+                
+                    <a class="main-nav-link" href="/">首页</a>
+                
+                    <a class="main-nav-link" href="/archives">归档</a>
+                
+                    <a class="main-nav-link" href="/categories">分类</a>
+                
+                    <a class="main-nav-link" href="/tags">标签</a>
+                
+                    <a class="main-nav-link" href="/about">关于</a>
+                
+            </nav>
+            
+            <div id="search-form-wrap">
+
+    <form class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+        <button type="submit" class="search-form-submit"></button>
+    </form>
+    <div class="ins-search">
+    <div class="ins-search-mask"></div>
+    <div class="ins-search-container">
+        <div class="ins-input-wrapper">
+            <input type="text" class="ins-search-input" placeholder="Type something...">
+            <span class="ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+</div>
+        </div>
+    </div>
+    <div id="main-nav-mobile" class="header-sub header-inner">
+        <table class="menu outer">
+            <tr>
+                
+                    <td><a class="main-nav-link" href="/">首页</a></td>
+                
+                    <td><a class="main-nav-link" href="/archives">归档</a></td>
+                
+                    <td><a class="main-nav-link" href="/categories">分类</a></td>
+                
+                    <td><a class="main-nav-link" href="/tags">标签</a></td>
+                
+                    <td><a class="main-nav-link" href="/about">关于</a></td>
+                
+                <td>
+                    
+    <div class="search-form">
+        <input type="text" class="ins-search-input search-form-input" placeholder="Search">
+    </div>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</header>
+
+        <div class="outer">
+            
+            
+                <aside id="sidebar">
+   
+        
+    <div class="widget-wrap" id="categories">
+        <h3 class="widget-title">
+            <span>categories</span>
+            &nbsp;
+            <a id="allExpand" href="#">
+                <i class="fa fa-angle-double-down fa-2x"></i>
+            </a>
+        </h3>
+        
+        
+        
+         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            1. 漏洞相关
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            MSSQL
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/MSSQL/CVE-2020-0618-Microsoft-SQL-Server-Reporting-Services%E8%BF%9C%E7%A8%8B%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">CVE-2020-0618_SQL Server Reporting Services远程代码执行漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/MSSQL/BID-23649-Microsoft-SQL-Server-%E6%95%B0%E6%8D%AE%E5%BA%93%E9%93%BE%E6%8E%A5%E7%88%AC%E7%BD%91%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">BID-23649_SQL Server链接爬网命令执行漏洞</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            OpenSSL
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/OpenSSL/CVE-2014-0224-OpenSSL%E4%B8%AD%E9%97%B4%E4%BA%BA%E6%BC%8F%E6%B4%9E/">CVE-2014-0224_OpenSSL中间人漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/OpenSSL/CVE-2014-0160-OpenSSL%E5%BF%83%E8%84%8F%E6%BB%B4%E8%A1%80%E6%BC%8F%E6%B4%9E/">CVE-2014-0160_OpenSSL心脏滴血漏洞</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Redis
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/Redis%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E/">Redis未授权访问漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C%E6%BC%8F%E6%B4%9E/">Redis主从复制代码执行漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2013-7458-Redis-redis-cli%E4%BF%A1%E6%81%AF%E6%B3%84%E9%9C%B2%E6%BC%8F%E6%B4%9E/">CVE-2013-7458_Redis redis-cli信息泄露漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2015-4335-Redis-EVAL-Lua%E6%B2%99%E7%AE%B1%E7%BB%95%E8%BF%87%E6%BC%8F%E6%B4%9E/">CVE-2015-4335_Redis EVAL Lua沙箱绕过漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2015-8080-Redis-getnum%E6%95%B4%E6%95%B0%E6%BA%A2%E5%87%BA%E6%BC%8F%E6%B4%9E/">CVE-2015-8080_Redis getnum整数溢出漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2016-8339-Redis%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E6%BC%8F%E6%B4%9E/">CVE-2016-8339_Redis缓冲区溢出漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2016-10517-Redis%E8%B7%A8%E5%8D%8F%E8%AE%AE%E6%BC%8F%E6%B4%9E/">CVE-2016-10517_Redis跨协议漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2017-15047-Redis%E6%95%B0%E7%BB%84%E7%B4%A2%E5%BC%95%E8%B6%8A%E7%95%8C%E6%BC%8F%E6%B4%9E/">CVE-2017-15047_Redis数组索引越界漏洞</a></li>  <li class="file"><a href="/wiki/1.%20%E6%BC%8F%E6%B4%9E%E7%9B%B8%E5%85%B3/Redis/CVE-2018-11218-Redis-Lua%E7%BC%93%E5%86%B2%E5%8C%BA%E6%BA%A2%E5%87%BA%E6%BC%8F%E6%B4%9E/">CVE-2018-11218_Redis Lua缓冲区溢出漏洞</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            2. 数据库安全
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Oracle Database
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database%E7%AE%80%E5%8D%95%E6%A6%82%E8%BF%B0/">Oracle Database简单概述</a></li>  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-PLSQL%E5%9F%BA%E7%A1%80%E5%8E%9F%E7%90%86/">Oracle Database PL/SQL注入漏洞原理</a></li>  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/Oracle-Database-11g-Wrap%E5%8A%A0%E5%AF%86%E8%A7%A3%E5%AF%86%E5%88%86%E6%9E%90/">Oracle Database 11g Wrap加密解密分析</a></li>  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-%E4%B8%8A%E7%AF%87/">The Oracle Hacker's Handbook: Hacking and Defending Oracle 上篇</a></li>  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/Oracle%20Database/The-Oracle-Hacker-s-Handbook-Hacking-and-Defending-Oracle-%E4%B8%8B%E7%AF%87/">The Oracle Hacker's Handbook: Hacking and Defending Oracle 下篇</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            SQL Server
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8A%E7%AF%87/">SQL Server数据库攻防详解上篇</a></li>  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E6%94%BB%E9%98%B2%E8%AF%A6%E8%A7%A3%E4%B8%8B%E7%AF%87/">SQL Server数据库攻防详解下篇</a></li>  <li class="file"><a href="/wiki/2.%20%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8/SQL%20Server/SQL-Server%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%89%E5%85%A8%E5%8A%A0%E5%9B%BA/">SQL Server数据库安全加固</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            3. 应急响应
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Linux应急响应
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/3.%20%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/Linux%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/Linux%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/">Linux应急响应</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Windows应急响应
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/3.%20%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/Windows%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/Windows%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/">Windows应急响应</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            4. 内网安全攻防
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory open">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder-open"></i>
+                            &nbsp;
+                            0-内网攻防基础
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/PowerShell%E5%9F%BA%E7%A1%80/">PowerShell基础</a></li>  <li class="file active"><a href="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/">部署域环境</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            1-内网信息搜集
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/1-%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86/%E4%B8%BB%E6%9C%BA%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86/">主机信息搜集</a></li>  <li class="file"><a href="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/1-%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86/%E5%9F%9F%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86/">域信息搜集</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            5. 高级威胁猎捕
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Cobalt Strike
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/0-Cobalt%20Strike%E9%9B%B6%E5%9F%BA%E7%A1%80/">0-Cobalt Strike零基础</a></li>  <li class="file"><a href="/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%8A%E7%AF%87/">1-Cobalt Strike基础上篇</a></li>  <li class="file"><a href="/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Cobalt%20Strike/1-Cobalt-Strike%E5%9F%BA%E7%A1%80%E4%B8%AD%E7%AF%87/">1-Cobalt Strike基础中篇</a></li>  </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            Defense Evasion
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            进程注入
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/5.%20%E9%AB%98%E7%BA%A7%E5%A8%81%E8%83%81%E7%8C%8E%E6%8D%95/Defense%20Evasion/%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5/Shellcode-APC%E6%B3%A8%E5%85%A5%E5%92%8C%E5%8A%A0%E8%BD%BD/">Shellcode APC注入和加载</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            6. 威胁情报
+                        </a>
+                         <ul class="unstyled" id="tree"> 
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            APT情报
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/6.%20%E5%A8%81%E8%83%81%E6%83%85%E6%8A%A5/APT%E6%83%85%E6%8A%A5/%E7%9F%A5%E5%90%8DAPT%E7%BB%84%E7%BB%87%E6%A6%82%E8%BF%B0/">知名APT组织概述</a></li>  </ul> 
+                    </li> 
+                     </ul> 
+                    </li> 
+                    
+                    <li class="directory">
+                        <a href="#" data-role="directory">
+                            <i class="fa fa-folder"></i>
+                            &nbsp;
+                            7. 学习资源
+                        </a>
+                         <ul class="unstyled" id="tree">  <li class="file"><a href="/wiki/7.%20%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90/%E5%AD%A6%E4%B9%A0%E8%B5%84%E6%BA%90/">学习资源</a></li>  </ul> 
+                    </li> 
+                     <li class="file"><a href="/wiki/hello-world/">Hello World</a></li>  </ul> 
+    </div>
+    <script>
+        $(document).ready(function() {
+            var iconFolderOpenClass  = 'fa-folder-open';
+            var iconFolderCloseClass = 'fa-folder';
+            var iconAllExpandClass = 'fa-angle-double-down';
+            var iconAllPackClass = 'fa-angle-double-up';
+            // Handle directory-tree expansion:
+            // 左键单独展开目录
+            $(document).on('click', '#categories a[data-role="directory"]', function (event) {
+                event.preventDefault();
+
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var subtree = $(this).siblings('ul');
+                icon.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if (expanded) {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideUp({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderCloseClass);
+                } else {
+                    if (typeof subtree != 'undefined') {
+                        subtree.slideDown({ duration: 100 });
+                    }
+                    icon.addClass(iconFolderOpenClass);
+                }
+            });
+            // 右键展开下属所有目录
+            $('#categories a[data-role="directory"]').bind("contextmenu", function(event){
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconFolderOpenClass);
+                var listNode = $(this).siblings('ul');
+                var subtrees = $.merge(listNode.find('li ul'), listNode);
+                var icons = $.merge(listNode.find('.fa'), icon);
+                icons.removeClass(iconFolderOpenClass).removeClass(iconFolderCloseClass);
+                if(expanded) {
+                    subtrees.slideUp({ duration: 100 });
+                    icons.addClass(iconFolderCloseClass);
+                } else {
+                    subtrees.slideDown({ duration: 100 });
+                    icons.addClass(iconFolderOpenClass);
+                }
+            })
+            // 展开关闭所有目录按钮
+            $(document).on('click', '#allExpand', function (event) {
+                event.preventDefault();
+                
+                var icon = $(this).children('.fa');
+                var expanded = icon.hasClass(iconAllExpandClass);
+                icon.removeClass(iconAllExpandClass).removeClass(iconAllPackClass);
+                if(expanded) {
+                    $('#sidebar .fa.fa-folder').removeClass('fa-folder').addClass('fa-folder-open')
+                    $('#categories li ul').slideDown({ duration: 100 });
+                    icon.addClass(iconAllPackClass);
+                } else {
+                    $('#sidebar .fa.fa-folder-open').removeClass('fa-folder-open').addClass('fa-folder')
+                    $('#categories li ul').slideUp({ duration: 100 });
+                    icon.addClass(iconAllExpandClass);
+                }
+            });  
+        });
+    </script>
+
+    
+    <div id="toTop" class="fa fa-angle-up"></div>
+</aside>
+            
+            <section id="main"><article id="post-4. 内网安全攻防/0-内网攻防基础/部署域环境" class="article article-type-post" itemscope itemprop="blogPost">
+    <div class="article-inner">
+        
+        
+            <header class="article-header">
+                
+                    <div class="article-meta">
+                        
+    <div class="article-category">
+    	<i class="fa fa-folder"></i>
+        <a class="article-category-link" href="/categories/4-%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/">4. 内网安全攻防</a><i class="fa fa-angle-right"></i><a class="article-category-link" href="/categories/4-%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/">0-内网攻防基础</a>
+    </div>
+
+                        
+    <div class="article-tag">
+        <i class="fa fa-tag"></i>
+        <a class="tag-link-link" href="/tags/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/" rel="tag">0-内网攻防基础</a>
+    </div>
+
+                        
+    <div class="article-date">
+        <i class="fa fa-calendar"></i>
+        <a href="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/">
+            <time datetime="2021-08-04T03:09:52.000Z" itemprop="datePublished">2021-08-04</time>
+        </a>
+    </div>
+
+
+                        
+                            <i class="fa fa-bar-chart"></i>
+                            <span id="busuanzi_container_site_pv"><span id="busuanzi_value_page_pv"></span></span>    
+                        
+                        
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/raw/writing/source/_posts/4. 内网安全攻防/0-内网攻防基础/部署域环境.md"> Source </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/edit/writing/source/_posts/4. 内网安全攻防/0-内网攻防基础/部署域环境.md"> Edit </a>
+                            </div>
+                            <div class="article-meta-button">
+                                <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/TahirMars/Wiki-site/commits/writing/source/_posts/4. 内网安全攻防/0-内网攻防基础/部署域环境.md"> History </a>
+                            </div>
+                        
+                    </div>
+                
+                
+    
+        <h1 class="article-title" itemprop="name">
+            部署域环境
+        </h1>
+    
+
+            </header>
+        
+        
+        <div class="article-entry" itemprop="articleBody">
+        
+        
+            
+                <div id="toc" class="toc-article">
+                <strong class="toc-title">Catalogue</strong>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Metadata"><span class="toc-number">1.</span> <span class="toc-text">Metadata</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tactics"><span class="toc-number">2.</span> <span class="toc-text">Tactics</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Techniques"><span class="toc-number">3.</span> <span class="toc-text">Techniques</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Procedure"><span class="toc-number">4.</span> <span class="toc-text">Procedure</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%90%AD%E5%BB%BA%E5%9F%9F%E7%8E%AF%E5%A2%83"><span class="toc-number">5.</span> <span class="toc-text">搭建域环境</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%9F%E6%8E%A7%E5%88%B6%E5%99%A8%E9%85%8D%E7%BD%AE"><span class="toc-number">5.1.</span> <span class="toc-text">域控制器配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E5%9F%9F%E6%8E%A7%E5%88%B6%E5%99%A8"><span class="toc-number">5.1.1.</span> <span class="toc-text">安装域控制器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E8%A3%85DNS%E6%9C%8D%E5%8A%A1"><span class="toc-number">5.1.2.</span> <span class="toc-text">安装DNS服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%9B%E5%BB%BAActive-Directory%E7%94%A8%E6%88%B7"><span class="toc-number">5.1.3.</span> <span class="toc-text">创建Active Directory用户</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%9F%E7%94%A8%E6%88%B7%E9%85%8D%E7%BD%AE"><span class="toc-number">5.2.</span> <span class="toc-text">域用户配置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#References"><span class="toc-number">6.</span> <span class="toc-text">References</span></a></li></ol>
+                </div>
+            
+        
+        
+            <h2 id="Metadata"><a href="#Metadata" class="headerlink" title="Metadata"></a>Metadata</h2><table>
+<thead>
+<tr>
+<th>Author</th>
+<th>Tahir</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Creation Date</td>
+<td>2021/08/04</td>
+</tr>
+<tr>
+<td>Modification Date</td>
+<td>2021/08/04</td>
+</tr>
+<tr>
+<td>Tactics</td>
+<td>None</td>
+</tr>
+<tr>
+<td>Techniques</td>
+<td>None</td>
+</tr>
+</tbody></table>
+<h2 id="Tactics"><a href="#Tactics" class="headerlink" title="Tactics"></a>Tactics</h2><p>None</p>
+<h2 id="Techniques"><a href="#Techniques" class="headerlink" title="Techniques"></a>Techniques</h2><p>None</p>
+<h2 id="Procedure"><a href="#Procedure" class="headerlink" title="Procedure"></a>Procedure</h2><h2 id="搭建域环境"><a href="#搭建域环境" class="headerlink" title="搭建域环境"></a>搭建域环境</h2><p>Windows Server 2012  10.251.0.37 域控制器 administrator Password!</p>
+<p>Windows 7 10.251.0.32 域成员 TEST\testuser  Password!</p>
+<h3 id="域控制器配置"><a href="#域控制器配置" class="headerlink" title="域控制器配置"></a>域控制器配置</h3><p>设置服务器，配置Windows Server 2012 R2操作系统，IP为10.251.0.37，子网掩码为255.255.255.0，DNS设置为本机IP地址。</p>
+<p><img src="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/5.png"></p>
+<h4 id="安装域控制器"><a href="#安装域控制器" class="headerlink" title="安装域控制器"></a>安装域控制器</h4><p>在Windows Server 2012上添加AD域服务</p>
+<p><img src="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/1.png"></p>
+<p>一路默认设置，直到点击安装为止，安装完成后，配置AD域控制器。</p>
+<p><img src="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/2.png"></p>
+<p>在active director域服务配置向导，添加新林，输入test.domain.</p>
+<p><img src="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/3.png"></p>
+<p>在域控制器选项中，将林功能级别、域功能级别都设置为Windows Server 2012，创建域林时，在默认情况下应选择DNS服务器，林中的第一个域控制器必须是全局目录服务器且不能是只读域控制器（RODC），然后，设置目录服务还原模式的密码为Password!（在开机进入安全模式修复活动目录数据库时将使用此密码）。</p>
+<p><img src="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/6.png"></p>
+<p>在DNS选项部分会出现关于DNS的警告，不用管该警告，保持默认设置。</p>
+<p><img src="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/7.png"></p>
+<p>点击下一步，进入其它选项，在NetBIOS域名（不支持DNS域名的旧版本操作系统，如Windows 98、NT，需要通过NetBIOS域名进行通信）部分保持默认设置。点击下一步，直到出现安装按钮为止。</p>
+<p><img src="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/8.png"></p>
+<h4 id="安装DNS服务"><a href="#安装DNS服务" class="headerlink" title="安装DNS服务"></a>安装DNS服务</h4><p>同上，点击下一步，保持默认设置，直到安装。</p>
+<p><img src="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/4.png"></p>
+<p>安装完上面服务后，重启服务器，使用域管理员账户（TEST\administrator）登录，在服务器管理界面可以看到AD DS、DNS服务了</p>
+<p><img src="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/9.png"></p>
+<h4 id="创建Active-Directory用户"><a href="#创建Active-Directory用户" class="headerlink" title="创建Active Directory用户"></a>创建Active Directory用户</h4><p>为域用户创建域控制器账户，在Active Directory用户和计算机界面中选择Users目录并单击右键，使用弹出的快捷菜单添加用户testuser/ Password!。</p>
+<p><img src="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/12.png"></p>
+<h3 id="域用户配置"><a href="#域用户配置" class="headerlink" title="域用户配置"></a>域用户配置</h3><p>将Windows 7计算机添加到该域中。设置IP地址为10.251.0.32，设置DNS地址为10.251.0.37，运行ping test.domain测试</p>
+<p><img src="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/11.png"></p>
+<p>将主机添加到域中，输入域控制器的管理员账户和密码。</p>
+<p><img src="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/13.png"></p>
+<p>点击确定后，弹出欢迎加入域的提示。</p>
+<p><img src="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/14.png"></p>
+<p>最后重启计算机，用域控创建的testuser用户登录域。</p>
+<p><img src="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/15.png"></p>
+<p>在Windows 7中测试域环境，输入命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net view /domain</span><br></pre></td></tr></table></figure>
+
+<p>报错6118</p>
+<p><img src="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/17.png"></p>
+<p>在Windows 7中。</p>
+<p>1.右键单击“我的电脑”，进入“管理”&gt;“服务”，启动“Computer Brower”服务，若无法启动，请确认“Server”和“WorkStation”两项服务已开启，并设置“Computer Brower”服务属性为“手动启动”。</p>
+<p>2.关闭防火墙</p>
+<p><img src="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/16.png"></p>
+<p>再次输入命令，可以看到域环境搭建成功。</p>
+<p><img src="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/%E9%83%A8%E7%BD%B2%E5%9F%9F%E7%8E%AF%E5%A2%83/18.png"></p>
+<h2 id="References"><a href="#References" class="headerlink" title="References"></a>References</h2>
+            </div>
+        
+        <footer class="article-footer">
+        </footer>
+    </div>
+</article>
+
+
+    
+<nav id="article-nav">
+    
+        <a href="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/1-%E5%86%85%E7%BD%91%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86/%E4%B8%BB%E6%9C%BA%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86/" id="article-nav-newer" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Newer</strong>
+            <div class="article-nav-title">
+                
+                    主机信息搜集
+                
+            </div>
+        </a>
+    
+    
+        <a href="/wiki/4.%20%E5%86%85%E7%BD%91%E5%AE%89%E5%85%A8%E6%94%BB%E9%98%B2/0-%E5%86%85%E7%BD%91%E6%94%BB%E9%98%B2%E5%9F%BA%E7%A1%80/PowerShell%E5%9F%BA%E7%A1%80/" id="article-nav-older" class="article-nav-link-wrap">
+            <strong class="article-nav-caption">Older</strong>
+            <div class="article-nav-title">PowerShell基础</div>
+        </a>
+    
+</nav>
+
+
+
+
+
+    
+    
+
+
+
+
+<!-- baidu url auto push script -->
+<script type="text/javascript">
+    !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=window.location.href,o=document.referrer;if(!e.test(r)){var n="//api.share.baidu.com/s.gif";o?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var t=new Image;t.src=n}}(window);
+</script>     
+</section>
+        </div>
+        <footer id="footer">
+    <div class="outer">
+        <div id="footer-info" class="inner">
+            Tahir &copy; 2021 
+            <a rel="external nofollow noopener noreferrer" target="_blank" href="http://creativecommons.org/licenses/by-nc-nd/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-nd/4.0/80x15.png"></a>
+            <br> Powered by <a href="http://hexo.io/" target="_blank" rel="external nofollow noopener noreferrer">Hexo</a>. Theme - <a target="_blank" rel="external nofollow noopener noreferrer" href="https://github.com/zthxxx/hexo-theme-Wikitten">wikitten</a>
+            
+                <br>
+                <span id="busuanzi_container_site_pv"><i class="fa fa-eye"></i> <span id="busuanzi_value_site_pv"></span></span>
+                &nbsp;|&nbsp;
+                <span id="busuanzi_container_site_pv"><i class="fa fa-user"></i> <span id="busuanzi_value_site_uv"></span></span>
+            
+        </div>
+    </div>
+</footer>
+        
+
+    
+        
+<script src="/libs/lightgallery/js/lightgallery.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-thumbnail.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-pager.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-autoplay.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-fullscreen.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-zoom.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-hash.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-share.min.js"></script>
+
+        
+<script src="/libs/lightgallery/js/lg-video.min.js"></script>
+
+    
+    
+        
+<script src="/libs/justified-gallery/jquery.justifiedGallery.min.js"></script>
+
+    
+    
+        <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true,
+            TeX: {
+                equationNumbers: {
+                  autoNumber: 'AMS'
+                }
+            }
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+
+
+<!-- Custom Scripts -->
+
+<script src="/js/main.js"></script>
+
+
+    </div>
+</body>
+</html>
